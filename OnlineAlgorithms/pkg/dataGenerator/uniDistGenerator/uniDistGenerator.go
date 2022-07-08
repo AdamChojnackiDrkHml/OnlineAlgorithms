@@ -11,7 +11,7 @@ type UniDistGenerator struct {
 	gen uniform.Uniform
 }
 
-func Craete(low, high int) *UniDistGenerator {
+func Create(low, high int) *UniDistGenerator {
 
 	g := &UniDistGenerator{gen: uniform.Uniform{Min: float64(low), Max: float64(high + 1), Src: rand.New(rand.NewSource(uint64(time.Now().UnixNano())))}}
 	return g
