@@ -34,9 +34,18 @@ func (ps *PagingSolver) createSolvingAlg(alg PagingAlg) {
 	case PA:
 		{
 			ps.alg = LRUAlg_Create(ps.size)
+			break
 		}
 	case PB:
+		{
+			ps.alg = FIFOAlg_Create(ps.size)
+			break
+		}
 	case PC:
+		{
+			ps.alg = LFUAlg_Create(ps.size)
+			break
+		}
 	case PD:
 		break
 	}
