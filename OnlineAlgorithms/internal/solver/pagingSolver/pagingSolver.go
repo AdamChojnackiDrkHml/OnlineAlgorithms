@@ -17,9 +17,9 @@ type PagingSolver struct {
 	alg    PagingSolvingAlg
 }
 
-func PagingSolver_Create(size int, alg PagingAlg) *PagingSolver {
+func PagingSolver_Create(size int, alg PagingAlg, debug bool) *PagingSolver {
 	pS := &PagingSolver{size: size, faults: 0}
-	pS.createSolvingAlg(alg)
+	pS.createSolvingAlg(alg, debug)
 	return pS
 }
 
@@ -29,21 +29,21 @@ func (pS *PagingSolver) Serve(request int) {
 	}
 }
 
-func (ps *PagingSolver) createSolvingAlg(alg PagingAlg) {
+func (ps *PagingSolver) createSolvingAlg(alg PagingAlg, debug bool) {
 	switch alg {
 	case PA:
 		{
-			ps.alg = LRUAlg_Create(ps.size)
+			ps.alg = LRUAlg_Create(ps.size, debug)
 			break
 		}
 	case PB:
 		{
-			ps.alg = FIFOAlg_Create(ps.size)
+			ps.alg = FIFOAlg_Create(ps.size, debug)
 			break
 		}
 	case PC:
 		{
-			ps.alg = LFUAlg_Create(ps.size)
+			ps.alg = LFUAlg_Create(ps.size, debug)
 			break
 		}
 	case PD:

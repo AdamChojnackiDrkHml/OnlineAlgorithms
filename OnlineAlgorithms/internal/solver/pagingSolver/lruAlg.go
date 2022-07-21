@@ -1,6 +1,7 @@
 package pagingsolver
 
 import (
+	"OnlineAlgorithms/internal/solver"
 	"container/heap"
 	"fmt"
 )
@@ -51,10 +52,11 @@ func (pq *PriorityQueue) update(item *LRUMem) {
 type LRUAlg struct {
 	memory PriorityQueue
 	size   int
+	debug  bool
 }
 
-func LRUAlg_Create(size int) *LRUAlg {
-	lru := &LRUAlg{size: size, memory: make(PriorityQueue, 0)}
+func LRUAlg_Create(size int, debug bool) *LRUAlg {
+	lru := &LRUAlg{size: size, memory: make(PriorityQueue, 0), debug: debug}
 	heap.Init(&lru.memory)
 
 	return lru
@@ -62,22 +64,22 @@ func LRUAlg_Create(size int) *LRUAlg {
 
 func (alg *LRUAlg) UpdateMemory(request int) bool {
 	isFound := alg.find(request)
-	fmt.Print(alg.unpackMemory())
+	solver.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
 	heap.Init(&alg.memory)
 	if !isFound {
-		fmt.Print(" ## FAULT ")
-		fmt.Print(" HAVE TO INSERT ", request, " ## ")
+		solver.DebugPrint(fmt.Sprint(" ## FAULT "), alg.debug)
+		solver.DebugPrint(fmt.Sprint(" HAVE TO INSERT ", request, " ## "), alg.debug)
 		if alg.memory.Len() >= alg.size {
 			x := heap.Pop(&alg.memory).(*LRUMem)
-			fmt.Print(" ## POPPING ", x.mem, " ## ")
+			solver.DebugPrint(fmt.Sprint(" ## POPPING ", x.mem, " ## "), alg.debug)
 		}
 		heap.Push(&alg.memory, &LRUMem{mem: request, lastReq: 0})
-		fmt.Print(" =>> ", alg.unpackMemory())
+		solver.DebugPrint(fmt.Sprint(" =>> ", alg.unpackMemory()), alg.debug)
 	} else {
-		fmt.Print(" ## FOUND ", request, " REQUEST SERVED ## =>> ", alg.unpackMemory())
+		solver.DebugPrint(fmt.Sprint(" ## FOUND ", request, " REQUEST SERVED ## =>> ", alg.unpackMemory()), alg.debug)
 	}
 	heap.Init(&alg.memory)
-	fmt.Println()
+	solver.DebugPrint(fmt.Sprintln(), alg.debug)
 	return isFound
 }
 
