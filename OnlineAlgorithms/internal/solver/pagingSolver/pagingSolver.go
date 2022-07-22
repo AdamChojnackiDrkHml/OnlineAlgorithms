@@ -5,9 +5,9 @@ import "fmt"
 type PagingAlg int
 
 const (
-	PA PagingAlg = iota
-	PB
-	PC
+	LRU PagingAlg = iota
+	FIFO
+	LFU
 	PD
 )
 
@@ -31,17 +31,17 @@ func (pS *PagingSolver) Serve(request int) {
 
 func (ps *PagingSolver) createSolvingAlg(alg PagingAlg, debug bool) {
 	switch alg {
-	case PA:
+	case LRU:
 		{
 			ps.alg = LRUAlg_Create(ps.size, debug)
 			break
 		}
-	case PB:
+	case FIFO:
 		{
 			ps.alg = FIFOAlg_Create(ps.size, debug)
 			break
 		}
-	case PC:
+	case LFU:
 		{
 			ps.alg = LFUAlg_Create(ps.size, debug)
 			break
