@@ -12,9 +12,7 @@ type FIFOAlg struct {
 }
 
 func FIFOAlg_Create(size int, debug bool) *FIFOAlg {
-	lru := &FIFOAlg{size: size, memory: make([]int, 0), debug: debug}
-
-	return lru
+	return &FIFOAlg{size: size, memory: make([]int, 0), debug: debug}
 }
 
 func (alg *FIFOAlg) UpdateMemory(request int) bool {
