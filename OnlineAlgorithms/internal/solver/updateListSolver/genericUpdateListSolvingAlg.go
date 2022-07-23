@@ -1,5 +1,15 @@
 package updatelistsolver
 
 type UpdateListSolvingAlg interface {
-	UpdateMemory(request int) bool
+	UpdateList(request int) int
+}
+
+func CreateList(size int) []int {
+	list := make([]int, size)
+
+	for i := range list {
+		list[i] = i
+	}
+
+	return list
 }
