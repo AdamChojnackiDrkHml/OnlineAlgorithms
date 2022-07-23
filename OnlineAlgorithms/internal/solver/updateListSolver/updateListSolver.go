@@ -5,45 +5,43 @@ import "fmt"
 type UpdateListAlg int
 
 const (
-	LRU UpdateListAlg = iota
-	FIFO
-	LFU
+	MTF UpdateListAlg = iota
+	TRANS
+	FQ
 	PD
 )
 
 type UpdateListSolver struct {
-	size   int
-	faults int
-	alg    UpdateListSolvingAlg
+	size int
+	cost int
+	alg  UpdateListSolvingAlg
 }
 
 func UpdateListSolver_Create(size int, alg UpdateListAlg, debug bool) *UpdateListSolver {
-	pS := &UpdateListSolver{size: size, faults: 0}
-	pS.createSolvingAlg(alg, debug)
-	return pS
+	uLS := &UpdateListSolver{size: size, cost: 0}
+	uLS.createSolvingAlg(alg, debug)
+	return uLS
 }
 
-func (pS *UpdateListSolver) Serve(request int) {
-	if !pS.alg.UpdateMemory(request) {
-		pS.faults++
-	}
+func (uLS *UpdateListSolver) Serve(request int) {
+	uLS.cost += uLS.alg.UpdateList(request)
 }
 
-func (ps *UpdateListSolver) createSolvingAlg(alg UpdateListAlg, debug bool) {
+func (uLS *UpdateListSolver) createSolvingAlg(alg UpdateListAlg, debug bool) {
 	switch alg {
-	case LRU:
+	case MTF:
 		{
-			// ps.alg = LRUAlg_Create(ps.size, debug)
+			uLS.alg = MTFAlg_Create(uLS.size, debug)
 			break
 		}
-	case FIFO:
+	case TRANS:
 		{
-			// ps.alg = FIFOAlg_Create(ps.size, debug)
+			uLS.alg = TransAlg_Create(uLS.size, debug)
 			break
 		}
-	case LFU:
+	case FQ:
 		{
-			// ps.alg = LFUAlg_Create(ps.size, debug)
+			uLS.alg = FQAlg_Create(uLS.size, debug)
 			break
 		}
 	case PD:
@@ -51,6 +49,6 @@ func (ps *UpdateListSolver) createSolvingAlg(alg UpdateListAlg, debug bool) {
 	}
 }
 
-func (ps *UpdateListSolver) Raport() string {
-	return fmt.Sprint(ps.faults)
+func (uLS *UpdateListSolver) Raport() string {
+	return fmt.Sprint(uLS.cost)
 }
