@@ -11,14 +11,28 @@ const (
 	PD
 )
 
+func (e UpdateListAlg) String() string {
+	switch e {
+	case MTF:
+		return "MTF"
+	case TRANS:
+		return "TRANS"
+	case FQ:
+		return "FQ"
+	default:
+		return "NULL"
+	}
+}
+
 type UpdateListSolver struct {
 	size int
 	cost int
 	alg  UpdateListSolvingAlg
+	algE UpdateListAlg
 }
 
-func UpdateListSolver_Create(size int, alg UpdateListAlg, debug bool) *UpdateListSolver {
-	uLS := &UpdateListSolver{size: size, cost: 0}
+func UpdateListSolver_Create(size int, alg int, debug bool) *UpdateListSolver {
+	uLS := &UpdateListSolver{size: size, cost: 0, algE: UpdateListAlg(alg)}
 	uLS.createSolvingAlg(alg, debug)
 	return uLS
 }
@@ -27,8 +41,8 @@ func (uLS *UpdateListSolver) Serve(request int) {
 	uLS.cost += uLS.alg.UpdateList(request)
 }
 
-func (uLS *UpdateListSolver) createSolvingAlg(alg UpdateListAlg, debug bool) {
-	switch alg {
+func (uLS *UpdateListSolver) createSolvingAlg(alg int, debug bool) {
+	switch UpdateListAlg(alg) {
 	case MTF:
 		{
 			uLS.alg = MTFAlg_Create(uLS.size, debug)
@@ -50,5 +64,5 @@ func (uLS *UpdateListSolver) createSolvingAlg(alg UpdateListAlg, debug bool) {
 }
 
 func (uLS *UpdateListSolver) Raport() string {
-	return fmt.Sprint(uLS.cost)
+	return fmt.Sprint(uLS.algE, "-", uLS.cost)
 }
