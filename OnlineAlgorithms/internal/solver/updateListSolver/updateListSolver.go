@@ -8,7 +8,7 @@ const (
 	MTF UpdateListAlg = iota
 	TRANS
 	FQ
-	PD
+	BIT
 )
 
 func (e UpdateListAlg) String() string {
@@ -19,6 +19,8 @@ func (e UpdateListAlg) String() string {
 		return "TRANS"
 	case FQ:
 		return "FQ"
+	case BIT:
+		return "BIT"
 	default:
 		return "NULL"
 	}
@@ -58,8 +60,11 @@ func (uLS *UpdateListSolver) createSolvingAlg(alg int, debug bool) {
 			uLS.alg = FQAlg_Create(uLS.size, debug)
 			break
 		}
-	case PD:
-		break
+	case BIT:
+		{
+			uLS.alg = BITAlg_Create(uLS.size, debug)
+			break
+		}
 	}
 }
 
