@@ -11,14 +11,28 @@ const (
 	PD
 )
 
+func (e PagingAlg) String() string {
+	switch e {
+	case LRU:
+		return "LRU"
+	case FIFO:
+		return "FIFO"
+	case LFU:
+		return "LFU"
+	default:
+		return "NULL"
+	}
+}
+
 type PagingSolver struct {
 	size   int
 	faults int
 	alg    PagingSolvingAlg
+	aleE   PagingAlg
 }
 
-func PagingSolver_Create(size int, alg PagingAlg, debug bool) *PagingSolver {
-	pS := &PagingSolver{size: size, faults: 0}
+func PagingSolver_Create(size int, alg int, debug bool) *PagingSolver {
+	pS := &PagingSolver{size: size, faults: 0, aleE: PagingAlg(alg)}
 	pS.createSolvingAlg(alg, debug)
 	return pS
 }
@@ -29,8 +43,8 @@ func (pS *PagingSolver) Serve(request int) {
 	}
 }
 
-func (ps *PagingSolver) createSolvingAlg(alg PagingAlg, debug bool) {
-	switch alg {
+func (ps *PagingSolver) createSolvingAlg(alg int, debug bool) {
+	switch PagingAlg(alg) {
 	case LRU:
 		{
 			ps.alg = LRUAlg_Create(ps.size, debug)
@@ -52,5 +66,5 @@ func (ps *PagingSolver) createSolvingAlg(alg PagingAlg, debug bool) {
 }
 
 func (ps *PagingSolver) Raport() string {
-	return fmt.Sprint(ps.faults)
+	return fmt.Sprint(ps.aleE, "-", ps.faults)
 }

@@ -1,7 +1,7 @@
 package pagingsolver
 
 import (
-	"OnlineAlgorithms/internal/solver"
+	"OnlineAlgorithms/internal/utils"
 	"fmt"
 )
 
@@ -17,21 +17,21 @@ func FIFOAlg_Create(size int, debug bool) *FIFOAlg {
 
 func (alg *FIFOAlg) UpdateMemory(request int) bool {
 	isFound := alg.find(request)
-	solver.DebugPrint(fmt.Sprint(alg.memory), alg.debug)
+	utils.DebugPrint(fmt.Sprint(alg.memory), alg.debug)
 	if !isFound {
-		solver.DebugPrint(fmt.Sprint(" ## FAULT "), alg.debug)
-		solver.DebugPrint(fmt.Sprint(" HAVE TO INSERT ", request, " ## "), alg.debug)
+		utils.DebugPrint(" ## FAULT ", alg.debug)
+		utils.DebugPrint(fmt.Sprint(" HAVE TO INSERT ", request, " ## "), alg.debug)
 		if len(alg.memory) >= alg.size {
-			solver.DebugPrint(fmt.Sprint(" ## POPPING ", alg.memory[alg.size-1], " ## "), alg.debug)
+			utils.DebugPrint(fmt.Sprint(" ## POPPING ", alg.memory[alg.size-1], " ## "), alg.debug)
 			alg.memory = alg.memory[:alg.size-1]
 
 		}
 		alg.memory = append([]int{request}, alg.memory...)
-		solver.DebugPrint(fmt.Sprint(" =>> ", alg.memory), alg.debug)
+		utils.DebugPrint(fmt.Sprint(" =>> ", alg.memory), alg.debug)
 	} else {
-		solver.DebugPrint(fmt.Sprint(" ## FOUND ", request, " REQUEST SERVED ## =>> ", alg.memory), alg.debug)
+		utils.DebugPrint(fmt.Sprint(" ## FOUND ", request, " REQUEST SERVED ## =>> ", alg.memory), alg.debug)
 	}
-	solver.DebugPrint(fmt.Sprintln(), alg.debug)
+	utils.DebugPrint(fmt.Sprintln(), alg.debug)
 	return isFound
 }
 
