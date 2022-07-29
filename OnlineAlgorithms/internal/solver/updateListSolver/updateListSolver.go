@@ -68,6 +68,6 @@ func (uLS *UpdateListSolver) createSolvingAlg(alg int, debug bool) {
 	}
 }
 
-func (uLS *UpdateListSolver) Raport() string {
-	return fmt.Sprint(uLS.algE, "-", uLS.cost)
+func (uLS *UpdateListSolver) Raport() (string, int) {
+	return fmt.Sprint(uLS.algE), uLS.cost
 }

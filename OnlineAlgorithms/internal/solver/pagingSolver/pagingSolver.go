@@ -28,11 +28,11 @@ type PagingSolver struct {
 	size   int
 	faults int
 	alg    PagingSolvingAlg
-	aleE   PagingAlg
+	algE   PagingAlg
 }
 
 func PagingSolver_Create(size int, alg int, debug bool) *PagingSolver {
-	pS := &PagingSolver{size: size, faults: 0, aleE: PagingAlg(alg)}
+	pS := &PagingSolver{size: size, faults: 0, algE: PagingAlg(alg)}
 	pS.createSolvingAlg(alg, debug)
 	return pS
 }
@@ -65,6 +65,6 @@ func (ps *PagingSolver) createSolvingAlg(alg int, debug bool) {
 	}
 }
 
-func (ps *PagingSolver) Raport() string {
-	return fmt.Sprint(ps.aleE, "-", ps.faults)
+func (ps *PagingSolver) Raport() (string, int) {
+	return fmt.Sprint(ps.algE), ps.faults
 }

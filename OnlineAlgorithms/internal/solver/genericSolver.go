@@ -14,7 +14,7 @@ const (
 
 type GenericSolver interface {
 	Serve(request int)
-	Raport() string
+	Raport() (string, int)
 }
 
 func CreateSolver(conf [4]int) []GenericSolver {

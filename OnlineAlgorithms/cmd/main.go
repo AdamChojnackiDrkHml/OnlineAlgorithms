@@ -22,19 +22,39 @@ func main() {
 	}
 	defer file.Close()
 
-	solverConf, genConf, floatValue, iterator := parseConfig(file)
+	solverConf, genConf, floatValue, noOfReq, noOfIterations := parseConfig(file)
+	noOfRes := 0
 
-	pSS := solver.CreateSolver(solverConf)
-	dG := dataGenerator.CreateDataGenerator(genConf, floatValue)
-
-	for i := 0; i < iterator; i++ {
-		for _, pS := range pSS {
-			pS.Serve(dG.GetRequest())
-		}
+	if solverConf[2] == 0 {
+		noOfRes = 3
+	} else {
+		noOfRes = 1
 	}
 
-	for _, pS := range pSS {
-		fmt.Println(pS.Raport())
+	res := make([]float64, noOfRes)
+	names := make([]string, noOfRes)
+	var name string
+	var score int
+	for iteration := 0; iteration < noOfIterations; iteration++ {
+		pSS := solver.CreateSolver(solverConf)
+		dG := dataGenerator.CreateDataGenerator(genConf, floatValue)
+
+		for i := 0; i < noOfReq; i++ {
+			for _, pS := range pSS {
+				pS.Serve(dG.GetRequest())
+			}
+		}
+
+		for i, pS := range pSS {
+			name, score = pS.Raport()
+			names[i] = name
+			res[i] += float64(score) / float64(noOfIterations)
+		}
+
+	}
+
+	for i, n := range names {
+		fmt.Println(n, " - ", res[i])
 	}
 
 }
@@ -44,7 +64,7 @@ func exitWithError(err string) {
 	os.Exit(1)
 }
 
-func parseConfig(config *os.File) ([4]int, [3]int, float64, int) {
+func parseConfig(config *os.File) ([4]int, [3]int, float64, int, int) {
 	scanner := bufio.NewScanner(config)
 	scanner.Split(bufio.ScanLines)
 
@@ -73,6 +93,6 @@ func parseConfig(config *os.File) ([4]int, [3]int, float64, int) {
 	solverConfs := [4]int{confInts[0], confInts[1], confInts[2], confInts[3]}
 	generatorConfs := [3]int{confInts[4], confInts[5], confInts[6]}
 
-	return solverConfs, generatorConfs, floatValue, confInts[7]
+	return solverConfs, generatorConfs, floatValue, confInts[7], confInts[8]
 
 }
