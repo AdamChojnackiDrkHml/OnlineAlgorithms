@@ -26,7 +26,7 @@ func main() {
 	noOfRes := 0
 
 	if solverConf[2] == 0 {
-		noOfRes = 3
+		noOfRes = 5
 	} else {
 		noOfRes = 1
 	}
