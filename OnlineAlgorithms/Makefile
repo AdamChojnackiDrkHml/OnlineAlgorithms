@@ -1,3 +1,5 @@
+.PHONY: build basic
+
 all: build basic
 
 build:
