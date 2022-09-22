@@ -28,7 +28,7 @@ func CreateSolver(conf [4]int) []GenericSolver {
 	}
 	for {
 		gS = append(gS, initSolver(conf[1], control, debug, conf[0]))
-		if !all || control == 2 {
+		if !all || control == 4 {
 			break
 		}
 		control++

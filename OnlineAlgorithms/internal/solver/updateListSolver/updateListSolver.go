@@ -1,6 +1,9 @@
 package updatelistsolver
 
-import "fmt"
+import (
+	"OnlineAlgorithms/internal/utils"
+	"fmt"
+)
 
 type UpdateListAlg int
 
@@ -9,6 +12,7 @@ const (
 	TRANS
 	FQ
 	BIT
+	TS
 )
 
 func (e UpdateListAlg) String() string {
@@ -21,6 +25,8 @@ func (e UpdateListAlg) String() string {
 		return "FQ"
 	case BIT:
 		return "BIT"
+	case TS:
+		return "TS"
 	default:
 		return "NULL"
 	}
@@ -63,6 +69,14 @@ func (uLS *UpdateListSolver) createSolvingAlg(alg int, debug bool) {
 	case BIT:
 		{
 			uLS.alg = BITAlg_Create(uLS.size, debug)
+			utils.DebugPrint("DUPA BIT\n", debug)
+			break
+		}
+	case TS:
+		{
+			uLS.alg = TSAlg_Create(uLS.size, debug)
+			utils.DebugPrint("DUPA TS\n", debug)
+
 			break
 		}
 	}
