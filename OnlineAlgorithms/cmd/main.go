@@ -3,9 +3,12 @@ package main
 import (
 	dataGenerator "OnlineAlgorithms/internal/dataGenerator"
 	"OnlineAlgorithms/internal/solver"
+	pagingsolver "OnlineAlgorithms/internal/solver/pagingSolver"
+	updatelistsolver "OnlineAlgorithms/internal/solver/updateListSolver"
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -30,32 +33,55 @@ func main() {
 	} else {
 		noOfRes = 1
 	}
+	resName := "data/res/" + filepath.Base(os.Args[1])
+	fmt.Println(resName)
+	f, err2 := os.OpenFile(resName, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
+	if err2 != nil {
+		exitWithError(err.Error())
+	}
+	defer f.Close()
 
-	res := make([]float64, noOfRes)
-	names := make([]string, noOfRes)
+	header := createHeader(solverConf, genConf)
+	fmt.Fprint(f, header)
+
 	var name string
 	var score int
-	for iteration := 0; iteration < noOfIterations; iteration++ {
-		pSS := solver.CreateSolver(solverConf)
-		dG := dataGenerator.CreateDataGenerator(genConf, floatValue)
+	for i := 0; i < 10; i++ {
+		ress := make([]int, noOfRes)
+		names := make([]string, noOfRes)
+		for iteration := 0; iteration < noOfIterations; iteration++ {
+			pSS := solver.CreateSolver(solverConf)
+			dG := dataGenerator.CreateDataGenerator(genConf, floatValue)
 
-		for i := 0; i < noOfReq; i++ {
-			for _, pS := range pSS {
-				pS.Serve(dG.GetRequest())
+			for i := 0; i < noOfReq; i++ {
+				for _, pS := range pSS {
+					pS.Serve(dG.GetRequest())
+				}
 			}
-		}
 
-		for i, pS := range pSS {
-			name, score = pS.Raport()
-			names[i] = name
-			res[i] += float64(score) / float64(noOfIterations)
-		}
+			for i, pS := range pSS {
+				name, score = pS.Raport()
+				names[i] = name
+				ress[i] += int(float64(score) / float64(noOfIterations))
+			}
 
+		}
+		fmt.Fprint(f, noOfReq)
+		fmt.Fprint(f, " ")
+		for _, res := range ress {
+			fmt.Fprint(f, res)
+			fmt.Fprint(f, " ")
+		}
+		if i < 9 {
+			fmt.Fprintln(f)
+		}
+		fmt.Println("aa")
+		noOfReq += 500
 	}
 
-	for i, n := range names {
-		fmt.Println(n, " - ", res[i])
-	}
+	// for i, n := range names {
+	// 	fmt.Println(n, " - ", res[i])
+	// }
 
 }
 
@@ -95,4 +121,72 @@ func parseConfig(config *os.File) ([4]int, [3]int, float64, int, int) {
 
 	return solverConfs, generatorConfs, floatValue, confInts[7], confInts[8]
 
+}
+
+func createHeader(solverConf [4]int, genConf [3]int) string {
+	header := ""
+
+	if solverConf[0] == 0 {
+		header += "PAGING"
+	} else {
+		header += "UPDATE_LIST"
+	}
+
+	header += "\n"
+
+	numOfAlgs := 0
+
+	if solverConf[2] == 0 {
+		if solverConf[1] == 0 {
+			header += "3"
+			numOfAlgs = 3
+		} else {
+			header += "5"
+			numOfAlgs = 5
+		}
+	} else {
+		header += "1"
+		numOfAlgs = 1
+	}
+
+	header += "\n"
+	fmt.Println(numOfAlgs)
+	if numOfAlgs == 1 {
+		if solverConf[0] == 0 {
+			header += fmt.Sprintf("%s", pagingsolver.PagingAlg(solverConf[2]))
+		} else {
+			header += fmt.Sprintf("%s", updatelistsolver.UpdateListAlg(solverConf[2]))
+		}
+	} else {
+		if solverConf[0] == 0 {
+			for i := 0; i < numOfAlgs; i++ {
+				header += fmt.Sprintf("%s ", pagingsolver.PagingAlg(i))
+			}
+		} else {
+			for i := 0; i < numOfAlgs; i++ {
+				header += fmt.Sprintf("%s ", updatelistsolver.UpdateListAlg(i))
+			}
+		}
+	}
+
+	header += "\n"
+
+	header += fmt.Sprintf("%d", genConf[0])
+	header += "\n"
+
+	if genConf[0] == 0 {
+		for i := 0; i < 3; i++ {
+			header += fmt.Sprintf("%s ", dataGenerator.GeneratorTypeEnum(i))
+		}
+	} else {
+		header += fmt.Sprintf("%s", dataGenerator.GeneratorTypeEnum(genConf[0]))
+	}
+
+	header += "\n"
+
+	header += fmt.Sprintf("%d ", solverConf[1])
+
+	header += "\n"
+
+	return header
 }

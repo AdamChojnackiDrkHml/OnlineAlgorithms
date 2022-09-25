@@ -9,10 +9,26 @@ import (
 type GeneratorTypeEnum int
 
 const (
-	Uni GeneratorTypeEnum = iota
+	All GeneratorTypeEnum = iota
+	Uni
 	Geo
 	Pois
 )
+
+func (e GeneratorTypeEnum) String() string {
+	switch e {
+	case All:
+		return "All"
+	case Uni:
+		return "Uni"
+	case Geo:
+		return "Geo"
+	case Pois:
+		return "Pois"
+	default:
+		return "NULL"
+	}
+}
 
 type GenericDataGenerator interface {
 	GetRequest() int
