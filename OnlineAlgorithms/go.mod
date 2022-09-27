@@ -1,6 +1,6 @@
 module OnlineAlgorithms
 
-go 1.18
+go 1.19
 
 require (
 	github.com/r0fls/gostats v0.0.0-20180711082619-e793b1fda35c
