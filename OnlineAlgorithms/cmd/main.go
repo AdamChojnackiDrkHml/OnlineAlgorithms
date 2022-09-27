@@ -82,10 +82,6 @@ func main() {
 		noOfReq += 500
 	}
 
-	// for i, n := range names {
-	// 	fmt.Println(n, " - ", res[i])
-	// }
-
 }
 
 func exitWithError(err string) {
@@ -177,7 +173,7 @@ func createHeader(solverConf [4]int, genConf [3]int) string {
 	header += "\n"
 
 	if genConf[0] == 0 {
-		for i := 0; i < 3; i++ {
+		for i := 0; i < 4; i++ {
 			header += fmt.Sprintf("%s ", dataGenerator.GeneratorTypeEnum(i))
 		}
 	} else {

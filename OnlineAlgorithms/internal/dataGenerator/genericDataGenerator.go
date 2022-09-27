@@ -2,6 +2,7 @@ package datagenerator_test
 
 import (
 	geodistgenerator "OnlineAlgorithms/internal/dataGenerator/geoDistGenerator"
+	hrmdistgenerator "OnlineAlgorithms/internal/dataGenerator/hrmDistGenerator"
 	poisdistgenerator "OnlineAlgorithms/internal/dataGenerator/poisDistGenerator"
 	unidistgenerator "OnlineAlgorithms/internal/dataGenerator/uniDistGenerator"
 )
@@ -13,6 +14,7 @@ const (
 	Uni
 	Geo
 	Pois
+	Hrm
 )
 
 func (e GeneratorTypeEnum) String() string {
@@ -25,6 +27,8 @@ func (e GeneratorTypeEnum) String() string {
 		return "Geo"
 	case Pois:
 		return "Pois"
+	case Hrm:
+		return "Hrm"
 	default:
 		return "NULL"
 	}
@@ -36,7 +40,6 @@ type GenericDataGenerator interface {
 
 func CreateDataGenerator(conf [3]int, controlFloat float64) GenericDataGenerator {
 	var gD GenericDataGenerator
-
 	switch GeneratorTypeEnum(conf[0]) {
 	case Uni:
 		gD = unidistgenerator.Create(conf[1], conf[2])
@@ -46,6 +49,9 @@ func CreateDataGenerator(conf [3]int, controlFloat float64) GenericDataGenerator
 
 	case Pois:
 		gD = poisdistgenerator.Create(controlFloat, conf[2])
+
+	case Hrm:
+		gD = hrmdistgenerator.Create(conf[1], conf[2])
 	}
 
 	return gD
