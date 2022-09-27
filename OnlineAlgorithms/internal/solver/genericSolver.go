@@ -17,7 +17,7 @@ type GenericSolver interface {
 	Raport() (string, int)
 }
 
-func CreateSolver(conf [4]int) []GenericSolver {
+func CreateSolver(conf [4]int, noOfAlgs int) []GenericSolver {
 	var gS []GenericSolver
 	debug := conf[3] == 1
 	control := conf[2] - 1
@@ -28,7 +28,7 @@ func CreateSolver(conf [4]int) []GenericSolver {
 	}
 	for {
 		gS = append(gS, initSolver(conf[1], control, debug, conf[0]))
-		if !all || control == 4 {
+		if !all || control == noOfAlgs-1 {
 			break
 		}
 		control++

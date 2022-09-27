@@ -26,12 +26,15 @@ func main() {
 	defer file.Close()
 
 	solverConf, genConf, floatValue, noOfReq, noOfIterations := parseConfig(file)
-	noOfRes := 0
+	noOfAlgs := 1
 
 	if solverConf[2] == 0 {
-		noOfRes = 5
-	} else {
-		noOfRes = 1
+		if solverConf[0] == 0 {
+			noOfAlgs = 3
+		}
+		if solverConf[0] == 1 {
+			noOfAlgs = 5
+		}
 	}
 	resName := "data/res/" + filepath.Base(os.Args[1])
 	fmt.Println(resName)
@@ -47,10 +50,10 @@ func main() {
 	var name string
 	var score int
 	for i := 0; i < 10; i++ {
-		ress := make([]int, noOfRes)
-		names := make([]string, noOfRes)
+		ress := make([]int, noOfAlgs)
+		names := make([]string, noOfAlgs)
 		for iteration := 0; iteration < noOfIterations; iteration++ {
-			pSS := solver.CreateSolver(solverConf)
+			pSS := solver.CreateSolver(solverConf, noOfAlgs)
 			dG := dataGenerator.CreateDataGenerator(genConf, floatValue)
 
 			for i := 0; i < noOfReq; i++ {
@@ -135,9 +138,8 @@ func createHeader(solverConf [4]int, genConf [3]int) string {
 	header += "\n"
 
 	numOfAlgs := 0
-
 	if solverConf[2] == 0 {
-		if solverConf[1] == 0 {
+		if solverConf[0] == 0 {
 			header += "3"
 			numOfAlgs = 3
 		} else {
