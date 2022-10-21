@@ -40,7 +40,7 @@ type GenericDataGenerator interface {
 
 func CreateDataGenerator(conf [3]int, controlFloat float64) GenericDataGenerator {
 	var gD GenericDataGenerator
-	switch GeneratorTypeEnum(conf[0]) {
+	switch GeneratorTypeEnum(conf[0] + 1) {
 	case Uni:
 		gD = unidistgenerator.Create(conf[1], conf[2])
 
