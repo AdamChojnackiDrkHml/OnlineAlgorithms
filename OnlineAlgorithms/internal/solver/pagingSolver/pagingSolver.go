@@ -8,7 +8,7 @@ const (
 	LRU PagingAlg = iota
 	FIFO
 	LFU
-	PD
+	MARK
 )
 
 func (e PagingAlg) String() string {
@@ -19,6 +19,8 @@ func (e PagingAlg) String() string {
 		return "FIFO"
 	case LFU:
 		return "LFU"
+	case MARK:
+		return "MARK"
 	default:
 		return "NULL"
 	}
@@ -60,8 +62,11 @@ func (ps *PagingSolver) createSolvingAlg(alg int, debug bool) {
 			ps.alg = LFUAlg_Create(ps.size, debug)
 			break
 		}
-	case PD:
-		break
+	case MARK:
+		{
+			ps.alg = MARKAlg_Create(ps.size, debug)
+			break
+		}
 	}
 }
 
