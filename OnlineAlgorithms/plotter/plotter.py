@@ -8,6 +8,8 @@ from itertools import cycle
 with open(sys.argv[1], 'r') as f:
     lines = f.read().splitlines()
 
+lines.pop() #remove last \n
+
 problem = lines.pop(0)
 num_of_algs = int(lines.pop(0))
 algs = lines.pop(0).strip().split(" ")
