@@ -7,3 +7,5 @@ require (
 	golang.org/x/exp v0.0.0-20221019170559-20944726eadf
 	gonum.org/v1/gonum v0.11.0
 )
+
+require gopkg.in/yaml.v3 v3.0.1 // indirect

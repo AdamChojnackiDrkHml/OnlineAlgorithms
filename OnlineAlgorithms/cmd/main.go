@@ -5,6 +5,7 @@ import (
 	"OnlineAlgorithms/internal/solver"
 	pagingsolver "OnlineAlgorithms/internal/solver/pagingSolver"
 	updatelistsolver "OnlineAlgorithms/internal/solver/updateListSolver"
+	"OnlineAlgorithms/internal/utils"
 	"bufio"
 	"fmt"
 	"os"
@@ -16,7 +17,13 @@ import (
 )
 
 func main() {
+	conf, err := utils.ParseYaml("data/configs/generic_structure.yml")
 
+	if err != nil {
+		exitWithError(err.Error())
+	}
+
+	fmt.Println(conf)
 	if ind := slices.Index(os.Args, "-f"); ind != -1 {
 		file, err := os.OpenFile(os.Args[ind+1], os.O_RDONLY, 0)
 
