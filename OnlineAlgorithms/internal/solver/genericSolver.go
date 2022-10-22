@@ -3,13 +3,7 @@ package solver
 import (
 	pagingsolver "OnlineAlgorithms/internal/solver/pagingSolver"
 	updatelistsolver "OnlineAlgorithms/internal/solver/updateListSolver"
-)
-
-type SolverTypeEnum int
-
-const (
-	Paging SolverTypeEnum = iota
-	UpdateList
+	"OnlineAlgorithms/internal/utils"
 )
 
 type GenericSolver interface {
@@ -17,17 +11,17 @@ type GenericSolver interface {
 	Raport() (string, int)
 }
 
-func CreateSolver(conf [4]int, noOfAlgs int) []GenericSolver {
+func CreateSolver(solverConf utils.SolverConfigS, noOfAlgs int) []GenericSolver {
 	var gS []GenericSolver
-	debug := conf[3] == 1
-	control := conf[2] - 1
+
+	control := solverConf.Alg - 1
 	all := false
-	if conf[2] == 0 {
+	if solverConf.Alg == 0 {
 		control = 0
 		all = true
 	}
 	for {
-		gS = append(gS, initSolver(conf[1], control, debug, conf[0]))
+		gS = append(gS, initSolver(solverConf.Size, control, solverConf.Debug, solverConf.ProblemType))
 		if !all || control == noOfAlgs-1 {
 			break
 		}
@@ -37,11 +31,11 @@ func CreateSolver(conf [4]int, noOfAlgs int) []GenericSolver {
 }
 
 func initSolver(size, alg int, debug bool, solver int) GenericSolver {
-	switch SolverTypeEnum(solver) {
-	case Paging:
+	switch utils.SolverTypeEnum(solver) {
+	case utils.Paging:
 		return pagingsolver.PagingSolver_Create(size, alg, debug)
 
-	case UpdateList:
+	case utils.UpdateList:
 		return updatelistsolver.UpdateListSolver_Create(size, alg, debug)
 	default:
 		return nil

@@ -5,42 +5,15 @@ import (
 	"fmt"
 )
 
-type UpdateListAlg int
-
-const (
-	MTF UpdateListAlg = iota
-	TRANS
-	FQ
-	BIT
-	TS
-)
-
-func (e UpdateListAlg) String() string {
-	switch e {
-	case MTF:
-		return "MTF"
-	case TRANS:
-		return "TRANS"
-	case FQ:
-		return "FQ"
-	case BIT:
-		return "BIT"
-	case TS:
-		return "TS"
-	default:
-		return "NULL"
-	}
-}
-
 type UpdateListSolver struct {
 	size int
 	cost int
 	alg  UpdateListSolvingAlg
-	algE UpdateListAlg
+	algE utils.UpdateListAlg
 }
 
 func UpdateListSolver_Create(size int, alg int, debug bool) *UpdateListSolver {
-	uLS := &UpdateListSolver{size: size, cost: 0, algE: UpdateListAlg(alg)}
+	uLS := &UpdateListSolver{size: size, cost: 0, algE: utils.UpdateListAlg(alg)}
 	uLS.createSolvingAlg(alg, debug)
 	return uLS
 }
@@ -50,29 +23,29 @@ func (uLS *UpdateListSolver) Serve(request int) {
 }
 
 func (uLS *UpdateListSolver) createSolvingAlg(alg int, debug bool) {
-	switch UpdateListAlg(alg) {
-	case MTF:
+	switch utils.UpdateListAlg(alg) {
+	case utils.MTF:
 		{
 			uLS.alg = MTFAlg_Create(uLS.size, debug)
 			break
 		}
-	case TRANS:
+	case utils.TRANS:
 		{
 			uLS.alg = TransAlg_Create(uLS.size, debug)
 			break
 		}
-	case FQ:
+	case utils.FQ:
 		{
 			uLS.alg = FQAlg_Create(uLS.size, debug)
 			break
 		}
-	case BIT:
+	case utils.BIT:
 		{
 			uLS.alg = BITAlg_Create(uLS.size, debug)
 			utils.DebugPrint("DUPA BIT\n", debug)
 			break
 		}
-	case TS:
+	case utils.TS:
 		{
 			uLS.alg = TSAlg_Create(uLS.size, debug)
 			utils.DebugPrint("DUPA TS\n", debug)

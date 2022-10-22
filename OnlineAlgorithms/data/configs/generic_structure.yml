@@ -4,8 +4,9 @@ test:
     # growth specifies by how much noOfReq will be increased each iteration
     generalConfig:
         noOfReq: 50
-        iterations: 100
+        iterations: 10
         growth: 500
+        repeats: 100
 
     # problemType {Paging, UpdateList}
     # size spiecifies size of problem memory 

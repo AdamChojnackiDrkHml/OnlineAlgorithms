@@ -6,59 +6,30 @@ import (
 	hrmdistgenerator "OnlineAlgorithms/internal/dataGenerator/hrmDistGenerator"
 	poisdistgenerator "OnlineAlgorithms/internal/dataGenerator/poisDistGenerator"
 	unidistgenerator "OnlineAlgorithms/internal/dataGenerator/uniDistGenerator"
+	"OnlineAlgorithms/internal/utils"
 )
-
-type GeneratorTypeEnum int
-
-const (
-	All GeneratorTypeEnum = iota
-	Uni
-	Geo
-	Pois
-	Hrm
-	Dhr
-)
-
-func (e GeneratorTypeEnum) String() string {
-	switch e {
-	case All:
-		return "All"
-	case Uni:
-		return "Uni"
-	case Geo:
-		return "Geo"
-	case Pois:
-		return "Pois"
-	case Hrm:
-		return "Hrm"
-	case Dhr:
-		return "Dhr"
-	default:
-		return "NULL"
-	}
-}
 
 type GenericDataGenerator interface {
 	GetRequest() int
 }
 
-func CreateDataGenerator(conf [3]int, controlFloat float64) GenericDataGenerator {
+func CreateDataGenerator(generConf utils.GeneratorConfigS) GenericDataGenerator {
 	var gD GenericDataGenerator
-	switch GeneratorTypeEnum(conf[0] + 1) {
-	case Uni:
-		gD = unidistgenerator.Create(conf[1], conf[2])
+	switch utils.GeneratorTypeEnum(generConf.DistributionType + 1) {
+	case utils.Uni:
+		gD = unidistgenerator.Create(generConf.Minimum, generConf.Maximum)
 
-	case Geo:
-		gD = geodistgenerator.Create(controlFloat, conf[2])
+	case utils.Geo:
+		gD = geodistgenerator.Create(generConf.Fvalue, generConf.Maximum)
 
-	case Pois:
-		gD = poisdistgenerator.Create(controlFloat, conf[2])
+	case utils.Pois:
+		gD = poisdistgenerator.Create(generConf.Fvalue, generConf.Maximum)
 
-	case Hrm:
-		gD = hrmdistgenerator.Create(conf[1], conf[2])
+	case utils.Hrm:
+		gD = hrmdistgenerator.Create(generConf.Minimum, generConf.Maximum)
 
-	case Dhr:
-		gD = dhrdistgenerator.Create(conf[1], conf[2])
+	case utils.Dhr:
+		gD = dhrdistgenerator.Create(generConf.Minimum, generConf.Maximum)
 	}
 
 	return gD
