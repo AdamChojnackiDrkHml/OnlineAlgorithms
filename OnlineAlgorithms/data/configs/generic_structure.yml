@@ -4,9 +4,9 @@ test:
     # growth specifies by how much noOfReq will be increased each iteration
     generalConfig:
         noOfReq: 50
-        iterations: 10
+        iterations: 1
         growth: 500
-        repeats: 100
+        repeats: 1
 
     # problemType {Paging, UpdateList}
     # size spiecifies size of problem memory 
@@ -17,7 +17,7 @@ test:
     solverConfig:
         problemType: 0
         size: 10
-        alg: 0
+        alg: 1
         debug: "yes"
 
     # distributionType {All, Uni,Geo, Pois, Hrm, Dhr}
@@ -25,7 +25,7 @@ test:
     # fvalue specifies configuration for float parameter based distributions (Geo, Pois)
     # maximum specifies the largest value that can be generated (larger one will be striped to it)
     generatorConfig:
-        distributionType: 1
+        distributionType: 0
         minimum: 0
         fvalue: 0.0
         maximum: 10

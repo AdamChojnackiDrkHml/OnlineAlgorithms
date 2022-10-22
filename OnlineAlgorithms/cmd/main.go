@@ -12,14 +12,9 @@ import (
 )
 
 func main() {
-	conf, err := utils.ParseYaml("data/configs/generic_structure.yml")
 
-	if err != nil {
-		utils.ExitWithError(err.Error())
-	}
-
-	fmt.Println(conf)
 	if ind := slices.Index(os.Args, "-f"); ind != -1 {
+		fmt.Println("aa")
 		config, err := utils.ParseYaml(os.Args[ind+1])
 		if err != nil {
 			utils.ExitWithError(err.Error())
@@ -28,10 +23,10 @@ func main() {
 	} else if ind := slices.Index(os.Args, "-p"); ind != -1 {
 		runTestForCmdArguments(utils.ParseCmd(os.Args[ind+1:]))
 	} else { //hand debug case
-		genConf := utils.GeneralConfigS{20, 1, 0, 1}
-		solverConf := utils.SolverConfigS{0, 5, 4, true}
-		generatorConf := utils.GeneratorConfigS{0, 0, 0.0, 15}
-		runTestForCmdArguments(&utils.Config{TestConfig: utils.TestConfigS{genConf, solverConf, generatorConf}})
+		genConf := utils.GeneralConfigS{NoOfReq: 50, Iterations: 1, Growth: 0, Repeats: 1}
+		solverConf := utils.SolverConfigS{ProblemType: 0, Size: 10, Alg: 1, Debug: true}
+		generatorConf := utils.GeneratorConfigS{DistributionType: 0, Minimum: 0, Fvalue: 0.0, Maximum: 10}
+		runTestForCmdArguments(&utils.Config{TestConfig: utils.TestConfigS{GeneralConfig: genConf, SolverConfig: solverConf, GeneratorConfig: generatorConf}})
 	}
 
 }
@@ -157,7 +152,7 @@ func runTestWithParametersFromFile(conf *utils.Config) {
 	header := createHeader(&solvConf, &generConf)
 
 	fmt.Fprint(f, header)
-	noOfAlgs := 0
+	noOfAlgs := 1
 	if solvConf.Alg == 0 {
 		if solvConf.ProblemType == 0 {
 			noOfAlgs = 4
