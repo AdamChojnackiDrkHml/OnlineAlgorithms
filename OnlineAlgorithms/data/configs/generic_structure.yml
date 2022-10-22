@@ -1,0 +1,30 @@
+test:
+    # noOfReq specifies how many requests will be generated each round
+    # iterations specifies number of test iterations
+    # growth specifies by how much noOfReq will be increased each iteration
+    generalConfig:
+        noOfReq: 50
+        iterations: 100
+        growth: 500
+
+    # problemType {Paging, UpdateList}
+    # size spiecifies size of problem memory 
+    # alg specifies the algorithm that will be used to manage problem
+    # for Paging {ALL, LRU, FIFO, LFU, MARK1, MARK2, RM}
+    # for UpdateList {ALL, MTF, TRANS, FQ, BIT, TS, TSBIT}    
+    # debug enables debug prints
+    solverConfig:
+        problemType: 0
+        size: 10
+        alg: 0
+        debug: "yes"
+
+    # distributionType {All, Uni,Geo, Pois, Hrm, Dhr}
+    # minimum generaly specifies minimum for Uni
+    # fvalue specifies configuration for float parameter based distributions (Geo, Pois)
+    # maximum specifies the largest value that can be generated (larger one will be striped to it)
+    generatorConfig:
+        distributionType: 1
+        minimum: 0
+        fvalue: 0.0
+        maximum: 10
