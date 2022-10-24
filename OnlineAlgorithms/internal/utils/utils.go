@@ -141,6 +141,7 @@ const (
 	FIFO
 	LFU
 	MARK
+	MARK2
 )
 
 func (e PagingAlg) String() string {
@@ -153,6 +154,8 @@ func (e PagingAlg) String() string {
 		return "LFU"
 	case MARK:
 		return "MARK"
+	case MARK2:
+		return "MARK2"
 	default:
 		return "NULL"
 	}
