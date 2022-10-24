@@ -18,17 +18,18 @@ func MARKAlg_Create(size int, debug bool) *MARKAlg {
 
 func (alg *MARKAlg) UpdateMemory(request int) bool {
 	utils.DebugPrint((fmt.Sprint("looking for ", request, "\t")), alg.debug)
-	isFound := alg.find(request)
+	index, isFound := alg.find(request)
 	utils.DebugPrint(fmt.Sprint(alg.memory, "\t"), alg.debug)
 	utils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
 
-	alg.checkAllMarks()
 	if !isFound {
+
 		utils.DebugPrint(" ## FAULT ", alg.debug)
 		utils.DebugPrint(fmt.Sprint(" HAVE TO INSERT ", request, " ## "), alg.debug)
 		if len(alg.memory) >= alg.size {
-			for i, n := range alg.marks {
-				if !n {
+			alg.checkAllMarks()
+			for i := len(alg.memory) - 1; i >= 0; i++ {
+				if !alg.marks[i] {
 					utils.DebugPrint(fmt.Sprint(" ## POPPING ", alg.memory[i], " ## "), alg.debug)
 					alg.memory = append(alg.memory[:i], alg.memory[i+1:]...)
 					alg.marks = append(alg.marks[:i], alg.marks[i+1:]...)
@@ -43,6 +44,10 @@ func (alg *MARKAlg) UpdateMemory(request int) bool {
 		utils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
 
 	} else {
+		alg.memory = append(alg.memory[:index], alg.memory[index+1:]...)
+		alg.marks = append(alg.marks[:index], alg.marks[index+1:]...)
+		alg.memory = append([]int{request}, alg.memory...)
+		alg.marks = append([]bool{true}, alg.marks...)
 		utils.DebugPrint(fmt.Sprint(" ## FOUND ", request, " REQUEST SERVED ## =>> ", alg.memory, "\t"), alg.debug)
 		utils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
 
@@ -51,14 +56,14 @@ func (alg *MARKAlg) UpdateMemory(request int) bool {
 	return isFound
 }
 
-func (alg *MARKAlg) find(request int) bool {
+func (alg *MARKAlg) find(request int) (int, bool) {
 	for i, n := range alg.memory {
 		if n == request {
 			alg.marks[i] = true
-			return true
+			return i, true
 		}
 	}
-	return false
+	return -1, false
 }
 
 func (alg *MARKAlg) checkAllMarks() {
