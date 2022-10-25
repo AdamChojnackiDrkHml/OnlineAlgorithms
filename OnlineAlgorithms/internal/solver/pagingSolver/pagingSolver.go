@@ -51,6 +51,10 @@ func (ps *PagingSolver) createSolvingAlg(alg int, debug bool) {
 			ps.alg = MARK2Alg_Create(ps.size, debug)
 			break
 		}
+	case utils.RM:
+		{
+			ps.alg = RMAlg_Create(ps.size, debug)
+		}
 	}
 }
 
