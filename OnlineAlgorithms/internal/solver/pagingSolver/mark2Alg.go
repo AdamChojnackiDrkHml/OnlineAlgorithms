@@ -38,9 +38,9 @@ func (alg *MARK2Alg) UpdateMemory(request int) bool {
 			}
 
 			utils.DebugPrint(fmt.Sprint(" ## POPPING ", alg.memory[evictIndex], " ## "), alg.debug)
-			alg.memory = append(alg.memory[:evictIndex], alg.memory[evictIndex:]...)
-			alg.marks = append(alg.marks[:evictIndex], alg.marks[evictIndex:]...)
-			alg.fq = append(alg.fq[:evictIndex], alg.fq[evictIndex:]...)
+			alg.memory = append(alg.memory[:evictIndex], alg.memory[evictIndex+1:]...)
+			alg.marks = append(alg.marks[:evictIndex], alg.marks[evictIndex+1:]...)
+			alg.fq = append(alg.fq[:evictIndex], alg.fq[evictIndex+1:]...)
 
 		}
 		alg.memory = append([]int{request}, alg.memory...)
