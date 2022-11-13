@@ -115,7 +115,11 @@ func runTestForCmdArguments(conf *utils.Config) {
 	genConf := conf.TestConfig.GeneralConfig
 	for iteration := 0; iteration < genConf.Iterations; iteration++ {
 		for repeat := 0; repeat < genConf.Repeats; repeat++ {
-			pSS := solver.CreateSolver(solvConf, 1)
+			pSS, err := solver.CreateSolver(solvConf)
+			if err != nil {
+				utils.ExitWithError(err.Error())
+			}
+
 			dG := dataGenerator.CreateDataGenerator(generConf)
 
 			for request := 0; request < genConf.NoOfReq; request++ {
@@ -167,7 +171,11 @@ func runTestWithParametersFromFile(conf *utils.Config) {
 		ress := make([]int, noOfAlgs)
 		names := make([]string, noOfAlgs)
 		for repeat := 0; repeat < genConf.Repeats; repeat++ {
-			pSS := solver.CreateSolver(solvConf, noOfAlgs)
+			pSS, err := solver.CreateSolver(solvConf)
+			if err != nil {
+				utils.ExitWithError(err.Error())
+			}
+
 			dG := dataGenerator.CreateDataGenerator(generConf)
 
 			for request := 0; request < genConf.NoOfReq; request++ {
