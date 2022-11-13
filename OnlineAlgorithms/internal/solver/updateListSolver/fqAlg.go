@@ -62,11 +62,11 @@ func (alg *FQAlg) UpdateList(request int) int {
 	return alg.size
 }
 
-func (alg *FQAlg) unpackMemory() [][2]int {
-	mem := make([][2]int, 0)
+func (alg *FQAlg) unpackMemory() [][]int {
+	mem := make([][]int, 0)
 
 	for _, n := range alg.memory {
-		mem = append(mem, [2]int{n.mem, n.freqCount})
+		mem = append(mem, []int{n.mem, n.freqCount})
 	}
 
 	return mem
