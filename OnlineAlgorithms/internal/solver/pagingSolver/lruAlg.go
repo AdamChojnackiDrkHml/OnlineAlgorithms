@@ -87,6 +87,7 @@ func (alg *LRUAlg) find(request int) bool {
 	ret := false
 	for _, n := range alg.memory {
 		if n.mem == request {
+			n.lastReq = 0
 			ret = true
 			continue
 		}
@@ -95,11 +96,11 @@ func (alg *LRUAlg) find(request int) bool {
 	return ret
 }
 
-func (alg *LRUAlg) unpackMemory() [][2]int {
-	mem := make([][2]int, 0)
+func (alg *LRUAlg) unpackMemory() [][]int {
+	mem := make([][]int, 0)
 
 	for _, n := range alg.memory {
-		mem = append(mem, [2]int{n.mem, n.lastReq})
+		mem = append(mem, []int{n.mem, n.lastReq})
 	}
 
 	return mem

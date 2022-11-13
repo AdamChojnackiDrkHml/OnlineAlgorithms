@@ -94,11 +94,11 @@ func (alg *LFUAlg) find(request int) bool {
 	return false
 }
 
-func (alg *LFUAlg) unpackMemory() [][2]int {
-	mem := make([][2]int, 0)
+func (alg *LFUAlg) unpackMemory() [][]int {
+	mem := make([][]int, 0)
 
 	for _, n := range alg.memory {
-		mem = append(mem, [2]int{n.mem, n.reqCnt})
+		mem = append(mem, []int{n.mem, n.reqCnt})
 	}
 
 	return mem
