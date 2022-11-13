@@ -30,7 +30,7 @@ func TSAlg_Create(size int, debug bool) *TSAlg {
 func (alg *TSAlg) UpdateList(request int) int {
 	utils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
 	utils.DebugPrint(fmt.Sprint(" LOOKING FOR ", request), alg.debug)
-	control := false
+
 	for i, n := range alg.memory {
 		if n.mem == request {
 			utils.DebugPrint(fmt.Sprint(" FOUND ", n.mem, " AT INDEX ", i, " LOOKING FOR BEST POSITION -"), alg.debug)
@@ -38,26 +38,23 @@ func (alg *TSAlg) UpdateList(request int) int {
 				n.timestamps[j]++
 			}
 			for j := 0; j < i; j++ {
-				if alg.memory[j].timestamps[i] <= 1 {
+				if alg.memory[j].timestamps[request] <= 1 {
 					//TODO
 					utils.DebugPrint(fmt.Sprint(" BEST POSITION AT INDEX ", j, " WITH TIMESTAMP ", alg.memory[j].timestamps[i], " =>"), alg.debug)
 					temp := alg.memory[i]
 					alg.memory = append(alg.memory[:i], alg.memory[i+1:]...)
 					alg.memory = append(alg.memory[:j], append([]*TSMem{temp}, alg.memory[j:]...)...)
 
-					control = true
 					break
 				}
 			}
 			for k := range alg.memory {
 				alg.memory[k].timestamps[n.mem] = 0
 			}
-			if control {
-				utils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
-				utils.DebugPrint(fmt.Sprintln(), alg.debug)
-				return i
-			}
 
+			utils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
+			utils.DebugPrint(fmt.Sprintln(), alg.debug)
+			return i
 		}
 	}
 	utils.DebugPrint(fmt.Sprintln(), alg.debug)
