@@ -5,6 +5,10 @@ import (
 	"fmt"
 )
 
+type PagingSolvingAlg interface {
+	UpdateMemory(request int) bool
+}
+
 type PagingSolver struct {
 	size   int
 	faults int
