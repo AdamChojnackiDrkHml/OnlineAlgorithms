@@ -8,6 +8,22 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+const (
+	NUM_OF_PAGING_ALGS     = 6
+	NUM_OF_UPDATELIST_ALGS = 5
+)
+
+func GetMaxNumOfAlgs(solver SolverTypeEnum) int {
+	switch solver {
+	case Paging:
+		return NUM_OF_PAGING_ALGS
+	case UpdateList:
+		return NUM_OF_UPDATELIST_ALGS
+	default:
+		return NUM_OF_PAGING_ALGS
+	}
+}
+
 func DebugPrint(s string, p bool) {
 	if p {
 		fmt.Print(s)
@@ -30,6 +46,7 @@ type SolverConfigS struct {
 	Size        int  `yaml:"size"`
 	Alg         int  `yaml:"alg"`
 	Debug       bool `yaml:"debug"`
+	DoAll       bool `yaml:"doAll"`
 }
 type GeneratorConfigS struct {
 	DistributionType int     `yaml:"distributionType"`
@@ -77,7 +94,7 @@ func ParseCmd(confStrings []string) *Config {
 	confInts := make([]int, 0)
 	floatValue := 0.0
 	for i, str := range confStrings {
-		if i == 5 && confInts[4] != 0 {
+		if i == 5 && confInts[5] != 0 {
 			confF, errF := strconv.ParseFloat(str, 64)
 			if errF != nil {
 				ExitWithError(fmt.Sprint("ERR 1 In config file argument", i, " = ", str, " is invalid"))
@@ -93,8 +110,8 @@ func ParseCmd(confStrings []string) *Config {
 		confInts = append(confInts, conf)
 	}
 	genConf := GeneralConfigS{confInts[7], confInts[8], confInts[9], confInts[10]}
-	solverConf := SolverConfigS{confInts[0], confInts[1], confInts[2], confInts[3] == 1}
-	generatorConf := GeneratorConfigS{confInts[4], confInts[5], floatValue, confInts[6]}
+	solverConf := SolverConfigS{confInts[0], confInts[1], confInts[2], confInts[3] == 1, confInts[4] == 1}
+	generatorConf := GeneratorConfigS{confInts[5], confInts[6], floatValue, confInts[7]}
 
 	return &Config{TestConfig: TestConfigS{genConf, solverConf, generatorConf}}
 

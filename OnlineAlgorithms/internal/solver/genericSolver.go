@@ -4,6 +4,7 @@ import (
 	pagingsolver "OnlineAlgorithms/internal/solver/pagingSolver"
 	updatelistsolver "OnlineAlgorithms/internal/solver/updateListSolver"
 	"OnlineAlgorithms/internal/utils"
+	"errors"
 )
 
 type GenericSolver interface {
@@ -11,23 +12,26 @@ type GenericSolver interface {
 	Raport() (string, int)
 }
 
-func CreateSolver(solverConf utils.SolverConfigS, noOfAlgs int) []GenericSolver {
+func CreateSolver(solverConf utils.SolverConfigS) ([]GenericSolver, error) {
+
+	if !validateConfigs(solverConf) {
+		return nil, errors.New("invalid algorith number for given solver")
+	}
+
 	var gS []GenericSolver
 
-	control := solverConf.Alg - 1
-	all := false
-	if solverConf.Alg == 0 {
-		control = 0
-		all = true
-	}
-	for {
-		gS = append(gS, initSolver(solverConf.Size, control, solverConf.Debug, solverConf.ProblemType))
-		if !all || control == noOfAlgs-1 {
-			break
+	if solverConf.DoAll {
+		noOfAlgs := utils.GetMaxNumOfAlgs(utils.SolverTypeEnum(solverConf.ProblemType))
+
+		for i := 0; i < noOfAlgs; i++ {
+			gS = append(gS, initSolver(solverConf.Size, i, solverConf.Debug, solverConf.ProblemType))
 		}
-		control++
+
+	} else {
+		gS = append(gS, initSolver(solverConf.Size, solverConf.Alg, solverConf.Debug, solverConf.ProblemType))
+
 	}
-	return gS
+	return gS, nil
 }
 
 func initSolver(size, alg int, debug bool, solver int) GenericSolver {
@@ -41,4 +45,16 @@ func initSolver(size, alg int, debug bool, solver int) GenericSolver {
 		return nil
 
 	}
+}
+
+func validateConfigs(solverConf utils.SolverConfigS) bool {
+	if utils.SolverTypeEnum(solverConf.ProblemType) == utils.Paging && (solverConf.Alg >= utils.NUM_OF_PAGING_ALGS) {
+		return false
+	}
+
+	if utils.SolverTypeEnum(solverConf.ProblemType) == utils.UpdateList && (solverConf.Alg >= utils.NUM_OF_UPDATELIST_ALGS) {
+		return false
+	}
+
+	return true
 }
