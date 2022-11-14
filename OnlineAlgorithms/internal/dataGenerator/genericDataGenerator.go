@@ -13,17 +13,32 @@ type GenericDataGenerator interface {
 	GetRequest() int
 }
 
-func CreateDataGenerator(generConf utils.GeneratorConfigS) GenericDataGenerator {
+func CreateDataGenerator(generConf utils.GeneratorConfigS) []GenericDataGenerator {
+	var generators []GenericDataGenerator
+
+	if generConf.DoAll {
+		for i := 0; i < utils.NUM_OF_DISTRIBUTIONS; i++ {
+			generators = append(generators, initGenerator(generConf, utils.GeneratorTypeEnum(i)))
+		}
+	} else {
+		generators = append(generators, initGenerator(generConf, generConf.DistributionType))
+	}
+
+	return generators
+}
+
+func initGenerator(generConf utils.GeneratorConfigS, generatorType utils.GeneratorTypeEnum) GenericDataGenerator {
 	var gD GenericDataGenerator
-	switch utils.GeneratorTypeEnum(generConf.DistributionType + 1) {
+
+	switch generatorType {
 	case utils.Uni:
 		gD = unidistgenerator.Create(generConf.Minimum, generConf.Maximum)
 
 	case utils.Geo:
-		gD = geodistgenerator.Create(generConf.Fvalue, generConf.Maximum)
+		gD = geodistgenerator.Create(generConf.FvalueGeo, generConf.Maximum)
 
 	case utils.Pois:
-		gD = poisdistgenerator.Create(generConf.Fvalue, generConf.Maximum)
+		gD = poisdistgenerator.Create(generConf.FvaluePoiss, generConf.Maximum)
 
 	case utils.Hrm:
 		gD = hrmdistgenerator.Create(generConf.Minimum, generConf.Maximum)
