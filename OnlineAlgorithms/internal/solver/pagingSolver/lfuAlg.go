@@ -66,6 +66,7 @@ func (pq *PriorityQueueLFU) update(item *LFUMemCell) {
 func (alg *LFUAlg) UpdateMemory(request int) bool {
 	isFound := alg.find(request)
 	utils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
+	utils.DebugPrint(fmt.Sprint(" ## LOOKING FOR ", request, " "), alg.debug)
 	heap.Init(&alg.memory)
 	if !isFound {
 		utils.DebugPrint(" ## FAULT ", alg.debug)

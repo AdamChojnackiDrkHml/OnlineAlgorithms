@@ -18,6 +18,8 @@ func FIFOAlg_Create(size int, debug bool) *FIFOAlg {
 func (alg *FIFOAlg) UpdateMemory(request int) bool {
 	isFound, position := alg.find(request)
 	utils.DebugPrint(fmt.Sprint(alg.memory), alg.debug)
+	utils.DebugPrint(fmt.Sprint(" ## LOOKING FOR ", request, " "), alg.debug)
+
 	if !isFound {
 		utils.DebugPrint(" ## FAULT ", alg.debug)
 		utils.DebugPrint(fmt.Sprint(" HAVE TO INSERT ", request, " ## "), alg.debug)
