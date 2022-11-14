@@ -1,20 +1,30 @@
 package utils
 
-import (
-	"fmt"
-	"os"
-	"strconv"
-
-	"gopkg.in/yaml.v3"
-)
+import "errors"
 
 const (
 	NUM_OF_PAGING_ALGS     = 6
 	NUM_OF_UPDATELIST_ALGS = 5
+	NUM_OF_DISTRIBUTIONS   = 5
 )
 
-func GetMaxNumOfAlgs(solver SolverTypeEnum) int {
-	switch solver {
+func GetNumOfAlgs(solverType SolverTypeEnum, doAll bool) int {
+	if doAll {
+		return GetMaxNumOfAlgs(solverType)
+	}
+
+	return 1
+}
+
+func GetNumOfDistributions(generatorConfigs GeneratorConfigS) int {
+	if generatorConfigs.DoAll {
+		return NUM_OF_DISTRIBUTIONS
+	}
+	return 1
+}
+
+func GetMaxNumOfAlgs(solverType SolverTypeEnum) int {
+	switch solverType {
 	case Paging:
 		return NUM_OF_PAGING_ALGS
 	case UpdateList:
@@ -24,17 +34,6 @@ func GetMaxNumOfAlgs(solver SolverTypeEnum) int {
 	}
 }
 
-func DebugPrint(s string, p bool) {
-	if p {
-		fmt.Print(s)
-	}
-}
-
-func ExitWithError(err string) {
-	fmt.Println(err)
-	os.Exit(1)
-}
-
 type GeneralConfigS struct {
 	NoOfReq    int `yaml:"noOfReq"`
 	Iterations int `yaml:"iterations"`
@@ -42,18 +41,20 @@ type GeneralConfigS struct {
 	Repeats    int `yaml:"repeats"`
 }
 type SolverConfigS struct {
-	ProblemType int  `yaml:"problemType"`
-	Size        int  `yaml:"size"`
-	Alg         int  `yaml:"alg"`
-	Debug       bool `yaml:"debug"`
-	DoAll       bool `yaml:"doAll"`
+	ProblemType SolverTypeEnum `yaml:"problemType"`
+	Size        int            `yaml:"size"`
+	AlgP        PagingAlg      `yaml:"algP"`
+	AlgUL       UpdateListAlg  `yaml:"algUL"`
+	Debug       bool           `yaml:"debug"`
+	DoAll       bool           `yaml:"doAll"`
 }
 type GeneratorConfigS struct {
-	DistributionType int     `yaml:"distributionType"`
-	Minimum          int     `yaml:"minimum"`
-	Fvalue           float64 `yaml:"fvalue"`
-	Maximum          int     `yaml:"maximum"`
-	DoAll            bool    `yaml:"doAll"`
+	DistributionType GeneratorTypeEnum `yaml:"distributionType"`
+	Minimum          int               `yaml:"minimum"`
+	FvalueGeo        float64           `yaml:"fvalueGeo"`
+	FvaluePoiss      float64           `yaml:"fvaluePoiss"`
+	Maximum          int               `yaml:"maximum"`
+	DoAll            bool              `yaml:"doAll"`
 }
 
 type TestConfigS struct {
@@ -68,54 +69,31 @@ type Config struct {
 	TestConfigs []TestConfigS `yaml:"test"`
 }
 
-func ParseYaml(configPath string) (*Config, error) {
+func ValidateTestConfig(testConf TestConfigS) error {
+	solverConfig := testConf.SolverConfig
+	generatorConfig := testConf.GeneratorConfig
 
-	config := &Config{}
-
-	// Open config file
-	file, err := os.Open(configPath)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	// Init new YAML decode
-	d := yaml.NewDecoder(file)
-
-	// Start YAML decoding from file
-	if err := d.Decode(&config); err != nil {
-		return nil, err
+	if generatorConfig.DoAll && solverConfig.DoAll {
+		return errors.New("cannot do both do alls")
 	}
 
-	return config, nil
-}
-
-func ParseCmd(confStrings []string) *Config {
-
-	confInts := make([]int, 0)
-	floatValue := 0.0
-	for i, str := range confStrings {
-		if i == 5 && confInts[5] != 0 {
-			confF, errF := strconv.ParseFloat(str, 64)
-			if errF != nil {
-				ExitWithError(fmt.Sprint("ERR 1 In config file argument", i, " = ", str, " is invalid"))
-			}
-			floatValue = confF
-			confInts = append(confInts, 0)
-			continue
-		}
-		conf, err := strconv.Atoi(str)
-		if err != nil {
-			ExitWithError(fmt.Sprint("ERR 2 In config file argument", i, " = ", str, " is invalid"))
-		}
-		confInts = append(confInts, conf)
+	if generatorConfig.DistributionType >= NUM_OF_DISTRIBUTIONS {
+		return errors.New("wrong distribution identification number")
 	}
-	genConf := GeneralConfigS{confInts[7], confInts[8], confInts[9], confInts[10]}
-	solverConf := SolverConfigS{confInts[0], confInts[1], confInts[2], confInts[3] == 1, confInts[4] == 1}
-	generatorConf := GeneratorConfigS{confInts[5], confInts[6], floatValue, confInts[7], confInts[8] == 1}
 
-	return &Config{TestConfigs: []TestConfigS{{genConf, solverConf, generatorConf}}}
+	if solverConfig.ProblemType == Paging && (solverConfig.AlgP >= NUM_OF_PAGING_ALGS) {
+		return errors.New("wrong paging algorithm identification number")
+	}
 
+	if solverConfig.ProblemType == UpdateList && (solverConfig.AlgUL >= NUM_OF_UPDATELIST_ALGS) {
+		return errors.New("wrong updateList algorithm identification number")
+	}
+
+	if generatorConfig.Maximum >= solverConfig.Size && solverConfig.ProblemType == UpdateList {
+		return errors.New("maximum request for n sized update list, must be at most n-1")
+	}
+
+	return nil
 }
 
 type SolverTypeEnum int
@@ -185,8 +163,7 @@ func (e PagingAlg) String() string {
 type GeneratorTypeEnum int
 
 const (
-	All GeneratorTypeEnum = iota
-	Uni
+	Uni GeneratorTypeEnum = iota
 	Geo
 	Pois
 	Hrm
@@ -195,8 +172,6 @@ const (
 
 func (e GeneratorTypeEnum) String() string {
 	switch e {
-	case All:
-		return "All"
 	case Uni:
 		return "Uni"
 	case Geo:
