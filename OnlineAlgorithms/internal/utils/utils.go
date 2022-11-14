@@ -53,6 +53,7 @@ type GeneratorConfigS struct {
 	Minimum          int     `yaml:"minimum"`
 	Fvalue           float64 `yaml:"fvalue"`
 	Maximum          int     `yaml:"maximum"`
+	DoAll            bool    `yaml:"doAll"`
 }
 
 type TestConfigS struct {
@@ -64,7 +65,7 @@ type TestConfigS struct {
 }
 
 type Config struct {
-	TestConfig TestConfigS `yaml:"test"`
+	TestConfigs []TestConfigS `yaml:"test"`
 }
 
 func ParseYaml(configPath string) (*Config, error) {
@@ -111,9 +112,9 @@ func ParseCmd(confStrings []string) *Config {
 	}
 	genConf := GeneralConfigS{confInts[7], confInts[8], confInts[9], confInts[10]}
 	solverConf := SolverConfigS{confInts[0], confInts[1], confInts[2], confInts[3] == 1, confInts[4] == 1}
-	generatorConf := GeneratorConfigS{confInts[5], confInts[6], floatValue, confInts[7]}
+	generatorConf := GeneratorConfigS{confInts[5], confInts[6], floatValue, confInts[7], confInts[8] == 1}
 
-	return &Config{TestConfig: TestConfigS{genConf, solverConf, generatorConf}}
+	return &Config{TestConfigs: []TestConfigS{{genConf, solverConf, generatorConf}}}
 
 }
 
