@@ -79,7 +79,13 @@ func ParseCmd(confStrings []string) TestConfigS {
 
 }
 
-func CreateHeader(f *os.File, solverConf *SolverConfigS, genConf *GeneratorConfigS) {
+func CreateAndWriteHeader(f *os.File, solverConf *SolverConfigS, genConf *GeneratorConfigS) {
+	header := createHeader(solverConf, genConf)
+
+	WriteToFile(f, header)
+}
+
+func createHeader(solverConf *SolverConfigS, genConf *GeneratorConfigS) string {
 	header := ""
 
 	header += solverConf.ProblemType.String()
@@ -87,10 +93,8 @@ func CreateHeader(f *os.File, solverConf *SolverConfigS, genConf *GeneratorConfi
 	header += "\n"
 
 	numOfAlgs := GetNumOfAlgs(solverConf.ProblemType, solverConf.DoAll)
-
+	header += fmt.Sprint(numOfAlgs)
 	header += "\n"
-
-	fmt.Println(numOfAlgs)
 
 	if !solverConf.DoAll {
 		switch solverConf.ProblemType {
@@ -105,11 +109,11 @@ func CreateHeader(f *os.File, solverConf *SolverConfigS, genConf *GeneratorConfi
 		switch solverConf.ProblemType {
 		case Paging:
 			for i := 0; i < numOfAlgs; i++ {
-				header += PagingAlg(i).String()
+				header += PagingAlg(i).String() + " "
 			}
 		case UpdateList:
 			for i := 0; i < numOfAlgs; i++ {
-				header += UpdateListAlg(i).String()
+				header += UpdateListAlg(i).String() + " "
 			}
 		}
 
@@ -117,15 +121,16 @@ func CreateHeader(f *os.File, solverConf *SolverConfigS, genConf *GeneratorConfi
 
 	header += "\n"
 
-	header += fmt.Sprintf("%d", genConf.DistributionType)
+	header += fmt.Sprint(GetNumOfDistributions(*genConf))
+
 	header += "\n"
 
 	if genConf.DoAll {
 		for i := 0; i < NUM_OF_DISTRIBUTIONS; i++ {
-			header += GeneratorTypeEnum(i).String()
+			header += GeneratorTypeEnum(i).String() + " "
 		}
 	} else {
-		header += genConf.DistributionType.String()
+		header += genConf.DistributionType.String() + " "
 	}
 
 	header += "\n"
@@ -133,8 +138,7 @@ func CreateHeader(f *os.File, solverConf *SolverConfigS, genConf *GeneratorConfi
 	header += fmt.Sprintf("%d ", solverConf.Size)
 
 	header += "\n"
-
-	WriteToFile(f, header)
+	return header
 }
 
 func SaveResToFile(f *os.File, ress []int, noOfReq int) {
