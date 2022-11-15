@@ -105,12 +105,16 @@ func runTestWithParametersFromFile(conf *utils.Config) {
 						}
 					}
 				}
+
+				resultsIterator := 0
 				for i := range dGS {
 					solversForGenerator := problemSolversForGenerators[i]
-					for j, problemSolver := range solversForGenerator {
+					for _, problemSolver := range solversForGenerator {
 						name, score = problemSolver.Raport()
-						names[i+j*noOfAlgs] = name
-						ress[i+j*noOfAlgs] += int(float64(score) / float64(genConf.Repeats))
+						names[resultsIterator] = name
+						ress[resultsIterator] += int(float64(score) / float64(genConf.Repeats))
+
+						resultsIterator++
 					}
 				}
 			}
