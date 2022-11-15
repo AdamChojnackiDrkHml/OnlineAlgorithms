@@ -1,0 +1,93 @@
+test:
+
+  #Move To Front
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        fvalueGeo: 0.1
+        fvaluePoiss: 15
+        maximum: 29
+        minimum: 0
+        doAll: "yes"        
+    solverConfig: 
+        algUL: 0
+        debug: "no"
+        problemType: 0
+        size: 30
+
+  #Transpose
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        fvalueGeo: 0.1
+        fvaluePoiss: 15
+        maximum: 29
+        minimum: 0
+        doAll: "yes"        
+    solverConfig: 
+        algUL: 1
+        debug: "no"
+        problemType: 0
+        size: 30
+
+  #Frequency Count
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        fvalueGeo: 0.1
+        fvaluePoiss: 15
+        maximum: 29
+        minimum: 0
+        doAll: "yes"        
+    solverConfig: 
+        algUL: 2
+        debug: "no"
+        problemType: 0
+        size: 30
+
+  #Bit
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        fvalueGeo: 0.1
+        fvaluePoiss: 15
+        maximum: 29
+        minimum: 0
+        doAll: "yes"        
+    solverConfig: 
+        algUL: 3
+        debug: "no"
+        problemType: 0
+        size: 30
+
+  #Timestamp(0)
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        fvalueGeo: 0.1
+        fvaluePoiss: 15
+        maximum: 29
+        minimum: 0
+        doAll: "yes"        
+    solverConfig: 
+        algUL: 4
+        debug: "no"
+        problemType: 0
+        size: 30
+
+

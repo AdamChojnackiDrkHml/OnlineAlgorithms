@@ -1,0 +1,83 @@
+test: 
+
+  #Uniform
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        distributionType: 0
+        maximum: 29
+        minimum: 0      
+    solverConfig: 
+        debug: "no"
+        problemType: 1
+        size: 30
+        doAll: "yes"
+
+  #Geometric
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        distributionType: 1
+        fvalueGeo: 0.1
+        maximum: 29
+        minimum: 0      
+    solverConfig: 
+        debug: "no"
+        problemType: 1
+        size: 30
+        doAll: "yes"
+
+  #Poisson
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        distributionType: 2
+        fvaluePoiss: 15
+        maximum: 29
+        minimum: 0      
+    solverConfig: 
+        debug: "no"
+        problemType: 1
+        size: 30
+        doAll: "yes"
+
+  #Harmonic
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        distributionType: 3
+        maximum: 29
+        minimum: 0      
+    solverConfig: 
+        debug: "no"
+        problemType: 1
+        size: 30
+        doAll: "yes"
+
+  #Diharmonic
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        distributionType: 4
+        maximum: 29
+        minimum: 0      
+    solverConfig: 
+        debug: "no"
+        problemType: 1
+        size: 30
+        doAll: "yes"

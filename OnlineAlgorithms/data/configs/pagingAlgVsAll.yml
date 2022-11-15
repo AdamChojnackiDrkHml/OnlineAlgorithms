@@ -1,0 +1,110 @@
+test:
+
+  #Least Recently Used 
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        fvalueGeo: 0.1
+        fvaluePoiss: 15
+        maximum: 150
+        minimum: 0
+        doAll: "yes"        
+    solverConfig: 
+        algP: 0
+        debug: "no"
+        problemType: 0
+        size: 30
+
+  #First In First Out
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        fvalueGeo: 0.1
+        fvaluePoiss: 15
+        maximum: 150
+        minimum: 0
+        doAll: "yes"        
+    solverConfig: 
+        algP: 1
+        debug: "no"
+        problemType: 0
+        size: 30
+
+  #Least Frequently Used
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        fvalueGeo: 0.1
+        fvaluePoiss: 15
+        maximum: 150
+        minimum: 0
+        doAll: "yes"        
+    solverConfig: 
+        algP: 2
+        debug: "no"
+        problemType: 0
+        size: 30
+
+  # Mark First In First Out
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        fvalueGeo: 0.1
+        fvaluePoiss: 15
+        maximum: 150
+        minimum: 0
+        doAll: "yes"        
+    solverConfig: 
+        algP: 3
+        debug: "no"
+        problemType: 0
+        size: 30
+
+  # Mark Least Frequently Used 
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        fvalueGeo: 0.1
+        fvaluePoiss: 15
+        maximum: 150
+        minimum: 0
+        doAll: "yes"        
+    solverConfig: 
+        algP: 4
+        debug: "no"
+        problemType: 0
+        size: 30
+
+  # Randomized Mark
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        fvalueGeo: 0.1
+        fvaluePoiss: 15
+        maximum: 150
+        minimum: 0
+        doAll: "yes"        
+    solverConfig: 
+        algP: 5
+        debug: "no"
+        problemType: 0
+        size: 30
+
