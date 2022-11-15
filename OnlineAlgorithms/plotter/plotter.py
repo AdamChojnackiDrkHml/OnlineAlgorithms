@@ -1,3 +1,4 @@
+import os
 import matplotlib.pyplot as plt
 import sys 
 import itertools
@@ -49,4 +50,9 @@ plt.ylabel("Avg Cost")
 plt.title(problem + "_" + str(size))
 
 plt.legend()
-plt.show()
+
+resName = os.path.dirname(sys.argv[1]) + '/graphs/' + os.path.basename(sys.argv[1]) + '.png'
+print(resName)
+plt.savefig(resName)
+
+

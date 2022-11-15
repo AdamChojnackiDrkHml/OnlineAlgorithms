@@ -1,0 +1,7 @@
+#!/bin/bash
+
+CURR_PATH=`pwd`
+
+for i in ${CURR_PATH}/data/res/results*; do
+    python3 plotter/plotter.py $i
+done
