@@ -15,7 +15,6 @@ import (
 func main() {
 
 	if ind := slices.Index(os.Args, "-f"); ind != -1 {
-		fmt.Println("aa")
 		config, err := utils.ParseYaml(os.Args[ind+1])
 		if err != nil {
 			utils.ExitWithError(err.Error())
@@ -70,7 +69,7 @@ func runTestWithParametersFromFile(conf *utils.Config) {
 		}
 
 		fileName := filepath.Base(os.Args[2])
-		resFilename := "data/res/" + strings.TrimSuffix(fileName, filepath.Ext(fileName)) + fmt.Sprint(i)
+		resFilename := "data/res/" + "results_" + strings.TrimSuffix(fileName, filepath.Ext(fileName)) + fmt.Sprint(i)
 
 		f := utils.OpenFile(resFilename)
 
@@ -78,7 +77,7 @@ func runTestWithParametersFromFile(conf *utils.Config) {
 		generConf := testConf.GeneratorConfig
 		genConf := testConf.GeneralConfig
 
-		utils.CreateHeader(f, &solvConf, &generConf)
+		utils.CreateAndWriteHeader(f, &solvConf, &generConf)
 
 		noOfAlgs := utils.GetNumOfAlgs(solvConf.ProblemType, solvConf.DoAll)
 		noOfDistros := utils.GetNumOfDistributions(generConf)
