@@ -82,46 +82,37 @@ func ParseCmd(confStrings []string) TestConfigS {
 func CreateHeader(f *os.File, solverConf *SolverConfigS, genConf *GeneratorConfigS) {
 	header := ""
 
-	if solverConf.ProblemType == 0 {
-		header += "PAGING"
-	} else {
-		header += "UPDATE_LIST"
-	}
+	header += solverConf.ProblemType.String()
 
 	header += "\n"
 
-	numOfAlgs := 0
-	if solverConf.AlgP == 0 {
-		if solverConf.ProblemType == 0 {
-			header += "3"
-			numOfAlgs = 3
-		} else {
-			header += "5"
-			numOfAlgs = 5
-		}
-	} else {
-		header += "1"
-		numOfAlgs = 1
-	}
+	numOfAlgs := GetNumOfAlgs(solverConf.ProblemType, solverConf.DoAll)
 
 	header += "\n"
+
 	fmt.Println(numOfAlgs)
-	if numOfAlgs == 1 {
-		if solverConf.ProblemType == 0 {
-			header += fmt.Sprintf("%s", PagingAlg(solverConf.AlgP))
-		} else {
-			header += fmt.Sprintf("%s", UpdateListAlg(solverConf.AlgUL))
+
+	if !solverConf.DoAll {
+		switch solverConf.ProblemType {
+		case Paging:
+			header += solverConf.AlgP.String()
+		case UpdateList:
+			header += solverConf.AlgUL.String()
 		}
+
 	} else {
-		if solverConf.ProblemType == 0 {
+
+		switch solverConf.ProblemType {
+		case Paging:
 			for i := 0; i < numOfAlgs; i++ {
-				header += fmt.Sprintf("%s ", PagingAlg(i))
+				header += PagingAlg(i).String()
 			}
-		} else {
+		case UpdateList:
 			for i := 0; i < numOfAlgs; i++ {
-				header += fmt.Sprintf("%s ", UpdateListAlg(i))
+				header += UpdateListAlg(i).String()
 			}
 		}
+
 	}
 
 	header += "\n"
@@ -131,10 +122,10 @@ func CreateHeader(f *os.File, solverConf *SolverConfigS, genConf *GeneratorConfi
 
 	if genConf.DoAll {
 		for i := 0; i < NUM_OF_DISTRIBUTIONS; i++ {
-			header += fmt.Sprintf("%s ", GeneratorTypeEnum(i))
+			header += GeneratorTypeEnum(i).String()
 		}
 	} else {
-		header += fmt.Sprintf("%s", GeneratorTypeEnum(genConf.DistributionType))
+		header += genConf.DistributionType.String()
 	}
 
 	header += "\n"
