@@ -16,9 +16,9 @@ type PagingSolver struct {
 	algE   utils.PagingAlg
 }
 
-func PagingSolver_Create(size int, alg int, debug bool) *PagingSolver {
-	pS := &PagingSolver{size: size, faults: 0, algE: utils.PagingAlg(alg)}
-	pS.createSolvingAlg(alg, debug)
+func PagingSolver_Create(size int, algP utils.PagingAlg, debug bool) *PagingSolver {
+	pS := &PagingSolver{size: size, faults: 0, algE: utils.PagingAlg(algP)}
+	pS.createSolvingAlg(algP, debug)
 	return pS
 }
 
@@ -28,8 +28,8 @@ func (pS *PagingSolver) Serve(request int) {
 	}
 }
 
-func (ps *PagingSolver) createSolvingAlg(alg int, debug bool) {
-	switch utils.PagingAlg(alg) {
+func (ps *PagingSolver) createSolvingAlg(algP utils.PagingAlg, debug bool) {
+	switch utils.PagingAlg(algP) {
 	case utils.LRU:
 		{
 			ps.alg = LRUAlg_Create(ps.size, debug)

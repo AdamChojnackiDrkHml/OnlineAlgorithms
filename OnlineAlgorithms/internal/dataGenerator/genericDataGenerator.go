@@ -16,12 +16,8 @@ type GenericDataGenerator interface {
 func CreateDataGenerator(generConf utils.GeneratorConfigS) []GenericDataGenerator {
 	var generators []GenericDataGenerator
 
-	if generConf.DoAll {
-		for i := 0; i < utils.NUM_OF_DISTRIBUTIONS; i++ {
-			generators = append(generators, initGenerator(generConf, utils.GeneratorTypeEnum(i)))
-		}
-	} else {
-		generators = append(generators, initGenerator(generConf, generConf.DistributionType))
+	for _, n := range generConf.DistributionType {
+		generators = append(generators, initGenerator(generConf, n))
 	}
 
 	return generators

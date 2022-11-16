@@ -10,19 +10,19 @@ const (
 	NUM_OF_DISTRIBUTIONS   = 5
 )
 
-func GetNumOfAlgs(solverType SolverTypeEnum, doAll bool) int {
-	if doAll {
-		return GetMaxNumOfAlgs(solverType)
+func GetNumOfAlgs(solverConfig SolverConfigS) int {
+	switch solverConfig.ProblemType {
+	case Paging:
+		return len(solverConfig.AlgP)
+	case UpdateList:
+		return len(solverConfig.AlgUL)
+	default:
+		return GetMaxNumOfAlgs(solverConfig.ProblemType)
 	}
-
-	return 1
 }
 
 func GetNumOfDistributions(generatorConfigs GeneratorConfigS) int {
-	if generatorConfigs.DoAll {
-		return NUM_OF_DISTRIBUTIONS
-	}
-	return 1
+	return len(generatorConfigs.DistributionType)
 }
 
 func GetMaxNumOfAlgs(solverType SolverTypeEnum) int {
@@ -43,20 +43,20 @@ type GeneralConfigS struct {
 	Repeats    int `yaml:"repeats"`
 }
 type SolverConfigS struct {
-	ProblemType SolverTypeEnum `yaml:"problemType"`
-	Size        int            `yaml:"size"`
-	AlgP        PagingAlg      `yaml:"algP"`
-	AlgUL       UpdateListAlg  `yaml:"algUL"`
-	Debug       bool           `yaml:"debug"`
-	DoAll       bool           `yaml:"doAll"`
+	ProblemType SolverTypeEnum  `yaml:"problemType"`
+	Size        int             `yaml:"size"`
+	AlgP        []PagingAlg     `yaml:"algP"`
+	AlgUL       []UpdateListAlg `yaml:"algUL"`
+	Debug       bool            `default:"false" yaml:"debug"`
+	DoAll       bool            `default:"false" yaml:"doAll"`
 }
 type GeneratorConfigS struct {
-	DistributionType GeneratorTypeEnum `yaml:"distributionType"`
-	Minimum          int               `yaml:"minimum"`
-	FvalueGeo        float64           `yaml:"fvalueGeo"`
-	FvaluePoiss      float64           `yaml:"fvaluePoiss"`
-	Maximum          int               `yaml:"maximum"`
-	DoAll            bool              `yaml:"doAll"`
+	DistributionType []GeneratorTypeEnum `yaml:"distributionType"`
+	Minimum          int                 `yaml:"minimum"`
+	FvalueGeo        float64             `yaml:"fvalueGeo"`
+	FvaluePoiss      float64             `yaml:"fvaluePoiss"`
+	Maximum          int                 `yaml:"maximum"`
+	DoAll            bool                `default:"false" yaml:"doAll"`
 }
 
 type TestConfigS struct {
@@ -71,23 +71,64 @@ type Config struct {
 	TestConfigs []TestConfigS `yaml:"test"`
 }
 
+func PreprocessTestConfig(testConf *TestConfigS) {
+	solverConfig := &testConf.SolverConfig
+	generatorConfig := testConf.GeneratorConfig
+
+	if solverConfig.DoAll {
+		switch solverConfig.ProblemType {
+		case Paging:
+			solverConfig.AlgP = make([]PagingAlg, 0)
+			for i := 0; i < NUM_OF_PAGING_ALGS; i++ {
+				solverConfig.AlgP = append(solverConfig.AlgP, PagingAlg(i))
+			}
+		case UpdateList:
+			solverConfig.AlgUL = make([]UpdateListAlg, 0)
+			for i := 0; i < NUM_OF_PAGING_ALGS; i++ {
+				solverConfig.AlgUL = append(solverConfig.AlgUL, UpdateListAlg(i))
+			}
+
+		}
+	}
+
+	if generatorConfig.DoAll {
+		generatorConfig.DistributionType = make([]GeneratorTypeEnum, 0)
+
+		for i := 0; i < NUM_OF_DISTRIBUTIONS; i++ {
+			generatorConfig.DistributionType = append(generatorConfig.DistributionType, GeneratorTypeEnum(i))
+		}
+	}
+
+}
+
 func ValidateTestConfig(testConf TestConfigS) error {
 	solverConfig := testConf.SolverConfig
 	generatorConfig := testConf.GeneratorConfig
 
-	if generatorConfig.DoAll && solverConfig.DoAll {
-		return errors.New("cannot do both do alls")
+	// if generatorConfig.DoAll && solverConfig.DoAll {
+	// 	return errors.New("cannot do both do alls")
+	// }
+
+	for _, distribution := range generatorConfig.DistributionType {
+		if distribution >= NUM_OF_DISTRIBUTIONS {
+			return errors.New("wrong distribution identification number")
+		}
 	}
 
-	if generatorConfig.DistributionType >= NUM_OF_DISTRIBUTIONS {
-		return errors.New("wrong distribution identification number")
+	if solverConfig.ProblemType == Paging {
+		for _, algP := range solverConfig.AlgP {
+			if algP >= NUM_OF_PAGING_ALGS {
+				return errors.New("wrong paging algorithm identification number")
+			}
+		}
 	}
 
-	if solverConfig.ProblemType == Paging && (solverConfig.AlgP >= NUM_OF_PAGING_ALGS) {
-		return errors.New("wrong paging algorithm identification number")
-	}
-
-	if solverConfig.ProblemType == UpdateList && (solverConfig.AlgUL >= NUM_OF_UPDATELIST_ALGS) {
+	if solverConfig.ProblemType == UpdateList {
+		for _, algUL := range solverConfig.AlgUL {
+			if algUL >= NUM_OF_UPDATELIST_ALGS {
+				return errors.New("wrong paging algorithm identification number")
+			}
+		}
 		return errors.New("wrong updateList algorithm identification number")
 	}
 

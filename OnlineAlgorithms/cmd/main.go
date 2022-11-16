@@ -15,6 +15,7 @@ import (
 func main() {
 
 	if ind := slices.Index(os.Args, "-f"); ind != -1 {
+		fmt.Println(os.Getwd())
 		config, err := utils.ParseYaml(os.Args[ind+1])
 		if err != nil {
 			utils.ExitWithError(err.Error())
@@ -23,9 +24,9 @@ func main() {
 	} else if ind := slices.Index(os.Args, "-p"); ind != -1 {
 		runTestForCmdArguments(utils.ParseCmd(os.Args[ind+1:]))
 	} else { //hand debug case
-		genConf := utils.GeneralConfigS{NoOfReq: 50, Iterations: 1, Growth: 500, Repeats: 1}
-		solverConf := utils.SolverConfigS{ProblemType: 0, Size: 10, AlgP: 1, Debug: true}
-		generatorConf := utils.GeneratorConfigS{DistributionType: 0, Minimum: 0, Maximum: 10, DoAll: true, FvalueGeo: 0.2, FvaluePoiss: 0.3}
+		genConf := utils.GeneralConfigS{NoOfReq: 500, Iterations: 20, Growth: 500, Repeats: 20}
+		solverConf := utils.SolverConfigS{ProblemType: 0, Size: 30, AlgP: []utils.PagingAlg{1}, Debug: false, DoAll: true}
+		generatorConf := utils.GeneratorConfigS{DistributionType: []utils.GeneratorTypeEnum{0}, Minimum: 0, Maximum: 150, DoAll: false, FvalueGeo: 0.2, FvaluePoiss: 0.3}
 		runTestWithParametersFromFile(&utils.Config{TestConfigs: []utils.TestConfigS{{GeneralConfig: genConf, SolverConfig: solverConf, GeneratorConfig: generatorConf}}})
 	}
 
@@ -68,6 +69,8 @@ func runTestWithParametersFromFile(conf *utils.Config) {
 			continue
 		}
 
+		utils.PreprocessTestConfig(&testConf)
+
 		fileName := filepath.Base(os.Args[2])
 		resFilename := "data/res/" + "results_" + strings.TrimSuffix(fileName, filepath.Ext(fileName)) + fmt.Sprint(i)
 
@@ -79,7 +82,7 @@ func runTestWithParametersFromFile(conf *utils.Config) {
 
 		utils.CreateAndWriteHeader(f, &solvConf, &generConf)
 
-		noOfAlgs := utils.GetNumOfAlgs(solvConf.ProblemType, solvConf.DoAll)
+		noOfAlgs := utils.GetNumOfAlgs(solvConf)
 		noOfDistros := utils.GetNumOfDistributions(generConf)
 
 		var name string
@@ -96,7 +99,7 @@ func runTestWithParametersFromFile(conf *utils.Config) {
 				for i := range dGS {
 					problemSolversForGenerators[i] = solver.CreateSolver(solvConf)
 				}
-				for request := 0; request < genConf.NoOfReq; request++ {
+				for requestIterator := 0; requestIterator < genConf.NoOfReq; requestIterator++ {
 					for i, generator := range dGS {
 						solversForGenerator := problemSolversForGenerators[i]
 						request := generator.GetRequest()

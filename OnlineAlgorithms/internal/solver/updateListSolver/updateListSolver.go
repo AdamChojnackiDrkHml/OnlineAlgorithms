@@ -26,9 +26,9 @@ type UpdateListSolver struct {
 	algE utils.UpdateListAlg
 }
 
-func UpdateListSolver_Create(size int, alg int, debug bool) *UpdateListSolver {
-	uLS := &UpdateListSolver{size: size, cost: 0, algE: utils.UpdateListAlg(alg)}
-	uLS.createSolvingAlg(alg, debug)
+func UpdateListSolver_Create(size int, algUL utils.UpdateListAlg, debug bool) *UpdateListSolver {
+	uLS := &UpdateListSolver{size: size, cost: 0, algE: utils.UpdateListAlg(algUL)}
+	uLS.createSolvingAlg(algUL, debug)
 	return uLS
 }
 
@@ -36,8 +36,8 @@ func (uLS *UpdateListSolver) Serve(request int) {
 	uLS.cost += uLS.alg.UpdateList(request)
 }
 
-func (uLS *UpdateListSolver) createSolvingAlg(alg int, debug bool) {
-	switch utils.UpdateListAlg(alg) {
+func (uLS *UpdateListSolver) createSolvingAlg(algUL utils.UpdateListAlg, debug bool) {
+	switch algUL {
 	case utils.MTF:
 		{
 			uLS.alg = MTFAlg_Create(uLS.size, debug)

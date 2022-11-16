@@ -15,29 +15,16 @@ func CreateSolver(solverConf utils.SolverConfigS) []GenericSolver {
 
 	var gS []GenericSolver
 
-	if solverConf.DoAll {
-		noOfAlgs := utils.GetMaxNumOfAlgs(utils.SolverTypeEnum(solverConf.ProblemType))
-
-		for i := 0; i < noOfAlgs; i++ {
-			gS = append(gS, initSolver(solverConf.Size, i, solverConf.Debug, solverConf.ProblemType))
-		}
-
-	} else {
-		gS = append(gS, initSolver(solverConf.Size, int(solverConf.AlgUL), solverConf.Debug, solverConf.ProblemType))
-
-	}
-	return gS
-}
-
-func initSolver(size, alg int, debug bool, solver utils.SolverTypeEnum) GenericSolver {
-	switch solver {
+	switch solverConf.ProblemType {
 	case utils.Paging:
-		return pagingsolver.PagingSolver_Create(size, alg, debug)
-
+		for _, algP := range solverConf.AlgP {
+			gS = append(gS, pagingsolver.PagingSolver_Create(solverConf.Size, algP, solverConf.Debug))
+		}
 	case utils.UpdateList:
-		return updatelistsolver.UpdateListSolver_Create(size, alg, debug)
-	default:
-		return nil
-
+		for _, algUL := range solverConf.AlgUL {
+			gS = append(gS, updatelistsolver.UpdateListSolver_Create(solverConf.Size, algUL, solverConf.Debug))
+		}
 	}
+
+	return gS
 }

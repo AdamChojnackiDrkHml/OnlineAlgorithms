@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/creasty/defaults"
 	"gopkg.in/yaml.v3"
 )
 
@@ -22,19 +23,18 @@ func ExitWithError(err string) {
 func ParseYaml(configPath string) (*Config, error) {
 
 	config := &Config{}
-
+	defaults.Set(config)
 	// Open config file
-	file, err := os.Open(configPath)
+	fileContent, err := os.ReadFile(configPath)
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
 
 	// Init new YAML decode
-	d := yaml.NewDecoder(file)
+	err = yaml.Unmarshal(fileContent, config)
 
 	// Start YAML decoding from file
-	if err := d.Decode(&config); err != nil {
+	if err != nil {
 		return nil, err
 	}
 
@@ -72,8 +72,8 @@ func ParseCmd(confStrings []string) TestConfigS {
 		confInts = append(confInts, conf)
 	}
 	genConf := GeneralConfigS{confInts[7], confInts[8], confInts[9], confInts[10]}
-	solverConf := SolverConfigS{SolverTypeEnum(confInts[0]), confInts[1], PagingAlg(confInts[2]), UpdateListAlg(confInts[2]), confInts[3] == 1, confInts[4] == 1}
-	generatorConf := GeneratorConfigS{GeneratorTypeEnum(confInts[5]), confInts[6], floatValueGeo, floatValuePoiss, confInts[7], confInts[8] == 1}
+	solverConf := SolverConfigS{SolverTypeEnum(confInts[0]), confInts[1], []PagingAlg{PagingAlg(confInts[2])}, []UpdateListAlg{UpdateListAlg(confInts[2])}, confInts[3] == 1, confInts[4] == 1}
+	generatorConf := GeneratorConfigS{[]GeneratorTypeEnum{GeneratorTypeEnum(confInts[5])}, confInts[6], floatValueGeo, floatValuePoiss, confInts[7], confInts[8] == 1}
 
 	return TestConfigS{genConf, solverConf, generatorConf}
 
@@ -92,31 +92,19 @@ func createHeader(solverConf *SolverConfigS, genConf *GeneratorConfigS) string {
 
 	header += "\n"
 
-	numOfAlgs := GetNumOfAlgs(solverConf.ProblemType, solverConf.DoAll)
+	numOfAlgs := GetNumOfAlgs(*solverConf)
 	header += fmt.Sprint(numOfAlgs)
 	header += "\n"
 
-	if !solverConf.DoAll {
-		switch solverConf.ProblemType {
-		case Paging:
-			header += solverConf.AlgP.String()
-		case UpdateList:
-			header += solverConf.AlgUL.String()
+	switch solverConf.ProblemType {
+	case Paging:
+		for _, algP := range solverConf.AlgP {
+			header += algP.String() + " "
 		}
-
-	} else {
-
-		switch solverConf.ProblemType {
-		case Paging:
-			for i := 0; i < numOfAlgs; i++ {
-				header += PagingAlg(i).String() + " "
-			}
-		case UpdateList:
-			for i := 0; i < numOfAlgs; i++ {
-				header += UpdateListAlg(i).String() + " "
-			}
+	case UpdateList:
+		for _, algUL := range solverConf.AlgUL {
+			header += algUL.String() + " "
 		}
-
 	}
 
 	header += "\n"
@@ -125,12 +113,8 @@ func createHeader(solverConf *SolverConfigS, genConf *GeneratorConfigS) string {
 
 	header += "\n"
 
-	if genConf.DoAll {
-		for i := 0; i < NUM_OF_DISTRIBUTIONS; i++ {
-			header += GeneratorTypeEnum(i).String() + " "
-		}
-	} else {
-		header += genConf.DistributionType.String() + " "
+	for _, distribution := range genConf.DistributionType {
+		header += distribution.String() + " "
 	}
 
 	header += "\n"
