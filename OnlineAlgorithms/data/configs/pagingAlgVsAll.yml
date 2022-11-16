@@ -13,7 +13,7 @@ test:
         minimum: 0
         doAll: "yes"        
     solverConfig: 
-        algP: 0
+        algP: [0]
         debug: "no"
         problemType: 0
         size: 30
@@ -31,7 +31,7 @@ test:
         minimum: 0
         doAll: "yes"        
     solverConfig: 
-        algP: 1
+        algP: [1]
         debug: "no"
         problemType: 0
         size: 30
@@ -49,7 +49,7 @@ test:
         minimum: 0
         doAll: "yes"        
     solverConfig: 
-        algP: 2
+        algP: [2]
         debug: "no"
         problemType: 0
         size: 30
@@ -67,7 +67,7 @@ test:
         minimum: 0
         doAll: "yes"        
     solverConfig: 
-        algP: 3
+        algP: [3]
         debug: "no"
         problemType: 0
         size: 30
@@ -85,7 +85,7 @@ test:
         minimum: 0
         doAll: "yes"        
     solverConfig: 
-        algP: 4
+        algP: [4]
         debug: "no"
         problemType: 0
         size: 30
@@ -103,7 +103,7 @@ test:
         minimum: 0
         doAll: "yes"        
     solverConfig: 
-        algP: 5
+        algP: [5]
         debug: "no"
         problemType: 0
         size: 30

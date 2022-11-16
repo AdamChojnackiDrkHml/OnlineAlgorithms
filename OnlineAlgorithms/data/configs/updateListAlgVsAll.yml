@@ -13,9 +13,9 @@ test:
         minimum: 0
         doAll: "yes"        
     solverConfig: 
-        algUL: 0
+        algUL: [0]
         debug: "no"
-        problemType: 0
+        problemType: 1
         size: 30
 
   #Transpose
@@ -31,9 +31,9 @@ test:
         minimum: 0
         doAll: "yes"        
     solverConfig: 
-        algUL: 1
+        algUL: [1]
         debug: "no"
-        problemType: 0
+        problemType: 1
         size: 30
 
   #Frequency Count
@@ -49,9 +49,9 @@ test:
         minimum: 0
         doAll: "yes"        
     solverConfig: 
-        algUL: 2
+        algUL: [2]
         debug: "no"
-        problemType: 0
+        problemType: 1
         size: 30
 
   #Bit
@@ -67,9 +67,9 @@ test:
         minimum: 0
         doAll: "yes"        
     solverConfig: 
-        algUL: 3
+        algUL: [3]
         debug: "no"
-        problemType: 0
+        problemType: 1
         size: 30
 
   #Timestamp(0)
@@ -85,9 +85,9 @@ test:
         minimum: 0
         doAll: "yes"        
     solverConfig: 
-        algUL: 4
+        algUL: [4]
         debug: "no"
-        problemType: 0
+        problemType: 1
         size: 30
 
 

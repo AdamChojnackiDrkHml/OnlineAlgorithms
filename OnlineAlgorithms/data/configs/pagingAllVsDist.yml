@@ -7,7 +7,7 @@ test:
         noOfReq: 3000
         repeats: 20
     generatorConfig: 
-        distributionType: 0
+        distributionType: [0]
         maximum: 150
         minimum: 0      
     solverConfig: 
@@ -23,7 +23,7 @@ test:
         noOfReq: 3000
         repeats: 20
     generatorConfig: 
-        distributionType: 1
+        distributionType: [1]
         fvalueGeo: 0.1
         maximum: 150
         minimum: 0      
@@ -40,7 +40,7 @@ test:
         noOfReq: 3000
         repeats: 20
     generatorConfig: 
-        distributionType: 2
+        distributionType: [2]
         fvaluePoiss: 15
         maximum: 150
         minimum: 0      
@@ -57,7 +57,7 @@ test:
         noOfReq: 3000
         repeats: 20
     generatorConfig: 
-        distributionType: 3
+        distributionType: [3]
         maximum: 150
         minimum: 0      
     solverConfig: 
@@ -73,7 +73,7 @@ test:
         noOfReq: 3000
         repeats: 20
     generatorConfig: 
-        distributionType: 4
+        distributionType: [4]
         maximum: 150
         minimum: 0      
     solverConfig: 
