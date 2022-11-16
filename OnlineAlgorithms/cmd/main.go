@@ -3,7 +3,8 @@ package main
 import (
 	dataGenerator "OnlineAlgorithms/internal/dataGenerator"
 	"OnlineAlgorithms/internal/solver"
-	"OnlineAlgorithms/internal/utils"
+	genUtils "OnlineAlgorithms/internal/utils/generalUtils"
+	ioutils "OnlineAlgorithms/internal/utils/ioUtils"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -15,24 +16,22 @@ import (
 func main() {
 
 	if ind := slices.Index(os.Args, "-f"); ind != -1 {
-		fmt.Println(os.Getwd())
-		config, err := utils.ParseYaml(os.Args[ind+1])
-		if err != nil {
-			utils.ExitWithError(err.Error())
-		}
+		config := ioutils.ReadYamlForConfig(os.Args[ind+1])
 		runTestWithParametersFromFile(config)
 	} else if ind := slices.Index(os.Args, "-p"); ind != -1 {
-		runTestForCmdArguments(utils.ParseCmd(os.Args[ind+1:]))
+		runTestForCmdArguments(ioutils.ParseCmd(os.Args[ind+1:]))
 	} else { //hand debug case
-		genConf := utils.GeneralConfigS{NoOfReq: 500, Iterations: 20, Growth: 500, Repeats: 20}
-		solverConf := utils.SolverConfigS{ProblemType: 0, Size: 30, AlgP: []utils.PagingAlg{1}, Debug: false, DoAll: true}
-		generatorConf := utils.GeneratorConfigS{DistributionType: []utils.GeneratorTypeEnum{0}, Minimum: 0, Maximum: 150, DoAll: false, FvalueGeo: 0.2, FvaluePoiss: 0.3}
-		runTestWithParametersFromFile(&utils.Config{TestConfigs: []utils.TestConfigS{{GeneralConfig: genConf, SolverConfig: solverConf, GeneratorConfig: generatorConf}}})
+		genConf := genUtils.GeneralConfigS{NoOfReq: 500, Iterations: 20, Growth: 500, Repeats: 20}
+		solverConf := genUtils.SolverConfigS{ProblemType: 0, Size: 30, AlgP: []genUtils.PagingAlg{1}, Debug: false, DoAll: true}
+		generatorConf := genUtils.GeneratorConfigS{DistributionType: []genUtils.GeneratorTypeEnum{0}, Minimum: 0, Maximum: 150, DoAll: false, FvalueGeo: 0.2, FvaluePoiss: 0.3}
+		runTestWithParametersFromFile(&genUtils.Config{TestConfigs: []genUtils.TestConfigS{{GeneralConfig: genConf, SolverConfig: solverConf, GeneratorConfig: generatorConf}}})
 	}
 
 }
 
-func runTestForCmdArguments(testConf utils.TestConfigS) {
+func runTestForCmdArguments(conf genUtils.Config) {
+
+	testConf := conf.TestConfigs[0]
 
 	solvConf := testConf.SolverConfig
 	generConf := testConf.GeneratorConfig
@@ -60,30 +59,30 @@ func runTestForCmdArguments(testConf utils.TestConfigS) {
 	}
 }
 
-func runTestWithParametersFromFile(conf *utils.Config) {
+func runTestWithParametersFromFile(conf *genUtils.Config) {
 
 	for i, testConf := range conf.TestConfigs {
 
-		if err := utils.ValidateTestConfig(testConf); err != nil {
+		if err := genUtils.ValidateTestConfig(testConf); err != nil {
 			fmt.Fprintln(os.Stderr, "Testcase ", fmt.Sprint(i), " error: ", err.Error())
 			continue
 		}
 
-		utils.PreprocessTestConfig(&testConf)
+		genUtils.PreprocessTestConfig(&testConf)
 
 		fileName := filepath.Base(os.Args[2])
 		resFilename := "data/res/" + "results_" + strings.TrimSuffix(fileName, filepath.Ext(fileName)) + fmt.Sprint(i)
 
-		f := utils.OpenFile(resFilename)
+		f := ioutils.OpenFile(resFilename)
 
 		solvConf := testConf.SolverConfig
 		generConf := testConf.GeneratorConfig
 		genConf := testConf.GeneralConfig
 
-		utils.CreateAndWriteHeader(f, &solvConf, &generConf)
+		ioutils.CreateAndWriteHeader(f, &solvConf, &generConf)
 
-		noOfAlgs := utils.GetNumOfAlgs(solvConf)
-		noOfDistros := utils.GetNumOfDistributions(generConf)
+		noOfAlgs := genUtils.GetNumOfAlgs(solvConf)
+		noOfDistros := genUtils.GetNumOfDistributions(generConf)
 
 		var name string
 		var score int
@@ -121,7 +120,7 @@ func runTestWithParametersFromFile(conf *utils.Config) {
 					}
 				}
 			}
-			utils.SaveResToFile(f, ress, genConf.NoOfReq)
+			ioutils.SaveResToFile(f, ress, genConf.NoOfReq)
 
 			genConf.NoOfReq += genConf.Growth
 

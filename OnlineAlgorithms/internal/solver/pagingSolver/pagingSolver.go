@@ -1,7 +1,7 @@
 package pagingsolver
 
 import (
-	"OnlineAlgorithms/internal/utils"
+	genUtils "OnlineAlgorithms/internal/utils/generalUtils"
 	"fmt"
 )
 
@@ -13,11 +13,11 @@ type PagingSolver struct {
 	size   int
 	faults int
 	alg    PagingSolvingAlg
-	algE   utils.PagingAlg
+	algE   genUtils.PagingAlg
 }
 
-func PagingSolver_Create(size int, algP utils.PagingAlg, debug bool) *PagingSolver {
-	pS := &PagingSolver{size: size, faults: 0, algE: utils.PagingAlg(algP)}
+func PagingSolver_Create(size int, algP genUtils.PagingAlg, debug bool) *PagingSolver {
+	pS := &PagingSolver{size: size, faults: 0, algE: genUtils.PagingAlg(algP)}
 	pS.createSolvingAlg(algP, debug)
 	return pS
 }
@@ -28,34 +28,34 @@ func (pS *PagingSolver) Serve(request int) {
 	}
 }
 
-func (ps *PagingSolver) createSolvingAlg(algP utils.PagingAlg, debug bool) {
-	switch utils.PagingAlg(algP) {
-	case utils.LRU:
+func (ps *PagingSolver) createSolvingAlg(algP genUtils.PagingAlg, debug bool) {
+	switch genUtils.PagingAlg(algP) {
+	case genUtils.LRU:
 		{
 			ps.alg = LRUAlg_Create(ps.size, debug)
 			break
 		}
-	case utils.FIFO:
+	case genUtils.FIFO:
 		{
 			ps.alg = FIFOAlg_Create(ps.size, debug)
 			break
 		}
-	case utils.LFU:
+	case genUtils.LFU:
 		{
 			ps.alg = LFUAlg_Create(ps.size, debug)
 			break
 		}
-	case utils.MARK:
+	case genUtils.MARK:
 		{
 			ps.alg = MARKAlg_Create(ps.size, debug)
 			break
 		}
-	case utils.MARK2:
+	case genUtils.MARK2:
 		{
 			ps.alg = MARK2Alg_Create(ps.size, debug)
 			break
 		}
-	case utils.RM:
+	case genUtils.RM:
 		{
 			ps.alg = RMAlg_Create(ps.size, debug)
 		}

@@ -1,7 +1,7 @@
 package pagingsolver
 
 import (
-	"OnlineAlgorithms/internal/utils"
+	ioutils "OnlineAlgorithms/internal/utils/ioUtils"
 	"fmt"
 	"math/rand"
 	"time"
@@ -19,40 +19,40 @@ func RMAlg_Create(size int, debug bool) *RMAlg {
 }
 
 func (alg *RMAlg) UpdateMemory(request int) bool {
-	utils.DebugPrint((fmt.Sprint("looking for ", request, "\t")), alg.debug)
+	ioutils.DebugPrint((fmt.Sprint("looking for ", request, "\t")), alg.debug)
 	isFound := alg.find(request)
-	utils.DebugPrint(fmt.Sprint(alg.memory, "\t"), alg.debug)
-	utils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
+	ioutils.DebugPrint(fmt.Sprint(alg.memory, "\t"), alg.debug)
+	ioutils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
 
 	if !isFound {
 
-		utils.DebugPrint(" ## FAULT ", alg.debug)
-		utils.DebugPrint(fmt.Sprint(" HAVE TO INSERT ", request, " ## "), alg.debug)
+		ioutils.DebugPrint(" ## FAULT ", alg.debug)
+		ioutils.DebugPrint(fmt.Sprint(" HAVE TO INSERT ", request, " ## "), alg.debug)
 		if len(alg.memory) >= alg.size {
 			alg.checkAllMarks()
 			evictIndex := alg.findItemToPop()
 
 			if evictIndex == -1 {
-				utils.ExitWithError("Unexcpeted")
+				ioutils.ExitWithError("Unexcpeted")
 			}
 
-			utils.DebugPrint(fmt.Sprint(" ## POPPING ", alg.memory[evictIndex], " ## "), alg.debug)
+			ioutils.DebugPrint(fmt.Sprint(" ## POPPING ", alg.memory[evictIndex], " ## "), alg.debug)
 			alg.memory = append(alg.memory[:evictIndex], alg.memory[evictIndex+1:]...)
 			alg.marks = append(alg.marks[:evictIndex], alg.marks[evictIndex+1:]...)
 
 		}
 		alg.memory = append([]int{request}, alg.memory...)
 		alg.marks = append([]bool{true}, alg.marks...)
-		utils.DebugPrint(fmt.Sprint(" =>> ", alg.memory, "\t"), alg.debug)
-		utils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
+		ioutils.DebugPrint(fmt.Sprint(" =>> ", alg.memory, "\t"), alg.debug)
+		ioutils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
 
 	} else {
 
-		utils.DebugPrint(fmt.Sprint(" ## FOUND ", request, " REQUEST SERVED ## =>> ", alg.memory, "\t"), alg.debug)
-		utils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
+		ioutils.DebugPrint(fmt.Sprint(" ## FOUND ", request, " REQUEST SERVED ## =>> ", alg.memory, "\t"), alg.debug)
+		ioutils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
 
 	}
-	utils.DebugPrint(fmt.Sprintln(), alg.debug)
+	ioutils.DebugPrint(fmt.Sprintln(), alg.debug)
 	return isFound
 }
 

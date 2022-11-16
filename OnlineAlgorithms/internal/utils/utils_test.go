@@ -1,6 +1,7 @@
 package utils
 
 import (
+	ioutils "OnlineAlgorithms/internal/utils/ioUtils"
 	"fmt"
 	"os"
 	"testing"
@@ -8,11 +9,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestYamlParse(t *testing.T) {
+func TestYamlParseFile(t *testing.T) {
 	fmt.Println(os.Getwd())
-	conf, err := ParseYaml("../../data/configs/generic_structure.yml")
-
-	assert.Equal(t, nil, err)
+	conf := ioutils.ReadYamlForConfig("../../data/configs/generic_structure.yml")
 
 	assert.NotNil(t, conf)
 }

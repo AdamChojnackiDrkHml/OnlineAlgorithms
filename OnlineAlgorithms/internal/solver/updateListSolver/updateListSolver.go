@@ -1,7 +1,7 @@
 package updatelistsolver
 
 import (
-	"OnlineAlgorithms/internal/utils"
+	genUtils "OnlineAlgorithms/internal/utils/generalUtils"
 	"fmt"
 )
 
@@ -23,11 +23,11 @@ type UpdateListSolver struct {
 	size int
 	cost int
 	alg  UpdateListSolvingAlg
-	algE utils.UpdateListAlg
+	algE genUtils.UpdateListAlg
 }
 
-func UpdateListSolver_Create(size int, algUL utils.UpdateListAlg, debug bool) *UpdateListSolver {
-	uLS := &UpdateListSolver{size: size, cost: 0, algE: utils.UpdateListAlg(algUL)}
+func UpdateListSolver_Create(size int, algUL genUtils.UpdateListAlg, debug bool) *UpdateListSolver {
+	uLS := &UpdateListSolver{size: size, cost: 0, algE: genUtils.UpdateListAlg(algUL)}
 	uLS.createSolvingAlg(algUL, debug)
 	return uLS
 }
@@ -36,33 +36,31 @@ func (uLS *UpdateListSolver) Serve(request int) {
 	uLS.cost += uLS.alg.UpdateList(request)
 }
 
-func (uLS *UpdateListSolver) createSolvingAlg(algUL utils.UpdateListAlg, debug bool) {
+func (uLS *UpdateListSolver) createSolvingAlg(algUL genUtils.UpdateListAlg, debug bool) {
 	switch algUL {
-	case utils.MTF:
+	case genUtils.MTF:
 		{
 			uLS.alg = MTFAlg_Create(uLS.size, debug)
 			break
 		}
-	case utils.TRANS:
+	case genUtils.TRANS:
 		{
 			uLS.alg = TransAlg_Create(uLS.size, debug)
 			break
 		}
-	case utils.FQ:
+	case genUtils.FQ:
 		{
 			uLS.alg = FQAlg_Create(uLS.size, debug)
 			break
 		}
-	case utils.BIT:
+	case genUtils.BIT:
 		{
 			uLS.alg = BITAlg_Create(uLS.size, debug)
-			utils.DebugPrint("DUPA BIT\n", debug)
 			break
 		}
-	case utils.TS:
+	case genUtils.TS:
 		{
 			uLS.alg = TSAlg_Create(uLS.size, debug)
-			utils.DebugPrint("DUPA TS\n", debug)
 
 			break
 		}

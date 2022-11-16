@@ -6,14 +6,14 @@ import (
 	hrmdistgenerator "OnlineAlgorithms/internal/dataGenerator/hrmDistGenerator"
 	poisdistgenerator "OnlineAlgorithms/internal/dataGenerator/poisDistGenerator"
 	unidistgenerator "OnlineAlgorithms/internal/dataGenerator/uniDistGenerator"
-	"OnlineAlgorithms/internal/utils"
+	genUtils "OnlineAlgorithms/internal/utils/generalUtils"
 )
 
 type GenericDataGenerator interface {
 	GetRequest() int
 }
 
-func CreateDataGenerator(generConf utils.GeneratorConfigS) []GenericDataGenerator {
+func CreateDataGenerator(generConf genUtils.GeneratorConfigS) []GenericDataGenerator {
 	var generators []GenericDataGenerator
 
 	for _, n := range generConf.DistributionType {
@@ -23,23 +23,23 @@ func CreateDataGenerator(generConf utils.GeneratorConfigS) []GenericDataGenerato
 	return generators
 }
 
-func initGenerator(generConf utils.GeneratorConfigS, generatorType utils.GeneratorTypeEnum) GenericDataGenerator {
+func initGenerator(generConf genUtils.GeneratorConfigS, generatorType genUtils.GeneratorTypeEnum) GenericDataGenerator {
 	var gD GenericDataGenerator
 
 	switch generatorType {
-	case utils.Uni:
+	case genUtils.Uni:
 		gD = unidistgenerator.Create(generConf.Minimum, generConf.Maximum)
 
-	case utils.Geo:
+	case genUtils.Geo:
 		gD = geodistgenerator.Create(generConf.FvalueGeo, generConf.Maximum)
 
-	case utils.Pois:
+	case genUtils.Pois:
 		gD = poisdistgenerator.Create(generConf.FvaluePoiss, generConf.Maximum)
 
-	case utils.Hrm:
+	case genUtils.Hrm:
 		gD = hrmdistgenerator.Create(generConf.Minimum, generConf.Maximum)
 
-	case utils.Dhr:
+	case genUtils.Dhr:
 		gD = dhrdistgenerator.Create(generConf.Minimum, generConf.Maximum)
 	}
 

@@ -1,7 +1,7 @@
 package updatelistsolver
 
 import (
-	"OnlineAlgorithms/internal/utils"
+	ioutils "OnlineAlgorithms/internal/utils/ioUtils"
 	"fmt"
 )
 
@@ -45,19 +45,19 @@ func FQAlg_Create(size int, debug bool) *FQAlg {
 }
 
 func (alg *FQAlg) UpdateList(request int) int {
-	utils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
-	utils.DebugPrint(fmt.Sprint(" LOOKING FOR ", request), alg.debug)
+	ioutils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
+	ioutils.DebugPrint(fmt.Sprint(" LOOKING FOR ", request), alg.debug)
 	for i, n := range alg.memory {
 		if n.mem == request {
 
-			utils.DebugPrint(fmt.Sprint(" FOUND ", n.mem, " AT INDEX ", i, "UPDATING HEAP => "), alg.debug)
+			ioutils.DebugPrint(fmt.Sprint(" FOUND ", n.mem, " AT INDEX ", i, "UPDATING HEAP => "), alg.debug)
 			alg.update(n, i)
-			utils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
-			utils.DebugPrint(fmt.Sprintln(), alg.debug)
+			ioutils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
+			ioutils.DebugPrint(fmt.Sprintln(), alg.debug)
 			return i
 		}
 	}
-	utils.DebugPrint(fmt.Sprintln(), alg.debug)
+	ioutils.DebugPrint(fmt.Sprintln(), alg.debug)
 
 	return alg.size
 }

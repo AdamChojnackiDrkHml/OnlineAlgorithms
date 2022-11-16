@@ -1,7 +1,7 @@
 package pagingsolver
 
 import (
-	"OnlineAlgorithms/internal/utils"
+	ioutils "OnlineAlgorithms/internal/utils/ioUtils"
 	"fmt"
 )
 
@@ -17,20 +17,20 @@ func MARKAlg_Create(size int, debug bool) *MARKAlg {
 }
 
 func (alg *MARKAlg) UpdateMemory(request int) bool {
-	utils.DebugPrint((fmt.Sprint("looking for ", request, "\t")), alg.debug)
+	ioutils.DebugPrint((fmt.Sprint("looking for ", request, "\t")), alg.debug)
 	index, isFound := alg.find(request)
-	utils.DebugPrint(fmt.Sprint(alg.memory, "\t"), alg.debug)
-	utils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
+	ioutils.DebugPrint(fmt.Sprint(alg.memory, "\t"), alg.debug)
+	ioutils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
 
 	if !isFound {
 
-		utils.DebugPrint(" ## FAULT ", alg.debug)
-		utils.DebugPrint(fmt.Sprint(" HAVE TO INSERT ", request, " ## "), alg.debug)
+		ioutils.DebugPrint(" ## FAULT ", alg.debug)
+		ioutils.DebugPrint(fmt.Sprint(" HAVE TO INSERT ", request, " ## "), alg.debug)
 		if len(alg.memory) >= alg.size {
 			alg.checkAllMarks()
 			for i := len(alg.memory) - 1; i >= 0; i++ {
 				if !alg.marks[i] {
-					utils.DebugPrint(fmt.Sprint(" ## POPPING ", alg.memory[i], " ## "), alg.debug)
+					ioutils.DebugPrint(fmt.Sprint(" ## POPPING ", alg.memory[i], " ## "), alg.debug)
 					alg.memory = append(alg.memory[:i], alg.memory[i+1:]...)
 					alg.marks = append(alg.marks[:i], alg.marks[i+1:]...)
 					break
@@ -40,19 +40,19 @@ func (alg *MARKAlg) UpdateMemory(request int) bool {
 		}
 		alg.memory = append([]int{request}, alg.memory...)
 		alg.marks = append([]bool{true}, alg.marks...)
-		utils.DebugPrint(fmt.Sprint(" =>> ", alg.memory, "\t"), alg.debug)
-		utils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
+		ioutils.DebugPrint(fmt.Sprint(" =>> ", alg.memory, "\t"), alg.debug)
+		ioutils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
 
 	} else {
 		alg.memory = append(alg.memory[:index], alg.memory[index+1:]...)
 		alg.marks = append(alg.marks[:index], alg.marks[index+1:]...)
 		alg.memory = append([]int{request}, alg.memory...)
 		alg.marks = append([]bool{true}, alg.marks...)
-		utils.DebugPrint(fmt.Sprint(" ## FOUND ", request, " REQUEST SERVED ## =>> ", alg.memory, "\t"), alg.debug)
-		utils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
+		ioutils.DebugPrint(fmt.Sprint(" ## FOUND ", request, " REQUEST SERVED ## =>> ", alg.memory, "\t"), alg.debug)
+		ioutils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
 
 	}
-	utils.DebugPrint(fmt.Sprintln(), alg.debug)
+	ioutils.DebugPrint(fmt.Sprintln(), alg.debug)
 	return isFound
 }
 
