@@ -1,4 +1,4 @@
-package dhrdistgenerator
+package datagenerator
 
 import (
 	"time"
@@ -13,7 +13,7 @@ type dhrDistGenerator struct {
 	high int
 }
 
-func Create(low, high int) *dhrDistGenerator {
+func DHR_Create(low, high int) *dhrDistGenerator {
 
 	g := &dhrDistGenerator{gen: uniform.Uniform{Min: float64(0), Max: float64(1), Src: rand.New(rand.NewSource(uint64(time.Now().UnixNano())))}}
 	g.dist = make([]float64, high+1)

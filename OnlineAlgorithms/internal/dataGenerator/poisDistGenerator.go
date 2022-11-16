@@ -1,4 +1,4 @@
-package poisdistgenerator
+package datagenerator
 
 import (
 	stats "github.com/r0fls/gostats"
@@ -9,7 +9,7 @@ type PoisDistGenerator struct {
 	limit int
 }
 
-func Create(scale float64, limit int) *PoisDistGenerator {
+func POIS_Create(scale float64, limit int) *PoisDistGenerator {
 
 	g := &PoisDistGenerator{gen: stats.Poisson(scale), limit: limit}
 	return g

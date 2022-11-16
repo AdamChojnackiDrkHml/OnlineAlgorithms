@@ -1,4 +1,4 @@
-package geodistgenerator
+package datagenerator
 
 import (
 	stats "github.com/r0fls/gostats"
@@ -9,7 +9,7 @@ type GeoDistGenerator struct {
 	limit int
 }
 
-func Create(scale float64, limit int) *GeoDistGenerator {
+func GEO_Create(scale float64, limit int) *GeoDistGenerator {
 
 	g := &GeoDistGenerator{gen: stats.Geometric(scale), limit: limit}
 	return g

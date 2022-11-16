@@ -1,11 +1,6 @@
-package datagenerator_test
+package datagenerator
 
 import (
-	dhrdistgenerator "OnlineAlgorithms/internal/dataGenerator/dhrDistGenerator"
-	geodistgenerator "OnlineAlgorithms/internal/dataGenerator/geoDistGenerator"
-	hrmdistgenerator "OnlineAlgorithms/internal/dataGenerator/hrmDistGenerator"
-	poisdistgenerator "OnlineAlgorithms/internal/dataGenerator/poisDistGenerator"
-	unidistgenerator "OnlineAlgorithms/internal/dataGenerator/uniDistGenerator"
 	genUtils "OnlineAlgorithms/internal/utils/generalUtils"
 )
 
@@ -28,19 +23,19 @@ func initGenerator(generConf genUtils.GeneratorConfigS, generatorType genUtils.G
 
 	switch generatorType {
 	case genUtils.Uni:
-		gD = unidistgenerator.Create(generConf.Minimum, generConf.Maximum)
+		gD = UNI_Create(generConf.Minimum, generConf.Maximum)
 
 	case genUtils.Geo:
-		gD = geodistgenerator.Create(generConf.FvalueGeo, generConf.Maximum)
+		gD = GEO_Create(generConf.FvalueGeo, generConf.Maximum)
 
 	case genUtils.Pois:
-		gD = poisdistgenerator.Create(generConf.FvaluePoiss, generConf.Maximum)
+		gD = POIS_Create(generConf.FvaluePoiss, generConf.Maximum)
 
 	case genUtils.Hrm:
-		gD = hrmdistgenerator.Create(generConf.Minimum, generConf.Maximum)
+		gD = HRM_Create(generConf.Minimum, generConf.Maximum)
 
 	case genUtils.Dhr:
-		gD = dhrdistgenerator.Create(generConf.Minimum, generConf.Maximum)
+		gD = DHR_Create(generConf.Minimum, generConf.Maximum)
 	}
 
 	return gD
