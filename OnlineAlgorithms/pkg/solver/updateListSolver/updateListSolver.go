@@ -64,6 +64,10 @@ func (uLS *UpdateListSolver) createSolvingAlg(algUL genUtils.UpdateListAlg, debu
 
 			break
 		}
+	case genUtils.Combination:
+		{
+			uLS.alg = CombinationAlg_Create(uLS.size, debug)
+		}
 	}
 }
 

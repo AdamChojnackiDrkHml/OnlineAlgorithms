@@ -37,6 +37,7 @@ const (
 	FC
 	BIT
 	TS
+	Combination
 )
 
 func (e UpdateListAlg) String() string {
@@ -51,6 +52,8 @@ func (e UpdateListAlg) String() string {
 		return "BIT"
 	case TS:
 		return "TS"
+	case Combination:
+		return "Combination"
 	default:
 		return "NULL"
 	}
@@ -162,7 +165,7 @@ type Config struct {
 // /////////////////////////////////////
 const (
 	NUM_OF_PAGING_ALGS     = 6
-	NUM_OF_UPDATELIST_ALGS = 5
+	NUM_OF_UPDATELIST_ALGS = 6
 	NUM_OF_DISTRIBUTIONS   = 5
 )
 
@@ -250,7 +253,7 @@ func ValidateTestConfig(testConf TestConfigS) error {
 	if solverConfig.ProblemType == UpdateList {
 		for _, algUL := range solverConfig.AlgUL {
 			if algUL >= NUM_OF_UPDATELIST_ALGS {
-				return errors.New("wrong paging algorithm identification number")
+				return errors.New("wrong update list algorithm identification number")
 			}
 		}
 	}
