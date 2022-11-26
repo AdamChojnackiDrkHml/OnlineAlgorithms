@@ -10,7 +10,7 @@ const debug = true
 
 func TestFQ(t *testing.T) {
 
-	fq := FQAlg_Create(10, debug)
+	fq := FCAlg_Create(10, debug)
 	ulS := UpdateListSolver{alg: fq}
 
 	initRequests := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}

@@ -5,19 +5,19 @@ import (
 	"fmt"
 )
 
-type FQAlg struct {
-	memory []*FQMem
+type FCAlg struct {
+	memory []*FCMem
 	size   int
 	debug  bool
 }
 
-type FQMem struct {
+type FCMem struct {
 	mem       int
 	freqCount int
 	index     int
 }
 
-func (alg *FQAlg) update(item *FQMem, pos int) {
+func (alg *FCAlg) update(item *FCMem, pos int) {
 	item.freqCount++
 	if pos == 0 {
 		return
@@ -33,18 +33,18 @@ func (alg *FQAlg) update(item *FQMem, pos int) {
 
 }
 
-func FQAlg_Create(size int, debug bool) *FQAlg {
-	fq := &FQAlg{size: size, memory: make([]*FQMem, 0), debug: debug}
+func FCAlg_Create(size int, debug bool) *FCAlg {
+	FC := &FCAlg{size: size, memory: make([]*FCMem, 0), debug: debug}
 	list := CreateList(size)
 
 	for i, n := range list {
-		fq.memory = append(fq.memory, &FQMem{mem: n, freqCount: 0, index: i})
+		FC.memory = append(FC.memory, &FCMem{mem: n, freqCount: 0, index: i})
 	}
 
-	return fq
+	return FC
 }
 
-func (alg *FQAlg) UpdateList(request int) int {
+func (alg *FCAlg) UpdateList(request int) int {
 	ioutils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
 	ioutils.DebugPrint(fmt.Sprint(" LOOKING FOR ", request), alg.debug)
 	for i, n := range alg.memory {
@@ -62,7 +62,7 @@ func (alg *FQAlg) UpdateList(request int) int {
 	return alg.size
 }
 
-func (alg *FQAlg) unpackMemory() [][]int {
+func (alg *FCAlg) unpackMemory() [][]int {
 	mem := make([][]int, 0)
 
 	for _, n := range alg.memory {

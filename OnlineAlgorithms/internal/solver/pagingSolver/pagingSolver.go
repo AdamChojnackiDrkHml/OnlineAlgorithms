@@ -45,14 +45,14 @@ func (ps *PagingSolver) createSolvingAlg(algP genUtils.PagingAlg, debug bool) {
 			ps.alg = LFUAlg_Create(ps.size, debug)
 			break
 		}
-	case genUtils.MARK:
+	case genUtils.MARK_LRU:
 		{
-			ps.alg = MARKAlg_Create(ps.size, debug)
+			ps.alg = MARKLRUAlg_Create(ps.size, debug)
 			break
 		}
-	case genUtils.MARK2:
+	case genUtils.MARK_FC:
 		{
-			ps.alg = MARK2Alg_Create(ps.size, debug)
+			ps.alg = MARKFCAlg_Create(ps.size, debug)
 			break
 		}
 	case genUtils.RM:

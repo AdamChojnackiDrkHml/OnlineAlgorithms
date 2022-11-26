@@ -5,18 +5,18 @@ import (
 	"fmt"
 )
 
-type MARKAlg struct {
+type MARKLRUAlg struct {
 	memory []int
 	marks  []bool
 	size   int
 	debug  bool
 }
 
-func MARKAlg_Create(size int, debug bool) *MARKAlg {
-	return &MARKAlg{size: size, memory: make([]int, 0), marks: make([]bool, 0), debug: debug}
+func MARKLRUAlg_Create(size int, debug bool) *MARKLRUAlg {
+	return &MARKLRUAlg{size: size, memory: make([]int, 0), marks: make([]bool, 0), debug: debug}
 }
 
-func (alg *MARKAlg) UpdateMemory(request int) bool {
+func (alg *MARKLRUAlg) UpdateMemory(request int) bool {
 	ioutils.DebugPrint((fmt.Sprint("looking for ", request, "\t")), alg.debug)
 	index, isFound := alg.find(request)
 	ioutils.DebugPrint(fmt.Sprint(alg.memory, "\t"), alg.debug)
@@ -56,7 +56,7 @@ func (alg *MARKAlg) UpdateMemory(request int) bool {
 	return isFound
 }
 
-func (alg *MARKAlg) find(request int) (int, bool) {
+func (alg *MARKLRUAlg) find(request int) (int, bool) {
 	for i, n := range alg.memory {
 		if n == request {
 			alg.marks[i] = true
@@ -66,7 +66,7 @@ func (alg *MARKAlg) find(request int) (int, bool) {
 	return -1, false
 }
 
-func (alg *MARKAlg) checkAllMarks() {
+func (alg *MARKLRUAlg) checkAllMarks() {
 	for _, n := range alg.marks {
 		if !n {
 			return

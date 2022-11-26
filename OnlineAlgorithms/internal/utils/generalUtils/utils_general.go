@@ -34,7 +34,7 @@ type UpdateListAlg int
 const (
 	MTF UpdateListAlg = iota
 	TRANS
-	FQ
+	FC
 	BIT
 	TS
 )
@@ -45,8 +45,8 @@ func (e UpdateListAlg) String() string {
 		return "MTF"
 	case TRANS:
 		return "TRANS"
-	case FQ:
-		return "FQ"
+	case FC:
+		return "FC"
 	case BIT:
 		return "BIT"
 	case TS:
@@ -65,8 +65,8 @@ const (
 	LRU PagingAlg = iota
 	FIFO
 	LFU
-	MARK
-	MARK2
+	MARK_LRU
+	MARK_FC
 	RM
 )
 
@@ -78,10 +78,10 @@ func (e PagingAlg) String() string {
 		return "FIFO"
 	case LFU:
 		return "LFU"
-	case MARK:
+	case MARK_LRU:
 		return "MARK"
-	case MARK2:
-		return "MARK2"
+	case MARK_FC:
+		return "MARK_FC"
 	case RM:
 		return "RM"
 	default:

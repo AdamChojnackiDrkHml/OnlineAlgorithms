@@ -48,9 +48,9 @@ func (uLS *UpdateListSolver) createSolvingAlg(algUL genUtils.UpdateListAlg, debu
 			uLS.alg = TransAlg_Create(uLS.size, debug)
 			break
 		}
-	case genUtils.FQ:
+	case genUtils.FC:
 		{
-			uLS.alg = FQAlg_Create(uLS.size, debug)
+			uLS.alg = FCAlg_Create(uLS.size, debug)
 			break
 		}
 	case genUtils.BIT:

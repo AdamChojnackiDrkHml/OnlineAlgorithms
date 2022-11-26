@@ -6,7 +6,7 @@ import (
 	"math"
 )
 
-type MARK2Alg struct {
+type MARKFCAlg struct {
 	memory []int
 	marks  []bool
 	fq     []int
@@ -14,11 +14,11 @@ type MARK2Alg struct {
 	debug  bool
 }
 
-func MARK2Alg_Create(size int, debug bool) *MARK2Alg {
-	return &MARK2Alg{size: size, memory: make([]int, 0), marks: make([]bool, 0), fq: make([]int, 0), debug: debug}
+func MARKFCAlg_Create(size int, debug bool) *MARKFCAlg {
+	return &MARKFCAlg{size: size, memory: make([]int, 0), marks: make([]bool, 0), fq: make([]int, 0), debug: debug}
 }
 
-func (alg *MARK2Alg) UpdateMemory(request int) bool {
+func (alg *MARKFCAlg) UpdateMemory(request int) bool {
 	ioutils.DebugPrint((fmt.Sprint("looking for ", request, "\t")), alg.debug)
 	isFound := alg.find(request)
 	ioutils.DebugPrint(fmt.Sprint(alg.memory, "\t"), alg.debug)
@@ -61,7 +61,7 @@ func (alg *MARK2Alg) UpdateMemory(request int) bool {
 	return isFound
 }
 
-func (alg *MARK2Alg) find(request int) bool {
+func (alg *MARKFCAlg) find(request int) bool {
 	for i, n := range alg.memory {
 		if n == request {
 			alg.marks[i] = true
@@ -72,7 +72,7 @@ func (alg *MARK2Alg) find(request int) bool {
 	return false
 }
 
-func (alg *MARK2Alg) checkAllMarks() {
+func (alg *MARKFCAlg) checkAllMarks() {
 	for _, n := range alg.marks {
 		if !n {
 			return
@@ -83,7 +83,7 @@ func (alg *MARK2Alg) checkAllMarks() {
 	}
 }
 
-func (alg *MARK2Alg) findSmallestFqUnmarked() int {
+func (alg *MARKFCAlg) findSmallestFqUnmarked() int {
 	minIndex := -1
 	minValue := math.MaxInt
 	for i, n := range alg.fq {

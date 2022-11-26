@@ -80,7 +80,7 @@ func TestLfu(t *testing.T) {
 }
 
 func TestMark1(t *testing.T) {
-	mark := MARKAlg_Create(10, debug)
+	mark := MARKLRUAlg_Create(10, debug)
 	pS := PagingSolver{alg: mark}
 
 	initRequests := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
@@ -101,7 +101,7 @@ func TestMark1(t *testing.T) {
 }
 
 func TestMark2(t *testing.T) {
-	mark := MARK2Alg_Create(10, debug)
+	mark := MARKFCAlg_Create(10, debug)
 	pS := PagingSolver{alg: mark}
 
 	initRequests := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
