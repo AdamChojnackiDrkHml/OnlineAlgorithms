@@ -1,47 +1,41 @@
 package pagingsolver
 
 import (
-	ioutils "OnlineAlgorithms/internal/utils/ioUtils"
+	ioutils "OnlineAlgorithms/pkg/solver/utils"
 	"container/heap"
 	"fmt"
 )
 
-type LFUMemCell struct {
-	reqCnt int
-	mem    int
-	index  int
+type LRUMem struct {
+	mem     int
+	lastReq int
+	index   int
 }
 
-type LFUAlg struct {
-	memory PriorityQueueLFU
-	size   int
-	debug  bool
-}
+type PriorityQueue []*LRUMem
 
-type PriorityQueueLFU []*LFUMemCell
-
-func (pq PriorityQueueLFU) Len() int {
+func (pq PriorityQueue) Len() int {
 	return len(pq)
 }
 
-func (pq PriorityQueueLFU) Less(i, j int) bool {
-	return pq[i].reqCnt < pq[j].reqCnt
+func (pq PriorityQueue) Less(i, j int) bool {
+	return pq[i].lastReq > pq[j].lastReq
 }
 
-func (pq PriorityQueueLFU) Swap(i, j int) {
+func (pq PriorityQueue) Swap(i, j int) {
 	pq[i], pq[j] = pq[j], pq[i]
 	pq[i].index = i
 	pq[j].index = j
 }
 
-func (pq *PriorityQueueLFU) Push(x any) {
+func (pq *PriorityQueue) Push(x any) {
 	n := len(*pq)
-	item := x.(*LFUMemCell)
+	item := x.(*LRUMem)
 	item.index = n
 	*pq = append(*pq, item)
 }
 
-func (pq *PriorityQueueLFU) Pop() any {
+func (pq *PriorityQueue) Pop() any {
 	old := *pq
 	n := len(old)
 	item := old[n-1]
@@ -51,19 +45,24 @@ func (pq *PriorityQueueLFU) Pop() any {
 	return item
 }
 
-func LFUAlg_Create(size int, debug bool) *LFUAlg {
-	lfu := &LFUAlg{size: size, memory: make(PriorityQueueLFU, 0), debug: debug}
-	heap.Init(&lfu.memory)
-
-	return lfu
+func (pq *PriorityQueue) update(item *LRUMem) {
+	item.lastReq++
 }
 
-func (pq *PriorityQueueLFU) update(item *LFUMemCell) {
-	item.reqCnt++
-	heap.Fix(pq, item.index)
+type LRUAlg struct {
+	memory PriorityQueue
+	size   int
+	debug  bool
 }
 
-func (alg *LFUAlg) UpdateMemory(request int) bool {
+func LRUAlg_Create(size int, debug bool) *LRUAlg {
+	lru := &LRUAlg{size: size, memory: make(PriorityQueue, 0), debug: debug}
+	heap.Init(&lru.memory)
+
+	return lru
+}
+
+func (alg *LRUAlg) UpdateMemory(request int) bool {
 	isFound := alg.find(request)
 	ioutils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
 	ioutils.DebugPrint(fmt.Sprint(" ## LOOKING FOR ", request, " "), alg.debug)
@@ -72,10 +71,10 @@ func (alg *LFUAlg) UpdateMemory(request int) bool {
 		ioutils.DebugPrint(" ## FAULT ", alg.debug)
 		ioutils.DebugPrint(fmt.Sprint(" HAVE TO INSERT ", request, " ## "), alg.debug)
 		if alg.memory.Len() >= alg.size {
-			x := heap.Pop(&alg.memory).(*LFUMemCell)
+			x := heap.Pop(&alg.memory).(*LRUMem)
 			ioutils.DebugPrint(fmt.Sprint(" ## POPPING ", x.mem, " ## "), alg.debug)
 		}
-		heap.Push(&alg.memory, &LFUMemCell{mem: request, reqCnt: 1})
+		heap.Push(&alg.memory, &LRUMem{mem: request, lastReq: 0})
 		ioutils.DebugPrint(fmt.Sprint(" =>> ", alg.unpackMemory()), alg.debug)
 	} else {
 		ioutils.DebugPrint(fmt.Sprint(" ## FOUND ", request, " REQUEST SERVED ## =>> ", alg.unpackMemory()), alg.debug)
@@ -85,21 +84,24 @@ func (alg *LFUAlg) UpdateMemory(request int) bool {
 	return isFound
 }
 
-func (alg *LFUAlg) find(request int) bool {
+func (alg *LRUAlg) find(request int) bool {
+	ret := false
 	for _, n := range alg.memory {
 		if n.mem == request {
-			alg.memory.update(n)
-			return true
+			n.lastReq = 0
+			ret = true
+			continue
 		}
+		alg.memory.update(n)
 	}
-	return false
+	return ret
 }
 
-func (alg *LFUAlg) unpackMemory() [][]int {
+func (alg *LRUAlg) unpackMemory() [][]int {
 	mem := make([][]int, 0)
 
 	for _, n := range alg.memory {
-		mem = append(mem, []int{n.mem, n.reqCnt})
+		mem = append(mem, []int{n.mem, n.lastReq})
 	}
 
 	return mem

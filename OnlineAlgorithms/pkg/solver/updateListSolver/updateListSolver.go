@@ -1,7 +1,7 @@
 package updatelistsolver
 
 import (
-	genUtils "OnlineAlgorithms/internal/utils/generalUtils"
+	genUtils "OnlineAlgorithms/pkg/utils/generalUtils"
 	"fmt"
 )
 

@@ -1,7 +1,7 @@
 package pagingsolver
 
 import (
-	ioutils "OnlineAlgorithms/internal/utils/ioUtils"
+	ioutils "OnlineAlgorithms/pkg/solver/utils"
 	"fmt"
 	"math"
 )
@@ -32,10 +32,6 @@ func (alg *MARKFCAlg) UpdateMemory(request int) bool {
 		if len(alg.memory) >= alg.size {
 			alg.checkAllMarks()
 			evictIndex := alg.findSmallestFqUnmarked()
-
-			if evictIndex == -1 {
-				ioutils.ExitWithError("Unexcpeted")
-			}
 
 			ioutils.DebugPrint(fmt.Sprint(" ## POPPING ", alg.memory[evictIndex], " ## "), alg.debug)
 			alg.memory = append(alg.memory[:evictIndex], alg.memory[evictIndex+1:]...)
@@ -84,7 +80,7 @@ func (alg *MARKFCAlg) checkAllMarks() {
 }
 
 func (alg *MARKFCAlg) findSmallestFqUnmarked() int {
-	minIndex := -1
+	minIndex := 0
 	minValue := math.MaxInt
 	for i, n := range alg.fq {
 		if !alg.marks[i] && n < minValue {

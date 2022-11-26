@@ -1,7 +1,7 @@
 package datagenerator
 
 import (
-	genUtils "OnlineAlgorithms/internal/utils/generalUtils"
+	genUtils "OnlineAlgorithms/pkg/utils/generalUtils"
 )
 
 type GenericDataGenerator interface {

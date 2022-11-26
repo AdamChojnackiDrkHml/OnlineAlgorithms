@@ -1,7 +1,6 @@
-package utils
+package ioutils
 
 import (
-	ioutils "OnlineAlgorithms/internal/utils/ioUtils"
 	"fmt"
 	"os"
 	"testing"
@@ -11,7 +10,7 @@ import (
 
 func TestYamlParseFile(t *testing.T) {
 	fmt.Println(os.Getwd())
-	conf := ioutils.ReadYamlForConfig("../../data/configs/generic_structure.yml")
+	conf := ReadYamlForConfig("../../data/configs/generic_structure.yml")
 
 	assert.NotNil(t, conf)
 }

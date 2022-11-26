@@ -1,7 +1,7 @@
 package pagingsolver
 
 import (
-	ioutils "OnlineAlgorithms/internal/utils/ioUtils"
+	ioutils "OnlineAlgorithms/pkg/solver/utils"
 	"fmt"
 	"math/rand"
 	"time"
@@ -31,10 +31,6 @@ func (alg *RMAlg) UpdateMemory(request int) bool {
 		if len(alg.memory) >= alg.size {
 			alg.checkAllMarks()
 			evictIndex := alg.findItemToPop()
-
-			if evictIndex == -1 {
-				ioutils.ExitWithError("Unexcpeted")
-			}
 
 			ioutils.DebugPrint(fmt.Sprint(" ## POPPING ", alg.memory[evictIndex], " ## "), alg.debug)
 			alg.memory = append(alg.memory[:evictIndex], alg.memory[evictIndex+1:]...)

@@ -1,7 +1,7 @@
 package ioutils
 
 import (
-	genUtils "OnlineAlgorithms/internal/utils/generalUtils"
+	genUtils "OnlineAlgorithms/pkg/utils/generalUtils"
 	"fmt"
 	"os"
 	"strconv"
@@ -38,12 +38,6 @@ func WriteToFile(f *os.File, s string) {
 	}
 	fmt.Fprint(f, s)
 
-}
-
-func DebugPrint(s string, p bool) {
-	if p {
-		fmt.Print(s)
-	}
 }
 
 func ExitWithError(err string) {
