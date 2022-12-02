@@ -1,9 +1,10 @@
 package solver
 
 import (
+	generalUtils "OnlineAlgorithms/pkg/generalUtils"
 	pagingsolver "OnlineAlgorithms/pkg/solver/pagingSolver"
 	updatelistsolver "OnlineAlgorithms/pkg/solver/updateListSolver"
-	genUtils "OnlineAlgorithms/pkg/utils/generalUtils"
+	solverutils "OnlineAlgorithms/pkg/solver/utils"
 )
 
 type GenericSolver interface {
@@ -11,20 +12,30 @@ type GenericSolver interface {
 	Raport() (string, int)
 }
 
-func CreateSolver(solverConf genUtils.SolverConfigS) []GenericSolver {
+func CreateSolversFromConfig(solverConf generalUtils.SolverConfigS) []GenericSolver {
 
 	var gS []GenericSolver
+	debug := solverConf.Debug
+	size := solverConf.Size
 
 	switch solverConf.ProblemType {
-	case genUtils.Paging:
+	case solverutils.Paging:
 		for _, algP := range solverConf.AlgP {
-			gS = append(gS, pagingsolver.PagingSolver_Create(solverConf.Size, algP, solverConf.Debug))
+			gS = append(gS, CreateSinglePagingSolver(size, algP, debug))
 		}
-	case genUtils.UpdateList:
+	case solverutils.UpdateList:
 		for _, algUL := range solverConf.AlgUL {
-			gS = append(gS, updatelistsolver.UpdateListSolver_Create(solverConf.Size, algUL, solverConf.Debug))
+			gS = append(gS, CreateSingleUpdateListSolver(size, algUL, debug))
 		}
 	}
 
 	return gS
+}
+
+func CreateSinglePagingSolver(size int, alg pagingsolver.PagingAlg, debug bool) GenericSolver {
+	return pagingsolver.PagingSolver_Create(size, alg, debug)
+}
+
+func CreateSingleUpdateListSolver(size int, alg updatelistsolver.UpdateListAlg, debug bool) GenericSolver {
+	return updatelistsolver.UpdateListSolver_Create(size, alg, debug)
 }

@@ -1,96 +1,23 @@
 package generalutils
 
 import (
+	solverutils "OnlineAlgorithms/pkg/solver"
+	pagingsolver "OnlineAlgorithms/pkg/solver/pagingsolver"
+	updatelistsolver "OnlineAlgorithms/pkg/solver/updatelistsolver"
 	"errors"
 )
 
 // ///////////
 // SOLVER ENUM
 // ///////////
-type SolverTypeEnum int
-
-const (
-	Paging SolverTypeEnum = iota
-	UpdateList
-)
-
-func (e SolverTypeEnum) String() string {
-	switch e {
-	case Paging:
-		return "Paging"
-	case UpdateList:
-		return "UpdateList"
-	default:
-		return "NULL"
-	}
-
-}
 
 // ////////////////
 // UPDATE LIST ENUM
 // ////////////////
-type UpdateListAlg int
-
-const (
-	MTF UpdateListAlg = iota
-	TRANS
-	FC
-	BIT
-	TS
-	Combination
-)
-
-func (e UpdateListAlg) String() string {
-	switch e {
-	case MTF:
-		return "MTF"
-	case TRANS:
-		return "TRANS"
-	case FC:
-		return "FC"
-	case BIT:
-		return "BIT"
-	case TS:
-		return "TS"
-	case Combination:
-		return "Combination"
-	default:
-		return "NULL"
-	}
-}
 
 // ///////////
 // PAGING ENUM
 // ///////////
-type PagingAlg int
-
-const (
-	LRU PagingAlg = iota
-	FIFO
-	LFU
-	MARK_LRU
-	MARK_FC
-	RM
-)
-
-func (e PagingAlg) String() string {
-	switch e {
-	case LRU:
-		return "LRU"
-	case FIFO:
-		return "FIFO"
-	case LFU:
-		return "LFU"
-	case MARK_LRU:
-		return "MARK"
-	case MARK_FC:
-		return "MARK_FC"
-	case RM:
-		return "RM"
-	default:
-		return "NULL"
-	}
-}
 
 // ///////////////
 // GENERATOR ENUM
@@ -132,12 +59,12 @@ type GeneralConfigS struct {
 	Repeats    int `yaml:"repeats"`
 }
 type SolverConfigS struct {
-	ProblemType SolverTypeEnum  `yaml:"problemType"`
-	Size        int             `yaml:"size"`
-	AlgP        []PagingAlg     `yaml:"algP"`
-	AlgUL       []UpdateListAlg `yaml:"algUL"`
-	Debug       bool            `default:"false" yaml:"debug"`
-	DoAll       bool            `default:"false" yaml:"doAll"`
+	ProblemType solverutils.SolverTypeEnum       `yaml:"problemType"`
+	Size        int                              `yaml:"size"`
+	AlgP        []pagingsolver.PagingAlg         `yaml:"algP"`
+	AlgUL       []updatelistsolver.UpdateListAlg `yaml:"algUL"`
+	Debug       bool                             `default:"false" yaml:"debug"`
+	DoAll       bool                             `default:"false" yaml:"doAll"`
 }
 type GeneratorConfigS struct {
 	DistributionType []GeneratorTypeEnum `yaml:"distributionType"`
@@ -171,9 +98,9 @@ const (
 
 func GetNumOfAlgs(solverConfig SolverConfigS) int {
 	switch solverConfig.ProblemType {
-	case Paging:
+	case solverutils.Paging:
 		return len(solverConfig.AlgP)
-	case UpdateList:
+	case solverutils.UpdateList:
 		return len(solverConfig.AlgUL)
 	default:
 		return GetMaxNumOfAlgs(solverConfig.ProblemType)
@@ -184,11 +111,11 @@ func GetNumOfDistributions(generatorConfigs GeneratorConfigS) int {
 	return len(generatorConfigs.DistributionType)
 }
 
-func GetMaxNumOfAlgs(solverType SolverTypeEnum) int {
+func GetMaxNumOfAlgs(solverType solverutils.SolverTypeEnum) int {
 	switch solverType {
-	case Paging:
+	case solverutils.Paging:
 		return NUM_OF_PAGING_ALGS
-	case UpdateList:
+	case solverutils.UpdateList:
 		return NUM_OF_UPDATELIST_ALGS
 	default:
 		return NUM_OF_PAGING_ALGS
@@ -204,15 +131,15 @@ func PreprocessTestConfig(testConf *TestConfigS) {
 
 	if solverConfig.DoAll {
 		switch solverConfig.ProblemType {
-		case Paging:
-			solverConfig.AlgP = make([]PagingAlg, 0)
+		case solverutils.Paging:
+			solverConfig.AlgP = make([]pagingsolver.PagingAlg, 0)
 			for i := 0; i < NUM_OF_PAGING_ALGS; i++ {
-				solverConfig.AlgP = append(solverConfig.AlgP, PagingAlg(i))
+				solverConfig.AlgP = append(solverConfig.AlgP, pagingsolver.PagingAlg(i))
 			}
-		case UpdateList:
-			solverConfig.AlgUL = make([]UpdateListAlg, 0)
+		case solverutils.UpdateList:
+			solverConfig.AlgUL = make([]updatelistsolver.UpdateListAlg, 0)
 			for i := 0; i < NUM_OF_UPDATELIST_ALGS; i++ {
-				solverConfig.AlgUL = append(solverConfig.AlgUL, UpdateListAlg(i))
+				solverConfig.AlgUL = append(solverConfig.AlgUL, updatelistsolver.UpdateListAlg(i))
 			}
 
 		}
@@ -242,7 +169,7 @@ func ValidateTestConfig(testConf TestConfigS) error {
 		}
 	}
 
-	if solverConfig.ProblemType == Paging {
+	if solverConfig.ProblemType == solverutils.Paging {
 		for _, algP := range solverConfig.AlgP {
 			if algP >= NUM_OF_PAGING_ALGS {
 				return errors.New("wrong paging algorithm identification number")
@@ -250,7 +177,7 @@ func ValidateTestConfig(testConf TestConfigS) error {
 		}
 	}
 
-	if solverConfig.ProblemType == UpdateList {
+	if solverConfig.ProblemType == solverutils.UpdateList {
 		for _, algUL := range solverConfig.AlgUL {
 			if algUL >= NUM_OF_UPDATELIST_ALGS {
 				return errors.New("wrong update list algorithm identification number")
@@ -258,7 +185,7 @@ func ValidateTestConfig(testConf TestConfigS) error {
 		}
 	}
 
-	if generatorConfig.Maximum >= solverConfig.Size && solverConfig.ProblemType == UpdateList {
+	if generatorConfig.Maximum >= solverConfig.Size && solverConfig.ProblemType == solverutils.UpdateList {
 		return errors.New("maximum request for n sized update list, must be at most n-1")
 	}
 

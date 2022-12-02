@@ -1,7 +1,6 @@
 package updatelistsolver
 
 import (
-	genUtils "OnlineAlgorithms/pkg/utils/generalUtils"
 	"fmt"
 )
 
@@ -23,11 +22,11 @@ type UpdateListSolver struct {
 	size int
 	cost int
 	alg  UpdateListSolvingAlg
-	algE genUtils.UpdateListAlg
+	algE UpdateListAlg
 }
 
-func UpdateListSolver_Create(size int, algUL genUtils.UpdateListAlg, debug bool) *UpdateListSolver {
-	uLS := &UpdateListSolver{size: size, cost: 0, algE: genUtils.UpdateListAlg(algUL)}
+func UpdateListSolver_Create(size int, algUL UpdateListAlg, debug bool) *UpdateListSolver {
+	uLS := &UpdateListSolver{size: size, cost: 0, algE: UpdateListAlg(algUL)}
 	uLS.createSolvingAlg(algUL, debug)
 	return uLS
 }
@@ -36,35 +35,35 @@ func (uLS *UpdateListSolver) Serve(request int) {
 	uLS.cost += uLS.alg.UpdateList(request)
 }
 
-func (uLS *UpdateListSolver) createSolvingAlg(algUL genUtils.UpdateListAlg, debug bool) {
+func (uLS *UpdateListSolver) createSolvingAlg(algUL UpdateListAlg, debug bool) {
 	switch algUL {
-	case genUtils.MTF:
+	case MTF:
 		{
 			uLS.alg = MTFAlg_Create(uLS.size, debug)
 			break
 		}
-	case genUtils.TRANS:
+	case TRANS:
 		{
 			uLS.alg = TransAlg_Create(uLS.size, debug)
 			break
 		}
-	case genUtils.FC:
+	case FC:
 		{
 			uLS.alg = FCAlg_Create(uLS.size, debug)
 			break
 		}
-	case genUtils.BIT:
+	case BIT:
 		{
 			uLS.alg = BITAlg_Create(uLS.size, debug)
 			break
 		}
-	case genUtils.TS:
+	case TS:
 		{
 			uLS.alg = TSAlg_Create(uLS.size, debug)
 
 			break
 		}
-	case genUtils.Combination:
+	case Combination:
 		{
 			uLS.alg = CombinationAlg_Create(uLS.size, debug)
 		}
