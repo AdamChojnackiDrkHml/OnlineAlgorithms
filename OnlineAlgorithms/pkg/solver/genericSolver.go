@@ -1,7 +1,6 @@
 package solver
 
 import (
-	generalUtils "OnlineAlgorithms/pkg/generalUtils"
 	pagingsolver "OnlineAlgorithms/pkg/solver/pagingSolver"
 	updatelistsolver "OnlineAlgorithms/pkg/solver/updateListSolver"
 	solverutils "OnlineAlgorithms/pkg/solver/utils"
@@ -12,7 +11,7 @@ type GenericSolver interface {
 	Raport() (string, int)
 }
 
-func CreateSolversFromConfig(solverConf generalUtils.SolverConfigS) []GenericSolver {
+func CreateSolversFromConfig(solverConf solverutils.SolverConfigS) []GenericSolver {
 
 	var gS []GenericSolver
 	debug := solverConf.Debug

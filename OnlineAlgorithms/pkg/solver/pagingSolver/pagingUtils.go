@@ -1,5 +1,7 @@
 package pagingsolver
 
+const NUM_OF_PAGING_ALGS = 6
+
 type PagingAlg int
 
 const (

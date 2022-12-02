@@ -1,4 +1,4 @@
-package datagenerator
+package distributions
 
 import (
 	"fmt"

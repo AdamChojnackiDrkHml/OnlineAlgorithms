@@ -1,7 +1,7 @@
 package updatelistsolver
 
 import (
-	ioutils "OnlineAlgorithms/pkg/solver/utils"
+	ioutils "OnlineAlgorithms/pkg/solver/ioutils"
 	"fmt"
 )
 

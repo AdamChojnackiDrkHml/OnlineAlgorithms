@@ -1,5 +1,7 @@
 package updatelistsolver
 
+const NUM_OF_UPDATELIST_ALGS = 6
+
 type UpdateListAlg int
 
 const (

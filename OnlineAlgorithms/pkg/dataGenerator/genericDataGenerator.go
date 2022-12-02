@@ -1,14 +1,15 @@
 package datagenerator
 
 import (
-	genUtils "OnlineAlgorithms/pkg/utils/generalUtils"
+	dGUtils "OnlineAlgorithms/pkg/dataGenerator/dataGeneratorUtils"
+	distributions "OnlineAlgorithms/pkg/dataGenerator/distributions"
 )
 
 type GenericDataGenerator interface {
 	GetRequest() int
 }
 
-func CreateDataGenerator(generConf genUtils.GeneratorConfigS) []GenericDataGenerator {
+func CreateDataGenerator(generConf dGUtils.GeneratorConfigS) []GenericDataGenerator {
 	var generators []GenericDataGenerator
 
 	for _, n := range generConf.DistributionType {
@@ -18,24 +19,24 @@ func CreateDataGenerator(generConf genUtils.GeneratorConfigS) []GenericDataGener
 	return generators
 }
 
-func initGenerator(generConf genUtils.GeneratorConfigS, generatorType genUtils.GeneratorTypeEnum) GenericDataGenerator {
+func initGenerator(generConf dGUtils.GeneratorConfigS, generatorType dGUtils.GeneratorTypeEnum) GenericDataGenerator {
 	var gD GenericDataGenerator
 
 	switch generatorType {
-	case genUtils.Uni:
-		gD = UNI_Create(generConf.Minimum, generConf.Maximum)
+	case dGUtils.Uni:
+		gD = distributions.UNI_Create(generConf.Minimum, generConf.Maximum)
 
-	case genUtils.Geo:
-		gD = GEO_Create(generConf.FvalueGeo, generConf.Maximum)
+	case dGUtils.Geo:
+		gD = distributions.GEO_Create(generConf.FvalueGeo, generConf.Maximum)
 
-	case genUtils.Pois:
-		gD = POIS_Create(generConf.FvaluePoiss, generConf.Maximum)
+	case dGUtils.Pois:
+		gD = distributions.POIS_Create(generConf.FvaluePoiss, generConf.Maximum)
 
-	case genUtils.Hrm:
-		gD = HRM_Create(generConf.Minimum, generConf.Maximum)
+	case dGUtils.Hrm:
+		gD = distributions.HRM_Create(generConf.Minimum, generConf.Maximum)
 
-	case genUtils.Dhr:
-		gD = DHR_Create(generConf.Minimum, generConf.Maximum)
+	case dGUtils.Dhr:
+		gD = distributions.DHR_Create(generConf.Minimum, generConf.Maximum)
 	}
 
 	return gD
