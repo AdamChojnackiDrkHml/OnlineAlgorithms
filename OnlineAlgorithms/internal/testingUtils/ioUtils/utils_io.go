@@ -2,6 +2,7 @@ package ioutils
 
 import (
 	dgutils "OnlineAlgorithms/pkg/dataGenerator/dataGeneratorUtils"
+	dist "OnlineAlgorithms/pkg/dataGenerator/distributions"
 	genUtils "OnlineAlgorithms/pkg/generalUtils"
 	pSolver "OnlineAlgorithms/pkg/solver/pagingSolver"
 	uLSolver "OnlineAlgorithms/pkg/solver/updateListSolver"
@@ -127,11 +128,33 @@ func ParseCmd(confStrings []string) genUtils.Config {
 		}
 		confInts = append(confInts, conf)
 	}
-	genConf := genUtils.GeneralConfigS{NoOfReq: confInts[7], Iterations: confInts[8], Growth: confInts[9], Repeats: confInts[10]}
-	solverConf := solverUtils.SolverConfigS{ProblemType: solverUtils.SolverTypeEnum(confInts[0]), Size: confInts[1], AlgP: []pSolver.PagingAlg{pSolver.PagingAlg(confInts[2])}, AlgUL: []uLSolver.UpdateListAlg{uLSolver.UpdateListAlg(confInts[2])}, Debug: confInts[3] == 1, DoAll: confInts[4] == 1}
-	generatorConf := dgutils.GeneratorConfigS{DistributionType: []dgutils.GeneratorTypeEnum{dgutils.GeneratorTypeEnum(confInts[5])}, Minimum: confInts[6], FvalueGeo: floatValueGeo, FvaluePoiss: floatValuePoiss, Maximum: confInts[7], DoAll: confInts[8] == 1}
+	genConf := genUtils.GeneralConfigS{
+		NoOfReq:    confInts[7],
+		Iterations: confInts[8],
+		Growth:     confInts[9],
+		Repeats:    confInts[10]}
 
-	return genUtils.Config{TestConfigs: []genUtils.TestConfigS{{GeneralConfig: genConf, SolverConfig: solverConf, GeneratorConfig: generatorConf}}}
+	solverConf := solverUtils.SolverConfigS{
+		ProblemType: solverUtils.SolverTypeEnum(confInts[0]),
+		Size:        confInts[1],
+		AlgP:        []pSolver.PagingAlg{pSolver.PagingAlg(confInts[2])},
+		AlgUL:       []uLSolver.UpdateListAlg{uLSolver.UpdateListAlg(confInts[2])},
+		Debug:       confInts[3] == 1,
+		DoAll:       confInts[4] == 1}
+
+	generatorConf := dgutils.GeneratorConfigS{
+		DistributionType: []dist.GeneratorTypeEnum{dist.GeneratorTypeEnum(confInts[5])},
+		Minimum:          confInts[6],
+		FvalueGeo:        floatValueGeo,
+		FvaluePoiss:      floatValuePoiss,
+		Maximum:          confInts[7],
+		DoAll:            confInts[8] == 1}
+
+	return genUtils.Config{
+		TestConfigs: []genUtils.TestConfigS{{
+			GeneralConfig:   genConf,
+			SolverConfig:    solverConf,
+			GeneratorConfig: generatorConf}}}
 
 }
 
