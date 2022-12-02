@@ -1,4 +1,4 @@
-package datagenerator
+package distributions
 
 import (
 	"time"
@@ -7,34 +7,34 @@ import (
 	uniform "gonum.org/v1/gonum/stat/distuv"
 )
 
-type dhrDistGenerator struct {
+type HrmDistGenerator struct {
 	gen  uniform.Uniform
 	dist []float64
 	high int
 }
 
-func DHR_Create(low, high int) *dhrDistGenerator {
+func HRM_Create(low, high int) *HrmDistGenerator {
 
-	g := &dhrDistGenerator{gen: uniform.Uniform{Min: float64(0), Max: float64(1), Src: rand.New(rand.NewSource(uint64(time.Now().UnixNano())))}}
+	g := &HrmDistGenerator{gen: uniform.Uniform{Min: float64(0), Max: float64(1), Src: rand.New(rand.NewSource(uint64(time.Now().UnixNano())))}}
 	g.dist = make([]float64, high+1)
 	g.high = high
 
 	S := 0.0
 
 	for i := high; i >= 1; i-- {
-		S += 1.0 / (float64(i) * float64(i))
+		S += 1.0 / float64(i)
 	}
 
 	g.dist[0] = 0.0
 
 	for i := 1; i <= high; i++ {
-		g.dist[i] = g.dist[i-1] + 1.0/(float64(i)*float64(i)*S)
+		g.dist[i] = g.dist[i-1] + 1.0/(float64(i)*S)
 	}
 
 	return g
 }
 
-func (g *dhrDistGenerator) GetRequest() int {
+func (g *HrmDistGenerator) GetRequest() int {
 	ran := g.gen.Rand()
 
 	for i := range g.dist {

@@ -3,8 +3,8 @@ package testcontroler
 import (
 	ioutils "OnlineAlgorithms/internal/testingUtils/ioUtils"
 	dataGenerator "OnlineAlgorithms/pkg/dataGenerator"
+	genUtils "OnlineAlgorithms/pkg/generalUtils"
 	"OnlineAlgorithms/pkg/solver"
-	genUtils "OnlineAlgorithms/pkg/utils/generalUtils"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -20,7 +20,7 @@ func RunTestForCmdArguments(conf genUtils.Config) {
 	genConf := testConf.GeneralConfig
 	for iteration := 0; iteration < genConf.Iterations; iteration++ {
 		for repeat := 0; repeat < genConf.Repeats; repeat++ {
-			pSS := solver.CreateSolver(solvConf)
+			pSS := solver.CreateSolversFromConfig(solvConf)
 
 			dG := dataGenerator.CreateDataGenerator(generConf)[0]
 
@@ -63,8 +63,8 @@ func RunTestWithParametersFromFile(conf *genUtils.Config) {
 
 		ioutils.CreateAndWriteHeader(f, &solvConf, &generConf)
 
-		noOfAlgs := genUtils.GetNumOfAlgs(solvConf)
-		noOfDistros := genUtils.GetNumOfDistributions(generConf)
+		noOfAlgs := solvConf.GetNumOfAlgs()
+		noOfDistros := generConf.GetNumOfDistributions()
 
 		var name string
 		var score int
@@ -78,7 +78,7 @@ func RunTestWithParametersFromFile(conf *genUtils.Config) {
 			for repeat := 0; repeat < genConf.Repeats; repeat++ {
 				problemSolversForGenerators := make([][]solver.GenericSolver, noOfDistros)
 				for i := range dGS {
-					problemSolversForGenerators[i] = solver.CreateSolver(solvConf)
+					problemSolversForGenerators[i] = solver.CreateSolversFromConfig(solvConf)
 				}
 				for requestIterator := 0; requestIterator < genConf.NoOfReq; requestIterator++ {
 					for i, generator := range dGS {
