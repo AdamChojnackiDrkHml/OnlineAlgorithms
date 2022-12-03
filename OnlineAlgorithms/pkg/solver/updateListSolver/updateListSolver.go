@@ -1,6 +1,7 @@
 package updatelistsolver
 
 import (
+	ulalgs "OnlineAlgorithms/pkg/solver/updateListSolver/updateListSolverAlgs"
 	"fmt"
 )
 
@@ -8,25 +9,15 @@ type UpdateListSolvingAlg interface {
 	UpdateList(request int) int
 }
 
-func CreateList(size int) []int {
-	list := make([]int, size)
-
-	for i := range list {
-		list[i] = i
-	}
-
-	return list
-}
-
 type UpdateListSolver struct {
 	size int
 	cost int
 	alg  UpdateListSolvingAlg
-	algE UpdateListAlg
+	algE ulalgs.UpdateListAlg
 }
 
-func UpdateListSolver_Create(size int, algUL UpdateListAlg, debug bool) *UpdateListSolver {
-	uLS := &UpdateListSolver{size: size, cost: 0, algE: UpdateListAlg(algUL)}
+func UpdateListSolver_Create(size int, algUL ulalgs.UpdateListAlg, debug bool) *UpdateListSolver {
+	uLS := &UpdateListSolver{size: size, cost: 0, algE: ulalgs.UpdateListAlg(algUL)}
 	uLS.createSolvingAlg(algUL, debug)
 	return uLS
 }
@@ -35,37 +26,31 @@ func (uLS *UpdateListSolver) Serve(request int) {
 	uLS.cost += uLS.alg.UpdateList(request)
 }
 
-func (uLS *UpdateListSolver) createSolvingAlg(algUL UpdateListAlg, debug bool) {
+func (uLS *UpdateListSolver) createSolvingAlg(algUL ulalgs.UpdateListAlg, debug bool) {
 	switch algUL {
-	case MTF:
+	case ulalgs.MTF:
 		{
-			uLS.alg = MTFAlg_Create(uLS.size, debug)
-			break
+			uLS.alg = ulalgs.MTFAlg_Create(uLS.size, debug)
 		}
-	case TRANS:
+	case ulalgs.TRANS:
 		{
-			uLS.alg = TransAlg_Create(uLS.size, debug)
-			break
+			uLS.alg = ulalgs.TransAlg_Create(uLS.size, debug)
 		}
-	case FC:
+	case ulalgs.FC:
 		{
-			uLS.alg = FCAlg_Create(uLS.size, debug)
-			break
+			uLS.alg = ulalgs.FCAlg_Create(uLS.size, debug)
 		}
-	case BIT:
+	case ulalgs.BIT:
 		{
-			uLS.alg = BITAlg_Create(uLS.size, debug)
-			break
+			uLS.alg = ulalgs.BITAlg_Create(uLS.size, debug)
 		}
-	case TS:
+	case ulalgs.TS:
 		{
-			uLS.alg = TSAlg_Create(uLS.size, debug)
-
-			break
+			uLS.alg = ulalgs.TSAlg_Create(uLS.size, debug)
 		}
-	case Combination:
+	case ulalgs.Combination:
 		{
-			uLS.alg = CombinationAlg_Create(uLS.size, debug)
+			uLS.alg = ulalgs.CombinationAlg_Create(uLS.size, debug)
 		}
 	}
 }

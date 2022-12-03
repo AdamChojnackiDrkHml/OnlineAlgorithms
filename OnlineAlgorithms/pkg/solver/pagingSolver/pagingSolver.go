@@ -1,6 +1,9 @@
 package pagingsolver
 
-import "fmt"
+import (
+	palgs "OnlineAlgorithms/pkg/solver/pagingSolver/pagingSolverAlgs"
+	"fmt"
+)
 
 type PagingSolvingAlg interface {
 	UpdateMemory(request int) bool
@@ -10,11 +13,11 @@ type PagingSolver struct {
 	size   int
 	faults int
 	alg    PagingSolvingAlg
-	algE   PagingAlg
+	algE   palgs.PagingAlg
 }
 
-func PagingSolver_Create(size int, algP PagingAlg, debug bool) *PagingSolver {
-	pS := &PagingSolver{size: size, faults: 0, algE: PagingAlg(algP)}
+func PagingSolver_Create(size int, algP palgs.PagingAlg, debug bool) *PagingSolver {
+	pS := &PagingSolver{size: size, faults: 0, algE: palgs.PagingAlg(algP)}
 	pS.createSolvingAlg(algP, debug)
 	return pS
 }
@@ -25,36 +28,36 @@ func (pS *PagingSolver) Serve(request int) {
 	}
 }
 
-func (ps *PagingSolver) createSolvingAlg(algP PagingAlg, debug bool) {
-	switch PagingAlg(algP) {
-	case LRU:
+func (ps *PagingSolver) createSolvingAlg(algP palgs.PagingAlg, debug bool) {
+	switch palgs.PagingAlg(algP) {
+	case palgs.LRU:
 		{
-			ps.alg = LRUAlg_Create(ps.size, debug)
+			ps.alg = palgs.LRUAlg_Create(ps.size, debug)
 			break
 		}
-	case FIFO:
+	case palgs.FIFO:
 		{
-			ps.alg = FIFOAlg_Create(ps.size, debug)
+			ps.alg = palgs.FIFOAlg_Create(ps.size, debug)
 			break
 		}
-	case LFU:
+	case palgs.LFU:
 		{
-			ps.alg = LFUAlg_Create(ps.size, debug)
+			ps.alg = palgs.LFUAlg_Create(ps.size, debug)
 			break
 		}
-	case MARK_LRU:
+	case palgs.MARK_LRU:
 		{
-			ps.alg = MARKLRUAlg_Create(ps.size, debug)
+			ps.alg = palgs.MARKLRUAlg_Create(ps.size, debug)
 			break
 		}
-	case MARK_FC:
+	case palgs.MARK_FC:
 		{
-			ps.alg = MARKFCAlg_Create(ps.size, debug)
+			ps.alg = palgs.MARKFCAlg_Create(ps.size, debug)
 			break
 		}
-	case RM:
+	case palgs.RM:
 		{
-			ps.alg = RMAlg_Create(ps.size, debug)
+			ps.alg = palgs.RMAlg_Create(ps.size, debug)
 		}
 	}
 }

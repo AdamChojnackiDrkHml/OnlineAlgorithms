@@ -1,4 +1,4 @@
-package pagingsolver
+package pagingsolveralgs
 
 const NUM_OF_PAGING_ALGS = 6
 

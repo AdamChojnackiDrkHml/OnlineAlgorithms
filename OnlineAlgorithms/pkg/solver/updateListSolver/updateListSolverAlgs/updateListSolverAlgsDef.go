@@ -1,4 +1,4 @@
-package updatelistsolver
+package updatelistsolveralgs
 
 const NUM_OF_UPDATELIST_ALGS = 6
 

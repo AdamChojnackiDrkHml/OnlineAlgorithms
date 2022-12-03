@@ -10,7 +10,7 @@ import (
 
 func TestYamlParseFile(t *testing.T) {
 	fmt.Println(os.Getwd())
-	conf := ReadYamlForConfig("../../../data/configs/generic_structure.yml")
+	conf := ReadYamlForConfig("../../../data/configs/generic_structure.yaml")
 
 	assert.NotNil(t, conf)
 }
