@@ -1,7 +1,6 @@
 import os
 import matplotlib.pyplot as plt
 import sys 
-import itertools
 from itertools import permutations as perm
 from itertools import cycle
 
@@ -23,8 +22,8 @@ for i in algs:
         names.append(i+"_"+j)
         
 num_of_plots = len(names)
-print(names)
-print(num_of_plots)
+# print(names)
+# print(num_of_plots)
 data = [[] for x in range (num_of_plots+1)]
 for row in lines:
     i = 0
@@ -35,13 +34,13 @@ for row in lines:
         i = i + 1
 
 X = data[0]
-print(data)
+# print(data)
 data.pop(0)
 
 cycol = cycle('bgrcmk')
-print(data)
+# print(data)
 for i, d in enumerate(data):
-    print(X, d, i)
+    # print(X, d, i)
     plt.plot(X, d, color=next(cycol), label=names[i])
     
 plt.xlabel("Size")
@@ -52,7 +51,7 @@ plt.title(problem + "_" + str(size))
 plt.legend()
 
 resName = os.path.dirname(sys.argv[1]) + '/graphs/' + os.path.basename(sys.argv[1]) + '.png'
-print(resName)
+# print(resName)
 plt.savefig(resName)
 
 
