@@ -1,0 +1,33 @@
+test: 
+  - generalConfig: 
+        growth: 500
+        iterations: 6
+        noOfReq: 500
+        repeats: 5
+    generatorConfig: 
+        distributionType: [4]
+        fvalueGeo: 0.1
+        fvaluePoiss: 10
+        maximum: 29
+        minimum: 0      
+    solverConfig: 
+        debug: "no"
+        problemType: 1
+        size: 30
+        doAll: "yes"
+#   - generalConfig: 
+#         growth: 500
+#         iterations: 1
+#         noOfReq: 50
+#         repeats: 1
+#     generatorConfig: 
+#         distributionType: 1
+#         fvalue: 0.2
+#         maximum: 10
+#         minimum: 0
+#         doAll: "no"
+#     solverConfig: 
+#         algUL: 1
+#         debug: "yes"
+#         problemType: 1
+#         size: 10
