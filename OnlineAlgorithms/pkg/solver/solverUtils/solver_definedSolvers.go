@@ -1,4 +1,4 @@
-package utils
+package solverutils
 
 type SolverTypeEnum int
 

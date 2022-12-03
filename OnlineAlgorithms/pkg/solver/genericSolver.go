@@ -3,9 +3,9 @@ package solver
 import (
 	pagingsolver "OnlineAlgorithms/pkg/solver/pagingSolver"
 	psalgs "OnlineAlgorithms/pkg/solver/pagingSolver/pagingSolverAlgs"
+	solverutils "OnlineAlgorithms/pkg/solver/solverUtils"
 	updatelistsolver "OnlineAlgorithms/pkg/solver/updateListSolver"
 	ulsalgs "OnlineAlgorithms/pkg/solver/updateListSolver/updateListSolverAlgs"
-	solverutils "OnlineAlgorithms/pkg/solver/utils"
 )
 
 type GenericSolver interface {
