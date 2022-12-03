@@ -1,4 +1,4 @@
-package pagingsolver
+package pagingsolveralgs
 
 import (
 	ioutils "OnlineAlgorithms/pkg/solver/ioutils"

@@ -1,4 +1,4 @@
-package updatelistsolver
+package updatelistsolveralgs
 
 import (
 	ioutils "OnlineAlgorithms/pkg/solver/ioutils"

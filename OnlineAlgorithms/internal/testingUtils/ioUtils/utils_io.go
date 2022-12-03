@@ -4,8 +4,8 @@ import (
 	dgutils "OnlineAlgorithms/pkg/dataGenerator/dataGeneratorUtils"
 	dist "OnlineAlgorithms/pkg/dataGenerator/distributions"
 	genUtils "OnlineAlgorithms/pkg/generalUtils"
-	pSolver "OnlineAlgorithms/pkg/solver/pagingSolver"
-	uLSolver "OnlineAlgorithms/pkg/solver/updateListSolver"
+	psalgs "OnlineAlgorithms/pkg/solver/pagingSolver/pagingSolverAlgs"
+	ulsalgs "OnlineAlgorithms/pkg/solver/updateListSolver/updateListSolverAlgs"
 	solverUtils "OnlineAlgorithms/pkg/solver/utils"
 	"fmt"
 	"os"
@@ -137,8 +137,8 @@ func ParseCmd(confStrings []string) genUtils.Config {
 	solverConf := solverUtils.SolverConfigS{
 		ProblemType: solverUtils.SolverTypeEnum(confInts[0]),
 		Size:        confInts[1],
-		AlgP:        []pSolver.PagingAlg{pSolver.PagingAlg(confInts[2])},
-		AlgUL:       []uLSolver.UpdateListAlg{uLSolver.UpdateListAlg(confInts[2])},
+		AlgP:        []psalgs.PagingAlg{psalgs.PagingAlg(confInts[2])},
+		AlgUL:       []ulsalgs.UpdateListAlg{ulsalgs.UpdateListAlg(confInts[2])},
 		Debug:       confInts[3] == 1,
 		DoAll:       confInts[4] == 1}
 

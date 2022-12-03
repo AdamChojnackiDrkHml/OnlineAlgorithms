@@ -2,7 +2,9 @@ package solver
 
 import (
 	pagingsolver "OnlineAlgorithms/pkg/solver/pagingSolver"
+	psalgs "OnlineAlgorithms/pkg/solver/pagingSolver/pagingSolverAlgs"
 	updatelistsolver "OnlineAlgorithms/pkg/solver/updateListSolver"
+	ulsalgs "OnlineAlgorithms/pkg/solver/updateListSolver/updateListSolverAlgs"
 	solverutils "OnlineAlgorithms/pkg/solver/utils"
 )
 
@@ -31,10 +33,10 @@ func CreateSolversFromConfig(solverConf solverutils.SolverConfigS) []GenericSolv
 	return gS
 }
 
-func CreateSinglePagingSolver(size int, alg pagingsolver.PagingAlg, debug bool) GenericSolver {
+func CreateSinglePagingSolver(size int, alg psalgs.PagingAlg, debug bool) GenericSolver {
 	return pagingsolver.PagingSolver_Create(size, alg, debug)
 }
 
-func CreateSingleUpdateListSolver(size int, alg updatelistsolver.UpdateListAlg, debug bool) GenericSolver {
+func CreateSingleUpdateListSolver(size int, alg ulsalgs.UpdateListAlg, debug bool) GenericSolver {
 	return updatelistsolver.UpdateListSolver_Create(size, alg, debug)
 }
