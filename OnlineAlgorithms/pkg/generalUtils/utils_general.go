@@ -2,7 +2,7 @@ package generalutils
 
 import (
 	dgutils "OnlineAlgorithms/pkg/dataGenerator/dataGeneratorUtils"
-	solverutils "OnlineAlgorithms/pkg/solver/utils"
+	solverutils "OnlineAlgorithms/pkg/solver/solverUtils"
 )
 
 // //////////////////////////////

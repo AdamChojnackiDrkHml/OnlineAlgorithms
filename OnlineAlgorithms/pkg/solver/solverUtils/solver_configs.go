@@ -1,4 +1,4 @@
-package utils
+package solverutils
 
 import (
 	psAlgs "OnlineAlgorithms/pkg/solver/pagingSolver/pagingSolverAlgs"
