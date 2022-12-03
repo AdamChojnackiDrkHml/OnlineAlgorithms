@@ -1,4 +1,4 @@
-.PHONY: build basic
+.PHONY: build basic, build, scenario, omg
 
 all: build basic
 
@@ -11,5 +11,7 @@ basic: build
 scenario: build
 	@go run cmd/main.go  -f data/configs/$(SCENARIO)
 
-handdebug: build
-	@go run cmd/main.go
+TESTS_DIR = ./data/configs
+
+omg:
+	$(foreach file, $(wildcard $(TESTS_DIR)/*.yml), go run cmd/main.go -f $(file);)
