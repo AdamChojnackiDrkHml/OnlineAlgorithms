@@ -90,4 +90,22 @@ test:
         problemType: 1
         size: 30
 
+  #Combination
+  - generalConfig: 
+        growth: 500
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
+    generatorConfig: 
+        fvalueGeo: 0.1
+        fvaluePoiss: 15
+        maximum: 29
+        minimum: 0
+        doAll: "yes"        
+    solverConfig: 
+        algUL: [5]
+        debug: "no"
+        problemType: 1
+        size: 30
+
 

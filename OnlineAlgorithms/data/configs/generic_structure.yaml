@@ -1,33 +1,18 @@
 test: 
+  #Combination
   - generalConfig: 
         growth: 500
-        iterations: 6
-        noOfReq: 500
-        repeats: 5
+        iterations: 20
+        noOfReq: 3000
+        repeats: 20
     generatorConfig: 
-        distributionType: [4]
         fvalueGeo: 0.1
-        fvaluePoiss: 10
+        fvaluePoiss: 15
         maximum: 29
-        minimum: 0      
+        minimum: 0
+        doAll: "yes"        
     solverConfig: 
+        algUL: [5]
         debug: "no"
         problemType: 1
         size: 30
-        doAll: "yes"
-#   - generalConfig: 
-#         growth: 500
-#         iterations: 1
-#         noOfReq: 50
-#         repeats: 1
-#     generatorConfig: 
-#         distributionType: 1
-#         fvalue: 0.2
-#         maximum: 10
-#         minimum: 0
-#         doAll: "no"
-#     solverConfig: 
-#         algUL: 1
-#         debug: "yes"
-#         problemType: 1
-#         size: 10
