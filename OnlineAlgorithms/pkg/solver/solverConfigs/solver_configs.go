@@ -16,7 +16,7 @@ type SolverConfigS struct {
 	DoAll       bool                    `default:"false" yaml:"doAll"`
 }
 
-func (solverConfig *SolverConfigS) SolverConfig_Preprocess() {
+func (solverConfig *SolverConfigS) Preprocess() {
 	if solverConfig.DoAll {
 		switch solverConfig.ProblemType {
 		case Paging:

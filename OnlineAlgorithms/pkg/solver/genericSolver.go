@@ -20,11 +20,11 @@ func CreateSolversFromConfig(solverConf solverutils.SolverConfigS) []GenericSolv
 	size := solverConf.Size
 
 	switch solverConf.ProblemType {
-	case solverutils.Paging:
+	case Paging:
 		for _, algP := range solverConf.AlgP {
 			gS = append(gS, CreateSinglePagingSolver(size, algP, debug))
 		}
-	case solverutils.UpdateList:
+	case UpdateList:
 		for _, algUL := range solverConf.AlgUL {
 			gS = append(gS, CreateSingleUpdateListSolver(size, algUL, debug))
 		}

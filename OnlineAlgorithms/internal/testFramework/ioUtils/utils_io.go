@@ -4,6 +4,7 @@ import (
 	dgutils "OnlineAlgorithms/pkg/dataGenerator/dataGeneratorUtils"
 	dist "OnlineAlgorithms/pkg/dataGenerator/distributions"
 	genUtils "OnlineAlgorithms/pkg/generalUtils"
+	"OnlineAlgorithms/pkg/solver"
 	psalgs "OnlineAlgorithms/pkg/solver/pagingSolver/pagingSolverAlgs"
 	solverUtils "OnlineAlgorithms/pkg/solver/solverUtils"
 	ulsalgs "OnlineAlgorithms/pkg/solver/updateListSolver/updateListSolverAlgs"
@@ -135,7 +136,7 @@ func ParseCmd(confStrings []string) genUtils.Config {
 		Repeats:    confInts[10]}
 
 	solverConf := solverUtils.SolverConfigS{
-		ProblemType: solverUtils.SolverTypeEnum(confInts[0]),
+		ProblemType: solver.SolverTypeEnum(confInts[0]),
 		Size:        confInts[1],
 		AlgP:        []psalgs.PagingAlg{psalgs.PagingAlg(confInts[2])},
 		AlgUL:       []ulsalgs.UpdateListAlg{ulsalgs.UpdateListAlg(confInts[2])},
@@ -179,11 +180,11 @@ func createHeader(solverConf *solverUtils.SolverConfigS, genConf *dgutils.Genera
 	header += "\n"
 
 	switch solverConf.ProblemType {
-	case solverUtils.Paging:
+	case solver.Paging:
 		for _, algP := range solverConf.AlgP {
 			header += algP.String() + " "
 		}
-	case solverUtils.UpdateList:
+	case solver.UpdateList:
 		for _, algUL := range solverConf.AlgUL {
 			header += algUL.String() + " "
 		}
