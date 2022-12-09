@@ -1,8 +1,7 @@
 package main
 
 import (
-	ioutils "OnlineAlgorithms/internal/testingUtils/ioUtils"
-	testCtrl "OnlineAlgorithms/internal/testingUtils/testControler"
+	testCtrl "OnlineAlgorithms/pkg/testFramework/testControler"
 	"fmt"
 	"os"
 

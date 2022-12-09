@@ -3,7 +3,7 @@ package solver
 import (
 	pagingsolver "OnlineAlgorithms/pkg/solver/pagingSolver"
 	psalgs "OnlineAlgorithms/pkg/solver/pagingSolver/pagingSolverAlgs"
-	solverutils "OnlineAlgorithms/pkg/solver/solverUtils"
+	svconf "OnlineAlgorithms/pkg/solver/solverConfigs"
 	updatelistsolver "OnlineAlgorithms/pkg/solver/updateListSolver"
 	ulsalgs "OnlineAlgorithms/pkg/solver/updateListSolver/updateListSolverAlgs"
 )
@@ -13,18 +13,18 @@ type GenericSolver interface {
 	Raport() (string, int)
 }
 
-func CreateSolversFromConfig(solverConf solverutils.SolverConfigS) []GenericSolver {
+func CreateSolversFromConfig(solverConf svconf.SolverConfigS) []GenericSolver {
 
 	var gS []GenericSolver
 	debug := solverConf.Debug
 	size := solverConf.Size
 
 	switch solverConf.ProblemType {
-	case Paging:
+	case svconf.Paging:
 		for _, algP := range solverConf.AlgP {
 			gS = append(gS, CreateSinglePagingSolver(size, algP, debug))
 		}
-	case UpdateList:
+	case svconf.UpdateList:
 		for _, algUL := range solverConf.AlgUL {
 			gS = append(gS, CreateSingleUpdateListSolver(size, algUL, debug))
 		}
