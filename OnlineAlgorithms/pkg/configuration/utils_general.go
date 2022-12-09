@@ -2,7 +2,7 @@ package generalutils
 
 import (
 	dgutils "OnlineAlgorithms/pkg/dataGenerator/dataGeneratorUtils"
-	solverutils "OnlineAlgorithms/pkg/solver/solverUtils"
+	svconf "OnlineAlgorithms/pkg/solver/solverConfigs"
 )
 
 // //////////////////////////////
@@ -18,7 +18,7 @@ type GeneralConfigS struct {
 type TestConfigS struct {
 	GeneralConfig GeneralConfigS `yaml:"generalConfig"`
 
-	SolverConfig solverutils.SolverConfigS `yaml:"solverConfig"`
+	SolverConfig svconf.SolverConfigS `yaml:"solverConfig"`
 
 	GeneratorConfig dgutils.GeneratorConfigS `yaml:"generatorConfig"`
 }
@@ -38,7 +38,7 @@ func PreprocessTestConfig(testConf *TestConfigS) {
 	solverConfig := &testConf.SolverConfig
 	generatorConfig := &testConf.GeneratorConfig
 
-	solverConfig.SolverConfig_Preprocess()
+	solverConfig.Preprocess()
 	generatorConfig.Preprocess()
 }
 

@@ -22,7 +22,7 @@ func (e PagingAlg) String() string {
 	case LFU:
 		return "LFU"
 	case MARK_LRU:
-		return "MARK"
+		return "MARK_LRU"
 	case MARK_FC:
 		return "MARK_FC"
 	case RM:

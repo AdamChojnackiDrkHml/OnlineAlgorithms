@@ -1,7 +1,7 @@
 package pagingsolveralgs
 
 import (
-	ioutils "OnlineAlgorithms/pkg/solver/ioutils"
+	ioutils "OnlineAlgorithms/pkg/solver/solverIoutils"
 	"fmt"
 	"math"
 )
