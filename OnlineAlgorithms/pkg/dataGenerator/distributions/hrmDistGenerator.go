@@ -13,6 +13,7 @@ type HrmDistGenerator struct {
 	high int
 }
 
+// HRM_Create takes bounds for distribution and returns Harmonic distribution.
 func HRM_Create(low, high int) *HrmDistGenerator {
 
 	g := &HrmDistGenerator{gen: uniform.Uniform{Min: float64(0), Max: float64(1), Src: rand.New(rand.NewSource(uint64(time.Now().UnixNano())))}}
@@ -34,6 +35,7 @@ func HRM_Create(low, high int) *HrmDistGenerator {
 	return g
 }
 
+// GetRequest is implementation of GenericDataGenerator interface for Harmonic distribution.
 func (g *HrmDistGenerator) GetRequest() int {
 	ran := g.gen.Rand()
 

@@ -7,29 +7,33 @@ import (
 	"time"
 )
 
-type BITMem struct {
+// BITMem holds single memory cell for Bit algorithm.
+type BITMemCell struct {
 	mem int
 	bit bool
 }
 
+// BItAlg hods all information for Bit algorithm.
 type BITAlg struct {
-	memory []*BITMem
+	memory []*BITMemCell
 	size   int
 	debug  bool
 }
 
+// BITAlg_Create takes size and debug flag and initializes Bit algorithm for Update List.
 func BITAlg_Create(size int, debug bool) *BITAlg {
 	b := &BITAlg{size: size, debug: debug}
 
-	list := CreateList(size)
+	list := createList(size)
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	for _, n := range list {
-		b.memory = append(b.memory, &BITMem{mem: n, bit: r.Int()%2 == 0})
+		b.memory = append(b.memory, &BITMemCell{mem: n, bit: r.Int()%2 == 0})
 	}
 
 	return b
 }
 
+// UpdateList is implementation of UpdateListSolvingAlg interface for Bit algorithm.
 func (alg *BITAlg) UpdateList(request int) int {
 	ioutils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
 	ioutils.DebugPrint(fmt.Sprint(" LOOKING FOR ", request, ", "), alg.debug)
@@ -40,7 +44,7 @@ func (alg *BITAlg) UpdateList(request int) int {
 			if !n.bit {
 				ioutils.DebugPrint("BIT FLIP TO 1, TRANSPOSING TO BEGINING => ", alg.debug)
 				alg.memory = append(alg.memory[:i], alg.memory[i+1:]...)
-				alg.memory = append([]*BITMem{n}, alg.memory...)
+				alg.memory = append([]*BITMemCell{n}, alg.memory...)
 			}
 			ioutils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
 			ioutils.DebugPrint(fmt.Sprintln(), alg.debug)

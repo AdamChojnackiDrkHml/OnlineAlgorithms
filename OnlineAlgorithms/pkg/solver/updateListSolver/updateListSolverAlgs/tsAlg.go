@@ -5,21 +5,24 @@ import (
 	"fmt"
 )
 
+// TSMem holds single memory cell for Timestamp(0) algorithm.
 type TSMem struct {
 	mem        int
 	timestamps []int
 }
 
+// TSAlg hods all information for Timestamp(0) algorithm.
 type TSAlg struct {
 	memory []*TSMem
 	size   int
 	debug  bool
 }
 
+// TSAlg_Create takes size and debug flag and initializes Timestamp(0) algorithm for Update List.
 func TSAlg_Create(size int, debug bool) *TSAlg {
 	b := &TSAlg{size: size, debug: debug}
 
-	list := CreateList(size)
+	list := createList(size)
 	for _, n := range list {
 		b.memory = append(b.memory, &TSMem{mem: n, timestamps: make([]int, size)})
 	}
@@ -27,6 +30,7 @@ func TSAlg_Create(size int, debug bool) *TSAlg {
 	return b
 }
 
+// UpdateList is implementation of UpdateListSolvingAlg interface for Timestamp(0) algorithm.
 func (alg *TSAlg) UpdateList(request int) int {
 	ioutils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
 	ioutils.DebugPrint(fmt.Sprint(" LOOKING FOR ", request), alg.debug)

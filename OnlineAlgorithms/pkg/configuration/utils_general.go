@@ -1,7 +1,7 @@
 package generalutils
 
 import (
-	dgutils "OnlineAlgorithms/pkg/dataGenerator/dataGeneratorUtils"
+	dgconfig "OnlineAlgorithms/pkg/dataGenerator/dataGeneratorConfigs"
 	svconf "OnlineAlgorithms/pkg/solver/solverConfigs"
 )
 
@@ -20,7 +20,7 @@ type TestConfigS struct {
 
 	SolverConfig svconf.SolverConfigS `yaml:"solverConfig"`
 
-	GeneratorConfig dgutils.GeneratorConfigS `yaml:"generatorConfig"`
+	GeneratorConfig dgconfig.GeneratorConfigS `yaml:"generatorConfig"`
 }
 
 type Config struct {

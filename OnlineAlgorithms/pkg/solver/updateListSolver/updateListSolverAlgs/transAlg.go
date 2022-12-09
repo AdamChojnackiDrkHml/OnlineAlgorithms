@@ -5,16 +5,19 @@ import (
 	"fmt"
 )
 
+// TransAlg hods all information for Transpose algorithm.
 type TransAlg struct {
 	memory []int
 	size   int
 	debug  bool
 }
 
+// TransAlg_Create takes size and debug flag and initializes Transpose algorithm for Update List.
 func TransAlg_Create(size int, debug bool) *TransAlg {
-	return &TransAlg{size: size, memory: CreateList(size), debug: debug}
+	return &TransAlg{size: size, memory: createList(size), debug: debug}
 }
 
+// UpdateList is implementation of UpdateListSolvingAlg interface for Transpose algorithm.
 func (alg *TransAlg) UpdateList(request int) int {
 	ioutils.DebugPrint(fmt.Sprint(alg.memory), alg.debug)
 	ioutils.DebugPrint(fmt.Sprint(" LOOKING FOR ", request), alg.debug)

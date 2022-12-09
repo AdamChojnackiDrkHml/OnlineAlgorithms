@@ -5,18 +5,21 @@ import (
 	"fmt"
 )
 
+// FIFOAlg hods all information for FIFO algorithm.
 type FIFOAlg struct {
 	memory []int
 	size   int
 	debug  bool
 }
 
+// FIFOAlg_Create takes size and debug flag and initializes FIFO algorithm for Paging.
 func FIFOAlg_Create(size int, debug bool) *FIFOAlg {
 	return &FIFOAlg{size: size, memory: make([]int, 0), debug: debug}
 }
 
+// UpdateMemory is implementation of PagingSolvingAlg interface for FIFO algorithm.
 func (alg *FIFOAlg) UpdateMemory(request int) bool {
-	isFound, position := alg.find(request)
+	isFound := alg.find(request)
 	ioutils.DebugPrint(fmt.Sprint(alg.memory), alg.debug)
 	ioutils.DebugPrint(fmt.Sprint(" ## LOOKING FOR ", request, " "), alg.debug)
 
@@ -31,20 +34,17 @@ func (alg *FIFOAlg) UpdateMemory(request int) bool {
 		alg.memory = append([]int{request}, alg.memory...)
 		ioutils.DebugPrint(fmt.Sprint(" =>> ", alg.memory), alg.debug)
 	} else {
-		// alg.memory = append(alg.memory[:position], alg.memory[position+1:]...)
-		// alg.memory = append([]int{request}, alg.memory...)
-		_ = position
 		ioutils.DebugPrint(fmt.Sprint(" ## FOUND ", request, " REQUEST SERVED ## =>> ", alg.memory), alg.debug)
 	}
 	ioutils.DebugPrint(fmt.Sprintln(), alg.debug)
 	return isFound
 }
 
-func (alg *FIFOAlg) find(request int) (bool, int) {
-	for i, n := range alg.memory {
+func (alg *FIFOAlg) find(request int) bool {
+	for _, n := range alg.memory {
 		if n == request {
-			return true, i
+			return true
 		}
 	}
-	return false, -1
+	return false
 }

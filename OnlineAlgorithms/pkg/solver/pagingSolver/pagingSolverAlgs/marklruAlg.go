@@ -5,6 +5,7 @@ import (
 	"fmt"
 )
 
+// MARKLRUAlg hods all information for Mark Least Recently Used algorithm.
 type MARKLRUAlg struct {
 	memory []int
 	marks  []bool
@@ -12,10 +13,12 @@ type MARKLRUAlg struct {
 	debug  bool
 }
 
+// MARKLRUAlg_Create takes size and debug flag and initializes Mark Least Recently Used algorithm for Paging.
 func MARKLRUAlg_Create(size int, debug bool) *MARKLRUAlg {
 	return &MARKLRUAlg{size: size, memory: make([]int, 0), marks: make([]bool, 0), debug: debug}
 }
 
+// UpdateMemory is implementation of PagingSolvingAlg interface for Mark Least Recently Used algorithm.
 func (alg *MARKLRUAlg) UpdateMemory(request int) bool {
 	ioutils.DebugPrint((fmt.Sprint("looking for ", request, "\t")), alg.debug)
 	index, isFound := alg.find(request)

@@ -9,33 +9,37 @@ import (
 
 const CHANCE_FOR_TIMESTAMP = 0.2
 
-type CombinationMem struct {
+// CmbMemCell holds single memory cell for Combination algorithm.
+type CmbMemCell struct {
 	mem        int
 	timestamps []int
 	bit        bool
 }
 
-type CombinationAlg struct {
-	memory []*CombinationMem
+// CmbAlg hods all information for Combination algorithm.
+type CmbAlg struct {
+	memory []*CmbMemCell
 	size   int
 	debug  bool
 }
 
-func CombinationAlg_Create(size int, debug bool) *CombinationAlg {
-	b := &CombinationAlg{size: size, debug: debug}
+// CombinationAlg_Create takes size and debug flag and initializes Combination algorithm for Update List.
+func CombinationAlg_Create(size int, debug bool) *CmbAlg {
+	b := &CmbAlg{size: size, debug: debug}
 
-	list := CreateList(size)
+	list := createList(size)
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	for _, n := range list {
-		b.memory = append(b.memory, &CombinationMem{mem: n, timestamps: make([]int, size), bit: r.Int()%2 == 0})
+		b.memory = append(b.memory, &CmbMemCell{mem: n, timestamps: make([]int, size), bit: r.Int()%2 == 0})
 
 	}
 
 	return b
 }
 
-func (alg *CombinationAlg) UpdateList(request int) int {
+// UpdateList is implementation of UpdateListSolvingAlg interface for Combination algorithm.
+func (alg *CmbAlg) UpdateList(request int) int {
 	ioutils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
 	ioutils.DebugPrint(fmt.Sprint(" LOOKING FOR ", request), alg.debug)
 
@@ -56,7 +60,7 @@ func (alg *CombinationAlg) UpdateList(request int) int {
 						ioutils.DebugPrint(fmt.Sprint(" BEST POSITION AT INDEX ", j, " WITH TIMESTAMP ", alg.memory[j].timestamps[i], " =>"), alg.debug)
 						temp := alg.memory[i]
 						alg.memory = append(alg.memory[:i], alg.memory[i+1:]...)
-						alg.memory = append(alg.memory[:j], append([]*CombinationMem{temp}, alg.memory[j:]...)...)
+						alg.memory = append(alg.memory[:j], append([]*CmbMemCell{temp}, alg.memory[j:]...)...)
 
 						break
 					}
@@ -70,7 +74,7 @@ func (alg *CombinationAlg) UpdateList(request int) int {
 					ioutils.DebugPrint("BIT FLIP TO 1, TRANSPOSING TO BEGINING => ", alg.debug)
 
 					alg.memory = append(alg.memory[:i], alg.memory[i+1:]...)
-					alg.memory = append([]*CombinationMem{n}, alg.memory...)
+					alg.memory = append([]*CmbMemCell{n}, alg.memory...)
 				}
 				n.bit = !n.bit
 			}
@@ -85,7 +89,7 @@ func (alg *CombinationAlg) UpdateList(request int) int {
 	return alg.size
 }
 
-func (alg *CombinationAlg) unpackMemory() [][]int {
+func (alg *CmbAlg) unpackMemory() [][]int {
 	mem := make([][]int, 0)
 
 	for i, n := range alg.memory {

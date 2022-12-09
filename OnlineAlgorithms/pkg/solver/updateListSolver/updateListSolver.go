@@ -1,3 +1,5 @@
+// Package updatelistsolver defines front for all algorithms solving UpdateList problem.
+// Provides basic shared functionalties for these algorithms.
 package updatelistsolver
 
 import (
@@ -5,10 +7,12 @@ import (
 	"fmt"
 )
 
+// UpdateListSolvingAlg provides fron for any algorithm implementing it.
 type UpdateListSolvingAlg interface {
 	UpdateList(request int) int
 }
 
+// UpdateListSolver struct holds specification of problem and choosen algorithm.
 type UpdateListSolver struct {
 	size int
 	cost int
@@ -16,14 +20,12 @@ type UpdateListSolver struct {
 	algE ulalgs.UpdateListAlg
 }
 
+// UpdateListSolver_Create creates UpdateListSolver struct for given configuration.
+// Returns UpdateListSolver.
 func UpdateListSolver_Create(size int, algUL ulalgs.UpdateListAlg, debug bool) *UpdateListSolver {
 	uLS := &UpdateListSolver{size: size, cost: 0, algE: ulalgs.UpdateListAlg(algUL)}
 	uLS.createSolvingAlg(algUL, debug)
 	return uLS
-}
-
-func (uLS *UpdateListSolver) Serve(request int) {
-	uLS.cost += uLS.alg.UpdateList(request)
 }
 
 func (uLS *UpdateListSolver) createSolvingAlg(algUL ulalgs.UpdateListAlg, debug bool) {
@@ -55,6 +57,12 @@ func (uLS *UpdateListSolver) createSolvingAlg(algUL ulalgs.UpdateListAlg, debug 
 	}
 }
 
+// Serve is implementation of GenericSolver interface
+func (uLS *UpdateListSolver) Serve(request int) {
+	uLS.cost += uLS.alg.UpdateList(request)
+}
+
+// Raport is implementation of GenericSolver interface
 func (uLS *UpdateListSolver) Raport() (string, int) {
 	return fmt.Sprint(uLS.algE), uLS.cost
 }

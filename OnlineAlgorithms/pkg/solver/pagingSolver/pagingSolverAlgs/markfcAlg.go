@@ -6,6 +6,7 @@ import (
 	"math"
 )
 
+// MARKFCAlg hods all information for Mark Frequency Count algorithm.
 type MARKFCAlg struct {
 	memory []int
 	marks  []bool
@@ -14,10 +15,12 @@ type MARKFCAlg struct {
 	debug  bool
 }
 
+// MARKFCAlg_Create takes size and debug flag and initializes Mark Frequency Count algorithm for Paging.
 func MARKFCAlg_Create(size int, debug bool) *MARKFCAlg {
 	return &MARKFCAlg{size: size, memory: make([]int, 0), marks: make([]bool, 0), fq: make([]int, 0), debug: debug}
 }
 
+// UpdateMemory is implementation of PagingSolvingAlg interface for Mark Frequency Count algorithm.
 func (alg *MARKFCAlg) UpdateMemory(request int) bool {
 	ioutils.DebugPrint((fmt.Sprint("looking for ", request, "\t")), alg.debug)
 	isFound := alg.find(request)

@@ -6,62 +6,28 @@ import (
 	"fmt"
 )
 
+// LRUMem holds single memory cell for Least Recently Used algorithm.
 type LRUMem struct {
 	mem     int
 	lastReq int
 	index   int
 }
 
-type PriorityQueue []*LRUMem
-
-func (pq PriorityQueue) Len() int {
-	return len(pq)
-}
-
-func (pq PriorityQueue) Less(i, j int) bool {
-	return pq[i].lastReq > pq[j].lastReq
-}
-
-func (pq PriorityQueue) Swap(i, j int) {
-	pq[i], pq[j] = pq[j], pq[i]
-	pq[i].index = i
-	pq[j].index = j
-}
-
-func (pq *PriorityQueue) Push(x any) {
-	n := len(*pq)
-	item := x.(*LRUMem)
-	item.index = n
-	*pq = append(*pq, item)
-}
-
-func (pq *PriorityQueue) Pop() any {
-	old := *pq
-	n := len(old)
-	item := old[n-1]
-	old[n-1] = nil  // avoid memory leak
-	item.index = -1 // for safety
-	*pq = old[0 : n-1]
-	return item
-}
-
-func (pq *PriorityQueue) update(item *LRUMem) {
-	item.lastReq++
-}
-
+// LFUAlg hods all information for Least Recently Used algorithm.
 type LRUAlg struct {
-	memory PriorityQueue
+	memory priorityQueue
 	size   int
 	debug  bool
 }
 
 func LRUAlg_Create(size int, debug bool) *LRUAlg {
-	lru := &LRUAlg{size: size, memory: make(PriorityQueue, 0), debug: debug}
+	lru := &LRUAlg{size: size, memory: make(priorityQueue, 0), debug: debug}
 	heap.Init(&lru.memory)
 
 	return lru
 }
 
+// LFUAlg_Create takes size and debug flag and initializes Least Recently Used algorithm for Paging.
 func (alg *LRUAlg) UpdateMemory(request int) bool {
 	isFound := alg.find(request)
 	ioutils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
@@ -105,4 +71,41 @@ func (alg *LRUAlg) unpackMemory() [][]int {
 	}
 
 	return mem
+}
+
+type priorityQueue []*LRUMem
+
+func (pq priorityQueue) Len() int {
+	return len(pq)
+}
+
+func (pq priorityQueue) Less(i, j int) bool {
+	return pq[i].lastReq > pq[j].lastReq
+}
+
+func (pq priorityQueue) Swap(i, j int) {
+	pq[i], pq[j] = pq[j], pq[i]
+	pq[i].index = i
+	pq[j].index = j
+}
+
+func (pq *priorityQueue) Push(x any) {
+	n := len(*pq)
+	item := x.(*LRUMem)
+	item.index = n
+	*pq = append(*pq, item)
+}
+
+func (pq *priorityQueue) Pop() any {
+	old := *pq
+	n := len(old)
+	item := old[n-1]
+	old[n-1] = nil  // avoid memory leak
+	item.index = -1 // for safety
+	*pq = old[0 : n-1]
+	return item
+}
+
+func (pq *priorityQueue) update(item *LRUMem) {
+	item.lastReq++
 }

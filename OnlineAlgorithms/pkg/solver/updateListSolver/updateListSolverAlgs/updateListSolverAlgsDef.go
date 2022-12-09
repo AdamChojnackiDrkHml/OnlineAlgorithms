@@ -1,9 +1,13 @@
+// Package updatelistsolveralgs contains implementation of supported algorithms for Update List.
+// Defines enumeration for these algorithms.
 package updatelistsolveralgs
 
 const NUM_OF_UPDATELIST_ALGS = 6
 
+// UpdateListAlg will hold enumerate for supported Update List algorithms.
 type UpdateListAlg int
 
+// Defined in UpdateListAlg algorithms.
 const (
 	MTF UpdateListAlg = iota
 	TRANS
@@ -13,6 +17,7 @@ const (
 	Combination
 )
 
+// String creates string from UpdateListAlg.
 func (e UpdateListAlg) String() string {
 	switch e {
 	case MTF:

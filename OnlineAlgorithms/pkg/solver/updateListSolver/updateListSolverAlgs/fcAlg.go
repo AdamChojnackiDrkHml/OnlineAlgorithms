@@ -5,37 +5,24 @@ import (
 	"fmt"
 )
 
-type FCAlg struct {
-	memory []*FCMem
-	size   int
-	debug  bool
-}
-
+// FCMem holds single memory cell for Frequency Count algorithm.
 type FCMem struct {
 	mem       int
 	freqCount int
 	index     int
 }
 
-func (alg *FCAlg) update(item *FCMem, pos int) {
-	item.freqCount++
-	if pos == 0 {
-		return
-	}
-
-	save := pos
-	for ; pos > 0 && alg.memory[save].freqCount >= alg.memory[pos-1].freqCount; pos-- {
-	}
-
-	alg.memory = append(alg.memory[:save], alg.memory[save+1:]...)
-	alg.memory = append(alg.memory[:pos+1], alg.memory[pos:]...)
-	alg.memory[pos] = item
-
+// FCAlg hods all information for Frequency Count algorithm.
+type FCAlg struct {
+	memory []*FCMem
+	size   int
+	debug  bool
 }
 
+// FCAlg_Create takes size and debug flag and initializes Frequency Count algorithm for Update List.
 func FCAlg_Create(size int, debug bool) *FCAlg {
 	FC := &FCAlg{size: size, memory: make([]*FCMem, 0), debug: debug}
-	list := CreateList(size)
+	list := createList(size)
 
 	for i, n := range list {
 		FC.memory = append(FC.memory, &FCMem{mem: n, freqCount: 0, index: i})
@@ -44,6 +31,7 @@ func FCAlg_Create(size int, debug bool) *FCAlg {
 	return FC
 }
 
+// UpdateList is implementation of UpdateListSolvingAlg interface for Frequency Count algorithm.
 func (alg *FCAlg) UpdateList(request int) int {
 	ioutils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
 	ioutils.DebugPrint(fmt.Sprint(" LOOKING FOR ", request), alg.debug)
@@ -60,6 +48,22 @@ func (alg *FCAlg) UpdateList(request int) int {
 	ioutils.DebugPrint(fmt.Sprintln(), alg.debug)
 
 	return alg.size
+}
+
+func (alg *FCAlg) update(item *FCMem, pos int) {
+	item.freqCount++
+	if pos == 0 {
+		return
+	}
+
+	save := pos
+	for ; pos > 0 && alg.memory[save].freqCount >= alg.memory[pos-1].freqCount; pos-- {
+	}
+
+	alg.memory = append(alg.memory[:save], alg.memory[save+1:]...)
+	alg.memory = append(alg.memory[:pos+1], alg.memory[pos:]...)
+	alg.memory[pos] = item
+
 }
 
 func (alg *FCAlg) unpackMemory() [][]int {

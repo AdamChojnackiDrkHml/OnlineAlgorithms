@@ -7,15 +7,16 @@ import (
 	uniform "gonum.org/v1/gonum/stat/distuv"
 )
 
-type dhrDistGenerator struct {
+type DhrDistGenerator struct {
 	gen  uniform.Uniform
 	dist []float64
 	high int
 }
 
-func DHR_Create(low, high int) *dhrDistGenerator {
+// DHR_Create takes bounds for distribution and returns Diharmonic distribution.
+func DHR_Create(low, high int) *DhrDistGenerator {
 
-	g := &dhrDistGenerator{gen: uniform.Uniform{Min: float64(0), Max: float64(1), Src: rand.New(rand.NewSource(uint64(time.Now().UnixNano())))}}
+	g := &DhrDistGenerator{gen: uniform.Uniform{Min: float64(0), Max: float64(1), Src: rand.New(rand.NewSource(uint64(time.Now().UnixNano())))}}
 	g.dist = make([]float64, high+1)
 	g.high = high
 
@@ -34,7 +35,8 @@ func DHR_Create(low, high int) *dhrDistGenerator {
 	return g
 }
 
-func (g *dhrDistGenerator) GetRequest() int {
+// GetRequest is implementation of GenericDataGenerator interface for Diharmonic distribution.
+func (g *DhrDistGenerator) GetRequest() int {
 	ran := g.gen.Rand()
 
 	for i := range g.dist {

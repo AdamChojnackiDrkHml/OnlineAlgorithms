@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// RMAlg hods all information for Random Markup algorithm.
 type RMAlg struct {
 	memory []int
 	marks  []bool
@@ -14,10 +15,12 @@ type RMAlg struct {
 	debug  bool
 }
 
+// RMAlg_Create takes size and debug flag and initializes Random Markup algorithm for Paging.
 func RMAlg_Create(size int, debug bool) *RMAlg {
 	return &RMAlg{size: size, memory: make([]int, 0), marks: make([]bool, 0), debug: debug}
 }
 
+// UpdateMemory is implementation of PagingSolvingAlg interface for Random Markup algorithm.
 func (alg *RMAlg) UpdateMemory(request int) bool {
 	ioutils.DebugPrint((fmt.Sprint("looking for ", request, "\t")), alg.debug)
 	isFound := alg.find(request)

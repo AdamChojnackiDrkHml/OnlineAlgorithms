@@ -5,16 +5,19 @@ import (
 	"fmt"
 )
 
+// MTFAlg hods all information for Move-To-Front algorithm.
 type MTFAlg struct {
 	memory []int
 	size   int
 	debug  bool
 }
 
+// MTFAlg_Create takes size and debug flag and initializes Move-To-Front algorithm for Update List.
 func MTFAlg_Create(size int, debug bool) *MTFAlg {
-	return &MTFAlg{size: size, memory: CreateList(size), debug: debug}
+	return &MTFAlg{size: size, memory: createList(size), debug: debug}
 }
 
+// UpdateList is implementation of UpdateListSolvingAlg interface for Move-To-Front algorithm.
 func (alg *MTFAlg) UpdateList(request int) int {
 	ioutils.DebugPrint(fmt.Sprint(alg.memory), alg.debug)
 	ioutils.DebugPrint(fmt.Sprint(" LOOKING FOR ", request), alg.debug)

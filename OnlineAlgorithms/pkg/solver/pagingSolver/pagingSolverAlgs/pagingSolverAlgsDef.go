@@ -1,9 +1,13 @@
+// Package pagingsolveralgs contains implementation of supported algorithms for Paging.
+// Defines enumeration for these algorithms.
 package pagingsolveralgs
 
 const NUM_OF_PAGING_ALGS = 6
 
+// PagingAlg will hold enumerate for supported Update List algorithms.
 type PagingAlg int
 
+// Defined in PagingAlg algorithms.
 const (
 	LRU PagingAlg = iota
 	FIFO
@@ -13,6 +17,7 @@ const (
 	RM
 )
 
+// String creates string from PagingAlg.
 func (e PagingAlg) String() string {
 	switch e {
 	case LRU:

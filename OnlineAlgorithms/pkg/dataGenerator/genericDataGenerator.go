@@ -1,15 +1,19 @@
+// Package datagenerator defines front for all used data generators.
 package datagenerator
 
 import (
-	dGUtils "OnlineAlgorithms/pkg/dataGenerator/dataGeneratorUtils"
+	dgconf "OnlineAlgorithms/pkg/dataGenerator/dataGeneratorConfigs"
 	dist "OnlineAlgorithms/pkg/dataGenerator/distributions"
 )
 
+// GenericDataGenerator provides fron for any data generator implementing it.
 type GenericDataGenerator interface {
 	GetRequest() int
 }
 
-func CreateDataGenerator(generConf dGUtils.GeneratorConfigS) []GenericDataGenerator {
+// CreateDataGenerator function takes GeneratorConfigS struct
+// and returns slice of GenericDataGenerator based on its contents.
+func CreateDataGenerator(generConf dgconf.GeneratorConfigS) []GenericDataGenerator {
 	var generators []GenericDataGenerator
 
 	for _, n := range generConf.DistributionType {
@@ -19,7 +23,7 @@ func CreateDataGenerator(generConf dGUtils.GeneratorConfigS) []GenericDataGenera
 	return generators
 }
 
-func initGenerator(generConf dGUtils.GeneratorConfigS, generatorType dist.GeneratorTypeEnum) GenericDataGenerator {
+func initGenerator(generConf dgconf.GeneratorConfigS, generatorType dist.GeneratorTypeEnum) GenericDataGenerator {
 	var gD GenericDataGenerator
 
 	switch generatorType {
