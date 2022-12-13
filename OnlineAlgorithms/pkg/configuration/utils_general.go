@@ -1,3 +1,5 @@
+// Package generalutils provides structs and utilities for managing
+// solver, generator and environament parameters for testing and use.
 package generalutils
 
 import (
@@ -5,9 +7,7 @@ import (
 	svconf "OnlineAlgorithms/pkg/solver/solverConfigs"
 )
 
-// //////////////////////////////
-// TEST CONFIG HOLDING STRUCTURES
-// //////////////////////////////
+// GeneralConfigS holds general testing environament configuration.
 type GeneralConfigS struct {
 	NoOfReq    int `yaml:"noOfReq"`
 	Iterations int `yaml:"iterations"`
@@ -15,6 +15,7 @@ type GeneralConfigS struct {
 	Repeats    int `yaml:"repeats"`
 }
 
+// TestConfigS holds all structures defined for single testcase.
 type TestConfigS struct {
 	GeneralConfig GeneralConfigS `yaml:"generalConfig"`
 
@@ -23,17 +24,13 @@ type TestConfigS struct {
 	GeneratorConfig dgconfig.GeneratorConfigS `yaml:"generatorConfig"`
 }
 
+// Config structure purpose is holding all defined testcases for testing purposes.
 type Config struct {
 	TestConfigs []TestConfigS `yaml:"test"`
 }
 
-// /////////////////////////////////////
-// GENERAL PROGRAM CONSTANTS AND GETTERS
-// /////////////////////////////////////
-
-// ////////////////////////////////////////////
-// UTILS FOR TEST CONFIG CHECKING AND PREPARING
-// ////////////////////////////////////////////
+// PreporcessTestConfig method should be called before starting test case
+// in order to prepare structures and resolve doAll flags.
 func PreprocessTestConfig(testConf *TestConfigS) {
 	solverConfig := &testConf.SolverConfig
 	generatorConfig := &testConf.GeneratorConfig
@@ -42,6 +39,8 @@ func PreprocessTestConfig(testConf *TestConfigS) {
 	generatorConfig.Preprocess()
 }
 
+// ValidateTestConfig function should be called before test start
+// with a goal to find all possible flaws in configuration that could ruin test.
 func ValidateTestConfig(testConf TestConfigS) error {
 	solverConfig := testConf.SolverConfig
 	generatorConfig := testConf.GeneratorConfig

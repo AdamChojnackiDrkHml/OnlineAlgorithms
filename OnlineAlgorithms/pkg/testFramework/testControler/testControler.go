@@ -3,7 +3,7 @@ package testcontroler
 
 import (
 	conf "OnlineAlgorithms/pkg/configuration"
-	dataGenerator "OnlineAlgorithms/pkg/dataGenerator"
+	dg "OnlineAlgorithms/pkg/dataGenerator"
 	"OnlineAlgorithms/pkg/solver"
 	ioutils "OnlineAlgorithms/pkg/testFramework/ioUtils"
 	"fmt"
@@ -30,7 +30,7 @@ func RunTestForCmdArguments(cmdArgs []string) {
 		for repeat := 0; repeat < genConf.Repeats; repeat++ {
 			pSS := solver.CreateSolversFromConfig(solvConf)
 
-			dG := dataGenerator.CreateDataGenerator(generConf)[0]
+			dG := dg.CreateDataGenerator(generConf)[0]
 
 			for request := 0; request < genConf.NoOfReq; request++ {
 				for _, pS := range pSS {
@@ -77,7 +77,7 @@ func RunTestForConfig(config *conf.Config, resFilename string) {
 		var name string
 		var score int
 
-		dGS := dataGenerator.CreateDataGenerator(generConf)
+		dGS := dg.CreateDataGenerator(generConf)
 
 		for iteration := 0; iteration < genConf.Iterations; iteration++ {
 
