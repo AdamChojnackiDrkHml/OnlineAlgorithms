@@ -1,26 +1,25 @@
 package distributions
 
 import (
+	"math/rand"
 	"time"
-
-	"golang.org/x/exp/rand"
-	uniform "gonum.org/v1/gonum/stat/distuv"
 )
 
 type UniDistGenerator struct {
-	gen uniform.Uniform
+	min int
+	max int
+	src *rand.Rand
 }
 
 // UNI_Create takes bounds for distribution and returns Uniform distribution.
 func UNI_Create(low, high int) *UniDistGenerator {
-
-	g := &UniDistGenerator{gen: uniform.Uniform{Min: float64(low), Max: float64(high + 1), Src: rand.New(rand.NewSource(uint64(time.Now().UnixNano())))}}
+	g := &UniDistGenerator{min: low, max: high + 1, src: rand.New(rand.NewSource(time.Now().UnixNano()))}
 	return g
 }
 
 // GetRequest is implementation of GenericDataGenerator interface for Uniform distribution.
 func (g *UniDistGenerator) GetRequest() int {
-	i := g.gen.Rand()
+	i := g.src.Intn(g.max-g.min) + g.min
 
-	return int(i)
+	return i
 }

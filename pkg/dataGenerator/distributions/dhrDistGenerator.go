@@ -1,14 +1,12 @@
 package distributions
 
 import (
+	"math/rand"
 	"time"
-
-	"golang.org/x/exp/rand"
-	uniform "gonum.org/v1/gonum/stat/distuv"
 )
 
 type DhrDistGenerator struct {
-	gen  uniform.Uniform
+	src  *rand.Rand
 	dist []float64
 	high int
 }
@@ -16,7 +14,7 @@ type DhrDistGenerator struct {
 // DHR_Create takes bounds for distribution and returns Diharmonic distribution.
 func DHR_Create(low, high int) *DhrDistGenerator {
 
-	g := &DhrDistGenerator{gen: uniform.Uniform{Min: float64(0), Max: float64(1), Src: rand.New(rand.NewSource(uint64(time.Now().UnixNano())))}}
+	g := &DhrDistGenerator{src: rand.New(rand.NewSource(time.Now().UnixNano()))}
 	g.dist = make([]float64, high+1)
 	g.high = high
 
@@ -37,7 +35,7 @@ func DHR_Create(low, high int) *DhrDistGenerator {
 
 // GetRequest is implementation of GenericDataGenerator interface for Diharmonic distribution.
 func (g *DhrDistGenerator) GetRequest() int {
-	ran := g.gen.Rand()
+	ran := g.src.Float64()
 
 	for i := range g.dist {
 		if g.dist[i] < ran && ran <= g.dist[i+1] {

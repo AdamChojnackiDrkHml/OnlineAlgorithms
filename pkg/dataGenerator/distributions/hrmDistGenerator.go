@@ -1,14 +1,12 @@
 package distributions
 
 import (
+	"math/rand"
 	"time"
-
-	"golang.org/x/exp/rand"
-	uniform "gonum.org/v1/gonum/stat/distuv"
 )
 
 type HrmDistGenerator struct {
-	gen  uniform.Uniform
+	src  *rand.Rand
 	dist []float64
 	high int
 }
@@ -16,7 +14,7 @@ type HrmDistGenerator struct {
 // HRM_Create takes bounds for distribution and returns Harmonic distribution.
 func HRM_Create(low, high int) *HrmDistGenerator {
 
-	g := &HrmDistGenerator{gen: uniform.Uniform{Min: float64(0), Max: float64(1), Src: rand.New(rand.NewSource(uint64(time.Now().UnixNano())))}}
+	g := &HrmDistGenerator{src: rand.New(rand.NewSource(time.Now().UnixNano()))}
 	g.dist = make([]float64, high+1)
 	g.high = high
 
@@ -37,7 +35,7 @@ func HRM_Create(low, high int) *HrmDistGenerator {
 
 // GetRequest is implementation of GenericDataGenerator interface for Harmonic distribution.
 func (g *HrmDistGenerator) GetRequest() int {
-	ran := g.gen.Rand()
+	ran := g.src.Float64()
 
 	for i := range g.dist {
 		if g.dist[i] < ran && ran <= g.dist[i+1] {
