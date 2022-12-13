@@ -6,10 +6,10 @@ build:
 	@go build -o build/main cmd/main.go
 
 basic: build
-	@go run cmd/main.go -f data/configs/pagingAllUni
+	@go run cmd/main.go data/configs/pagingAllUni
 
 scenario: build
-	@go run cmd/main.go  -f data/configs/$(SCENARIO)
+	@go run cmd/main.go data/configs/$(SCENARIO)
 
 TESTS_DIR = ./data/configs
 
