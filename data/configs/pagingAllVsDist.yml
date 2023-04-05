@@ -24,7 +24,7 @@ test:
         repeats: 20
     generatorConfig: 
         distributionType: [1]
-        fvalueGeo: 0.1
+        fvalueGeo: 0.5
         maximum: 150
         minimum: 0      
     solverConfig: 

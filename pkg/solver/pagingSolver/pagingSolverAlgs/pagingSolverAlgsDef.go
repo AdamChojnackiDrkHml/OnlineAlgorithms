@@ -15,6 +15,8 @@ const (
 	MARK_LRU
 	MARK_FC
 	RM
+	FWF
+	RAND
 )
 
 // String creates string from PagingAlg.
@@ -32,6 +34,10 @@ func (e PagingAlg) String() string {
 		return "MARK_FC"
 	case RM:
 		return "RM"
+	case FWF:
+		return "FWF"
+	case RAND:
+		return "RAND"
 	default:
 		return "NULL"
 	}
