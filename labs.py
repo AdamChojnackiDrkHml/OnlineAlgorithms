@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
+from matplotlib.ticker import MaxNLocator
 
 Ns = [20, 30, 40, 50, 60, 70, 80, 90, 100]
-KsRatios = [1.0 / 10.0, 1.0 / 9.0, 1.0 / 8.0, 1.0 / 7.0, 1.0 / 6.0, 1.0 / 5.0]
 Distros = ["Uni", "Geo", "Hrm", "Dhr"]
 Algs = ["FIFO", "FWF", "LRU", "LFU", "RM", "RAND"]
 
@@ -13,7 +13,7 @@ print(res)
 
 for i in range(len(Distros)):
     for j in range(len(Ns)):
-        filename = "data/labs/" + (str(Ns[j]) + "_" + str(Distros[i]) + ".txt")
+        filename = "data/labs/" + (str(Ns[j]) + "_" + str(Distros[i]) + "2.txt")
         res[j][i] = np.loadtxt(filename, unpack='False')
         
 
@@ -21,12 +21,15 @@ for i in range(len(Distros)):
 
 for j in range(len(Ns)):
     for i in range(len(Distros)):
-        myK = list(map(lambda x: Ns[j] * x, KsRatios))
-        for a in range(len(Algs)):
-            plt.plot(myK, res[j][i][a], label=Algs[a])
+        # myK = list(map(lambda x: Ns[j] * x, KsRatios))
+        ret = [int(i) for i in (res[j][i][0])]
+        print(ret)
+        for a in range(1, len(Algs)):
+            plt.plot(ret, res[j][i][a], label=Algs[a])
         
         plt.xlabel("Cache Size")
         plt.ylabel("Avg Cost")
+        plt.xticks(ret)
         plt.title("N = " + str(Ns[j]) + " " + Distros[i])
         plt.legend(loc='upper right')
         plt.savefig("data/labs/graphs/NDist/" + str(Ns[j]) + Distros[i] , bbox_inches="tight")

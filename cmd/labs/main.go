@@ -11,14 +11,24 @@ import (
 	"fmt"
 	"sync"
 
-	"math"
 	"os"
 )
 
 func main() {
 	fmt.Println(os.Getwd())
 	Ns := []int{20, 30, 40, 50, 60, 70, 80, 90, 100}
-	KsRatios := []float64{1.0 / 10.0, 1.0 / 9.0, 1.0 / 8.0, 1.0 / 7.0, 1.0 / 6.0, 1.0 / 5.0}
+	KsRatios2 := make([][]int, len(Ns))
+
+	for i := range KsRatios2 {
+		low := Ns[i] / 10
+		high := Ns[i] / 5
+		KsRatios2[i] = make([]int, 0)
+
+		for j := low; j <= high; j++ {
+			KsRatios2[i] = append(KsRatios2[i], j)
+		}
+		fmt.Println(KsRatios2[i])
+	}
 	generatorConfig := &datagenerator.GeneratorConfigS{
 		FvalueGeo: 0.5,
 		Minimum:   0,
@@ -53,10 +63,10 @@ func main() {
 
 	for j, N := range Ns {
 
-		results[j] = make([][][]float64, len(KsRatios))
-		for i, KRatio := range KsRatios {
+		results[j] = make([][][]float64, len(KsRatios2[j]))
+		for i, cache := range KsRatios2[j] {
 			generatorConfig.Maximum = N
-			solverconfigs.Size = int(math.Ceil(float64(N) * KRatio))
+			solverconfigs.Size = cache
 
 			dGS := dg.CreateDataGenerator(*generatorConfig)
 			results[j][i] = make([][]float64, len(dGS))
@@ -86,11 +96,11 @@ func main() {
 		resFilename := templateFilename + fmt.Sprintf("%v_", N)
 
 		for distro := range generatorConfig.DistributionType {
-			f := ioutils.CreateAndOpenResFile(resFilename + distributions.FromInt(distro) + ".txt")
+			f := ioutils.CreateAndOpenResFile(resFilename + distributions.FromInt(distro) + "2.txt")
 			// ioutils.CreateAndWriteHeader(f, solverconfigs, generatorConfig)
-			for ratio := range KsRatios {
+			for ratio, cache := range KsRatios2[setN] {
 
-				ioutils.SaveResToFilePuri(f, results[setN][ratio][distro])
+				ioutils.SaveResToFile(f, results[setN][ratio][distro], cache)
 
 			}
 			f.Close()
