@@ -23,7 +23,7 @@ func (alg *MTFAlg) UpdateList(request int) int {
 	ioutils.DebugPrint(fmt.Sprint(" LOOKING FOR ", request), alg.debug)
 	for i, n := range alg.memory {
 		if n == request {
-			ioutils.DebugPrint(fmt.Sprint(" FOUND ", n, " AT INDEX ", i, " TRANSPOsING TO BEGINING => "), alg.debug)
+			ioutils.DebugPrint(fmt.Sprint(" FOUND ", n, " AT INDEX ", i, " TRANSPOING TO BEGINING => "), alg.debug)
 			alg.memory = append(alg.memory[:i], alg.memory[i+1:]...)
 			alg.memory = append([]int{n}, alg.memory...)
 			ioutils.DebugPrint(fmt.Sprint(alg.memory), alg.debug)

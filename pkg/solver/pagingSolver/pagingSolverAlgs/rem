@@ -1,0 +1,139 @@
+package pagingsolveralgs
+
+// LFUMemCell holds single memory cell for Least Frequently Used algorithm.
+type LFUMemCell struct {
+	reqCnt int
+	mem    int
+}
+
+// LFUAlg hods all information for Least Frequently Used algorithm.
+type LFUAlg struct {
+	memory        []*LFUMemCell
+	size          int
+	debug         bool
+	globalCounter map[int]*LFUMemCell
+	counter       int
+}
+
+// LFUAlg_Create takes size and debug flag and initializes Least Frequently Used algorithm for Paging.
+func LFUAlg_Create(size int, debug bool) *LFUAlg {
+	lfu := &LFUAlg{
+		size:          size,
+		memory:        make([]*LFUMemCell, 0),
+		debug:         debug,
+		globalCounter: make(map[int]*LFUMemCell),
+		counter:       0,
+	}
+
+	return lfu
+}
+
+// UpdateMemory is implementation of PagingSolvingAlg interface for Least Frequently Used algorithm.
+func (alg *LFUAlg) UpdateMemory(request int) bool {
+	isFound, res, index := alg.find(request)
+	if !isFound {
+		if len(alg.memory) >= alg.size {
+			x := alg.memory[len(alg.memory)-1]
+			alg.memory = alg.memory[:len(alg.memory)-1]
+			alg.globalCounter[x.mem] = x
+		}
+		elem, present := alg.globalCounter[request]
+
+		if present {
+			//TODO insert
+			// heap.Push(&alg.memory, elem)
+			elem.reqCnt++
+			alg.insertToPosition(elem, len(alg.memory)-1)
+		} else {
+			mem := &LFUMemCell{mem: request, reqCnt: 1}
+			alg.insertToPosition(mem, len(alg.memory)-1)
+		} // heap.Push(&alg.memory, &LFUMemCell{mem: request, reqCnt: 1})
+	} else {
+		res.reqCnt++
+		alg.memory = append(alg.memory[:index], alg.memory[index+1:]...)
+
+		alg.insertToPosition(res, index)
+	}
+	// fmt.Println(alg.counter)
+	// alg.counter++
+	// if alg.counter == 38 {
+	// 	// fmt.Println(3434)
+	// }
+	return isFound
+}
+
+func (alg *LFUAlg) find(request int) (bool, *LFUMemCell, int) {
+	for i, n := range alg.memory {
+		if n.mem == request {
+			return true, n, i
+		}
+	}
+	return false, nil, -1
+}
+
+func (alg *LFUAlg) insertToPosition(elem *LFUMemCell, startPos int) {
+	left, right := 0, startPos
+
+	if len(alg.memory) == 0 {
+		alg.memory = append(alg.memory, elem)
+		return
+	}
+
+	if elem.reqCnt < alg.memory[len(alg.memory)-1].reqCnt {
+		alg.memory = append(alg.memory, elem)
+		return
+	}
+	for left <= right {
+		mid := (left + right) / 2
+		if mid == 0 {
+			alg.memory = prependInt(alg.memory, elem, alg.size)
+			return
+		}
+
+		if mid == alg.size {
+			alg.memory = append(alg.memory, elem)
+			return
+		}
+		if alg.memory[mid].reqCnt == elem.reqCnt && alg.memory[mid-1].reqCnt > elem.reqCnt {
+			alg.memory = append(alg.memory, nil)
+			copy(alg.memory[mid+1:], alg.memory[mid:])
+			alg.memory[mid] = elem
+			if len(alg.memory) > alg.size {
+				alg.memory = alg.memory[:alg.size]
+			}
+			return
+		}
+
+		if alg.memory[mid].reqCnt > elem.reqCnt {
+			left = mid + 1
+			continue
+		}
+
+		if alg.memory[mid].reqCnt <= elem.reqCnt {
+			right = mid - 1
+			continue
+		}
+
+	}
+}
+
+func prependInt(x []*LFUMemCell, y *LFUMemCell, size int) []*LFUMemCell {
+	x = append(x, nil)
+	copy(x[1:], x)
+	x[0] = y
+	if len(x) < size {
+		return x
+	}
+	return x[:size]
+}
+
+func (alg *LFUAlg) unpackMemory() [][2]int {
+	res := make([][2]int, alg.size)
+
+	for i := range res {
+		res[i][0] = alg.memory[i].mem
+		res[i][1] = alg.memory[i].reqCnt
+	}
+
+	return res
+}

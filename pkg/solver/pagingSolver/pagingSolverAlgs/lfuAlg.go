@@ -1,9 +1,7 @@
 package pagingsolveralgs
 
 import (
-	ioutils "OnlineAlgorithms/pkg/solver/solverIoutils"
 	"container/heap"
-	"fmt"
 )
 
 // LFUMemCell holds single memory cell for Least Frequently Used algorithm.
@@ -15,14 +13,20 @@ type LFUMemCell struct {
 
 // LFUAlg hods all information for Least Frequently Used algorithm.
 type LFUAlg struct {
-	memory priorityQueueLFU
-	size   int
-	debug  bool
+	memory        priorityQueueLFU
+	size          int
+	debug         bool
+	globalCounter map[int]*LFUMemCell
 }
 
 // LFUAlg_Create takes size and debug flag and initializes Least Frequently Used algorithm for Paging.
 func LFUAlg_Create(size int, debug bool) *LFUAlg {
-	lfu := &LFUAlg{size: size, memory: make(priorityQueueLFU, 0), debug: debug}
+	lfu := &LFUAlg{
+		size:          size,
+		memory:        make(priorityQueueLFU, 0),
+		debug:         debug,
+		globalCounter: make(map[int]*LFUMemCell),
+	}
 	heap.Init(&lfu.memory)
 
 	return lfu
@@ -31,23 +35,24 @@ func LFUAlg_Create(size int, debug bool) *LFUAlg {
 // UpdateMemory is implementation of PagingSolvingAlg interface for Least Frequently Used algorithm.
 func (alg *LFUAlg) UpdateMemory(request int) bool {
 	isFound := alg.find(request)
-	ioutils.DebugPrint(fmt.Sprint(alg.unpackMemory()), alg.debug)
-	ioutils.DebugPrint(fmt.Sprint(" ## LOOKING FOR ", request, " "), alg.debug)
 	heap.Init(&alg.memory)
 	if !isFound {
-		ioutils.DebugPrint(" ## FAULT ", alg.debug)
-		ioutils.DebugPrint(fmt.Sprint(" HAVE TO INSERT ", request, " ## "), alg.debug)
 		if alg.memory.Len() >= alg.size {
 			x := heap.Pop(&alg.memory).(*LFUMemCell)
-			ioutils.DebugPrint(fmt.Sprint(" ## POPPING ", x.mem, " ## "), alg.debug)
+			alg.globalCounter[x.mem] = x
 		}
-		heap.Push(&alg.memory, &LFUMemCell{mem: request, reqCnt: 1})
-		ioutils.DebugPrint(fmt.Sprint(" =>> ", alg.unpackMemory()), alg.debug)
-	} else {
-		ioutils.DebugPrint(fmt.Sprint(" ## FOUND ", request, " REQUEST SERVED ## =>> ", alg.unpackMemory()), alg.debug)
+		elem, present := alg.globalCounter[request]
+
+		if present {
+			//TODO insert
+			// heap.Push(&alg.memory, elem)
+			elem.reqCnt++
+			heap.Push(&alg.memory, elem)
+		} else {
+			heap.Push(&alg.memory, &LFUMemCell{mem: request, reqCnt: 1})
+		}
 	}
 	heap.Init(&alg.memory)
-	ioutils.DebugPrint(fmt.Sprintln(), alg.debug)
 	return isFound
 }
 

@@ -24,14 +24,14 @@ func TestFifo(t *testing.T) {
 	}
 
 	assert.Equal(t, faults, 10, "Unexpected fault number")
-	assert.Equal(t, []int{9, 8, 7, 6, 5, 4, 3, 2, 1, 0}, fifo.memory)
+	assert.Equal(t, []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, fifo.memory)
 
 	if !fifo.UpdateMemory(10) {
 		faults++
 	}
 
 	assert.Equal(t, faults, 11, "Unexpected fault number")
-	assert.Equal(t, []int{10, 9, 8, 7, 6, 5, 4, 3, 2, 1}, fifo.memory)
+	assert.Equal(t, []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, fifo.memory)
 
 }
 
@@ -52,7 +52,7 @@ func TestLru(t *testing.T) {
 	}
 
 	assert.Equal(t, faults, 10, "Unexpected fault number")
-	assert.Equal(t, [][]int{{0, 10}, {1, 9}, {2, 8}, {3, 7}, {4, 6}, {5, 5}, {6, 4}, {7, 3}, {8, 0}, {9, 1}}, lru.unpackMemory(), "NO dupa1")
+	assert.Equal(t, []int{0, 1, 2, 3, 4, 5, 6, 7, 9, 8}, lru.memory, "NO dupa1")
 
 	if !lru.UpdateMemory(0) {
 		faults++
@@ -62,7 +62,7 @@ func TestLru(t *testing.T) {
 	}
 
 	assert.Equal(t, faults, 11, "Unexpected fault number")
-	assert.Equal(t, [][]int{{2, 10}, {3, 9}, {5, 7}, {7, 5}, {4, 8}, {9, 3}, {6, 6}, {0, 1}, {8, 2}, {10, 0}}, lru.unpackMemory(), "NO dupa2")
+	assert.Equal(t, []int{2, 3, 4, 5, 6, 7, 9, 8, 0, 10}, lru.memory, "NO dupa2")
 
 }
 
@@ -83,7 +83,18 @@ func TestLfu(t *testing.T) {
 	}
 
 	assert.Equal(t, faults, 10, "Unexpected fault number")
-	assert.Equal(t, [][]int{{0, 1}, {1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}, {6, 1}, {7, 1}, {8, 2}, {9, 1}}, lfu.unpackMemory(), "NO dupa1")
+	assert.Equal(t, [][2]int{
+		{8, 2},
+		{9, 1},
+		{7, 1},
+		{6, 1},
+		{5, 1},
+		{4, 1},
+		{3, 1},
+		{2, 1},
+		{1, 1},
+		{0, 1},
+	}, lfu.unpackMemory(), "NO dupa1")
 
 	for i := 0; i < 9; i++ {
 		if !lfu.UpdateMemory(initRequests[i]) {
@@ -91,12 +102,54 @@ func TestLfu(t *testing.T) {
 		}
 	}
 
+	if !lfu.UpdateMemory(9) {
+		faults++
+	}
+	if !lfu.UpdateMemory(9) {
+		faults++
+	}
+	if !lfu.UpdateMemory(9) {
+		faults++
+	}
+
 	if !lfu.UpdateMemory(10) {
 		faults++
 	}
 
+	if !lfu.UpdateMemory(10) {
+		faults++
+	}
 	assert.Equal(t, faults, 11, "Unexpected fault number")
-	assert.Equal(t, [][]int{{10, 1}, {3, 2}, {6, 2}, {1, 2}, {7, 2}, {2, 2}, {5, 2}, {0, 2}, {8, 3}, {4, 2}}, lfu.unpackMemory(), "NO dupa2")
+	assert.Equal(t, [][2]int{
+		{9, 4},
+		{8, 3},
+		{10, 2},
+		{7, 2},
+		{6, 2},
+		{5, 2},
+		{4, 2},
+		{3, 2},
+		{2, 2},
+		{1, 2},
+	}, lfu.unpackMemory(), "NO dupa2")
+
+	if !lfu.UpdateMemory(0) {
+		faults++
+	}
+
+	assert.Equal(t, faults, 12, "Unexpected fault number")
+	assert.Equal(t, [][2]int{
+		{9, 4},
+		{0, 3},
+		{8, 3},
+		{10, 2},
+		{7, 2},
+		{6, 2},
+		{5, 2},
+		{4, 2},
+		{3, 2},
+		{2, 2},
+	}, lfu.unpackMemory(), "NO dupa2")
 
 }
 

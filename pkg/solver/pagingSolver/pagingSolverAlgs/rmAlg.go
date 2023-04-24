@@ -1,8 +1,6 @@
 package pagingsolveralgs
 
 import (
-	ioutils "OnlineAlgorithms/pkg/solver/solverIoutils"
-	"fmt"
 	"math/rand"
 	"time"
 )
@@ -13,45 +11,37 @@ type RMAlg struct {
 	marks  []bool
 	size   int
 	debug  bool
+	source *rand.Rand
 }
 
 // RMAlg_Create takes size and debug flag and initializes Random Markup algorithm for Paging.
 func RMAlg_Create(size int, debug bool) *RMAlg {
-	return &RMAlg{size: size, memory: make([]int, 0), marks: make([]bool, 0), debug: debug}
+	return &RMAlg{
+		size:   size,
+		memory: make([]int, 0),
+		marks:  make([]bool, 0),
+		debug:  debug,
+		source: rand.New(rand.NewSource(time.Now().UTC().UnixNano()))}
 }
 
 // UpdateMemory is implementation of PagingSolvingAlg interface for Random Markup algorithm.
 func (alg *RMAlg) UpdateMemory(request int) bool {
-	ioutils.DebugPrint((fmt.Sprint("looking for ", request, "\t")), alg.debug)
 	isFound := alg.find(request)
-	ioutils.DebugPrint(fmt.Sprint(alg.memory, "\t"), alg.debug)
-	ioutils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
 
 	if !isFound {
 
-		ioutils.DebugPrint(" ## FAULT ", alg.debug)
-		ioutils.DebugPrint(fmt.Sprint(" HAVE TO INSERT ", request, " ## "), alg.debug)
 		if len(alg.memory) >= alg.size {
 			alg.checkAllMarks()
 			evictIndex := alg.findItemToPop()
 
-			ioutils.DebugPrint(fmt.Sprint(" ## POPPING ", alg.memory[evictIndex], " ## "), alg.debug)
 			alg.memory = append(alg.memory[:evictIndex], alg.memory[evictIndex+1:]...)
 			alg.marks = append(alg.marks[:evictIndex], alg.marks[evictIndex+1:]...)
 
 		}
 		alg.memory = append([]int{request}, alg.memory...)
 		alg.marks = append([]bool{true}, alg.marks...)
-		ioutils.DebugPrint(fmt.Sprint(" =>> ", alg.memory, "\t"), alg.debug)
-		ioutils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
-
-	} else {
-
-		ioutils.DebugPrint(fmt.Sprint(" ## FOUND ", request, " REQUEST SERVED ## =>> ", alg.memory, "\t"), alg.debug)
-		ioutils.DebugPrint(fmt.Sprint(alg.marks, "\t"), alg.debug)
 
 	}
-	ioutils.DebugPrint(fmt.Sprintln(), alg.debug)
 	return isFound
 }
 
@@ -77,16 +67,16 @@ func (alg *RMAlg) checkAllMarks() {
 }
 
 func (alg *RMAlg) findItemToPop() int {
+	copyMarksIndx := make([]int, len(alg.marks))
 
-	rand.Seed(time.Now().UTC().UnixNano())
-	copyMarksIndx := make([]int, 0)
-
+	counter := 0
 	for i, n := range alg.marks {
 		if !n {
-			copyMarksIndx = append(copyMarksIndx, i)
+			copyMarksIndx[counter] = i
+			counter++
 		}
 	}
 
-	return copyMarksIndx[rand.Intn(len(copyMarksIndx))]
+	return copyMarksIndx[alg.source.Intn(counter)]
 
 }

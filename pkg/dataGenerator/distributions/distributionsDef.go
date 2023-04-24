@@ -2,7 +2,7 @@
 // Defines enumeration for these distributions.
 package distributions
 
-const NUM_OF_DISTRIBUTIONS = 5
+const NUM_OF_DISTRIBUTIONS = 4
 
 // GeneratorTypeEnum will hold enumerate for supported distributions.
 type GeneratorTypeEnum int
@@ -11,7 +11,6 @@ type GeneratorTypeEnum int
 const (
 	Uni GeneratorTypeEnum = iota
 	Geo
-	Pois
 	Hrm
 	Dhr
 )
@@ -23,13 +22,27 @@ func (e GeneratorTypeEnum) String() string {
 		return "Uni"
 	case Geo:
 		return "Geo"
-	case Pois:
-		return "Pois"
+
 	case Hrm:
 		return "Hrm"
 	case Dhr:
 		return "Dhr"
 	default:
 		return "NULL"
+	}
+}
+
+func FromInt(j int) string {
+	switch j {
+	case 0:
+		return "Uni"
+	case 1:
+		return "Geo"
+	case 2:
+		return "Hrm"
+	case 3:
+		return "Dhr"
+	default:
+		return "Null"
 	}
 }

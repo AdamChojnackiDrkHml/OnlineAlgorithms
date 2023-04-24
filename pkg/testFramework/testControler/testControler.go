@@ -7,7 +7,6 @@ import (
 	"OnlineAlgorithms/pkg/solver"
 	ioutils "OnlineAlgorithms/pkg/testFramework/ioUtils"
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 )
@@ -56,10 +55,10 @@ func RunTestForConfig(config *conf.Config, resFilename string) {
 
 	for i, testConf := range config.TestConfigs {
 
-		if err := conf.ValidateTestConfig(testConf); err != nil {
-			fmt.Fprintln(os.Stderr, "Testcase ", fmt.Sprint(i), " error: ", err.Error())
-			continue
-		}
+		// if err := conf.ValidateTestConfig(testConf); err != nil {
+		// 	fmt.Fprintln(os.Stderr, "Testcase ", fmt.Sprint(i), " error: ", err.Error())
+		// 	continue
+		// }
 
 		conf.PreprocessTestConfig(&testConf)
 
@@ -78,36 +77,32 @@ func RunTestForConfig(config *conf.Config, resFilename string) {
 		var score int
 
 		dGS := dg.CreateDataGenerator(generConf)
-
+		dG := dGS[0]
 		for iteration := 0; iteration < genConf.Iterations; iteration++ {
 
-			ress := make([]int, noOfAlgs*noOfDistros)
+			ress := make([]float64, noOfAlgs*noOfDistros)
 			names := make([]string, noOfAlgs*noOfDistros)
 			for repeat := 0; repeat < genConf.Repeats; repeat++ {
-				problemSolversForGenerators := make([][]solver.GenericSolver, noOfDistros)
-				for i := range dGS {
-					problemSolversForGenerators[i] = solver.CreateSolversFromConfig(solvConf)
-				}
-				for requestIterator := 0; requestIterator < genConf.NoOfReq; requestIterator++ {
-					for i, generator := range dGS {
-						solversForGenerator := problemSolversForGenerators[i]
-						request := generator.GetRequest()
-						for _, problemSolver := range solversForGenerator {
-							problemSolver.Serve(request)
-						}
+				problemSolvers := solver.CreateSolversFromConfig(solvConf)
+				requests := dg.GetSliceOfRequests(&dG, genConf.NoOfReq)
+				// fmt.Println("REPEAT", repeat)
+				// fmt.Println("ITERATION", iteration)
+
+				for _, request := range requests {
+					// if solvConf.Size == 16 && generConf.Maximum == 80 && repeat == 8 && request == 22 {
+					// 	fmt.Println(9, genConf.Iterations, genConf.Repeats, request)
+					// }
+					for _, problemSolver := range problemSolvers {
+						problemSolver.Serve(request)
 					}
 				}
-
 				resultsIterator := 0
-				for i := range dGS {
-					solversForGenerator := problemSolversForGenerators[i]
-					for _, problemSolver := range solversForGenerator {
-						name, score = problemSolver.Raport()
-						names[resultsIterator] = name
-						ress[resultsIterator] += int(float64(score) / float64(genConf.Repeats))
+				for _, problemSolver := range problemSolvers {
+					name, score = problemSolver.Raport()
+					names[resultsIterator] = name
+					ress[resultsIterator] += float64(score) / float64(genConf.Repeats)
 
-						resultsIterator++
-					}
+					resultsIterator++
 				}
 			}
 			ioutils.SaveResToFile(f, ress, genConf.NoOfReq)
@@ -119,6 +114,74 @@ func RunTestForConfig(config *conf.Config, resFilename string) {
 		f.Close()
 
 	}
+}
+
+func MyTest(config *conf.Config) [][][]float64 {
+
+	results := make([][][]float64, len(config.TestConfigs))
+
+	for i, testConf := range config.TestConfigs {
+
+		// if err := conf.ValidateTestConfig(testConf); err != nil {
+		// 	fmt.Fprintln(os.Stderr, "Testcase ", fmt.Sprint(i), " error: ", err.Error())
+		// 	continue
+		// }
+
+		conf.PreprocessTestConfig(&testConf)
+
+		solvConf := testConf.SolverConfig
+		generConf := testConf.GeneratorConfig
+		genConf := testConf.GeneralConfig
+
+		noOfAlgs := solvConf.GetNumOfAlgs()
+		noOfDistros := generConf.GetNumOfDistributions()
+
+		var name string
+		var score int
+
+		results[i] = make([][]float64, genConf.Iterations)
+
+		dGS := dg.CreateDataGenerator(generConf)
+		dG := dGS[0]
+		for iteration := 0; iteration < genConf.Iterations; iteration++ {
+
+			ress := make([]float64, noOfAlgs*noOfDistros)
+			names := make([]string, noOfAlgs*noOfDistros)
+			for repeat := 0; repeat < genConf.Repeats; repeat++ {
+				problemSolvers := solver.CreateSolversFromConfig(solvConf)
+				requests := dg.GetSliceOfRequests(&dG, genConf.NoOfReq)
+				// fmt.Println("REPEAT", repeat)
+				// fmt.Println("ITERATION", iteration)
+
+				for _, request := range requests {
+					// if solvConf.Size == 16 && generConf.Maximum == 80 && repeat == 8 && request == 22 {
+					// 	fmt.Println(9, genConf.Iterations, genConf.Repeats, request)
+					// }
+					for _, problemSolver := range problemSolvers {
+						problemSolver.Serve(request)
+					}
+				}
+				resultsIterator := 0
+				for _, problemSolver := range problemSolvers {
+					name, score = problemSolver.Raport()
+					names[resultsIterator] = name
+					ress[resultsIterator] += float64(score) / float64(genConf.Repeats)
+
+					resultsIterator++
+				}
+			}
+			for i := range ress {
+				ress[i] /= float64(genConf.NoOfReq)
+			}
+			results[i][iteration] = make([]float64, len(ress))
+			copy(results[i][iteration], ress)
+			genConf.NoOfReq += genConf.Growth
+
+		}
+
+	}
+
+	return results
 }
 
 // RunTestForFileConfig takes as argument path to yaml file.

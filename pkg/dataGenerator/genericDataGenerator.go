@@ -33,9 +33,6 @@ func initGenerator(generConf dgconf.GeneratorConfigS, generatorType dist.Generat
 	case dist.Geo:
 		gD = dist.GEO_Create(generConf.FvalueGeo, generConf.Maximum)
 
-	case dist.Pois:
-		gD = dist.POIS_Create(generConf.FvaluePoiss, generConf.Maximum)
-
 	case dist.Hrm:
 		gD = dist.HRM_Create(generConf.Minimum, generConf.Maximum)
 
@@ -44,4 +41,14 @@ func initGenerator(generConf dgconf.GeneratorConfigS, generatorType dist.Generat
 	}
 
 	return gD
+}
+
+func GetSliceOfRequests(g *GenericDataGenerator, n int) []int {
+	res := make([]int, n)
+
+	for i := range res {
+		res[i] = (*g).GetRequest()
+	}
+
+	return res
 }

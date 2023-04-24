@@ -23,9 +23,17 @@ import (
 
 // SaveResToFile takes results slice and number of requests
 // and writes that to passed file.
-func SaveResToFile(f *os.File, ress []int, noOfReq int) {
+func SaveResToFile(f *os.File, ress []float64, noOfReq int) {
 	writeToFile(f, fmt.Sprint(noOfReq))
 	writeToFile(f, " ")
+	for _, res := range ress {
+		writeToFile(f, fmt.Sprint(res))
+		writeToFile(f, " ")
+	}
+	writeToFile(f, "\n")
+}
+
+func SaveResToFilePuri(f *os.File, ress []float64) {
 	for _, res := range ress {
 		writeToFile(f, fmt.Sprint(res))
 		writeToFile(f, " ")

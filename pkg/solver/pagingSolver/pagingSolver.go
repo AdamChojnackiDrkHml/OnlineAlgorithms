@@ -4,6 +4,7 @@ package pagingsolver
 
 import (
 	palgs "OnlineAlgorithms/pkg/solver/pagingSolver/pagingSolverAlgs"
+	"errors"
 	"fmt"
 )
 
@@ -23,6 +24,9 @@ type PagingSolver struct {
 // PagingSolver_Create creates PagingSolver struct for given configuration.
 // Returns PagingSolver.
 func PagingSolver_Create(size int, algP palgs.PagingAlg, debug bool) *PagingSolver {
+	if size <= 0 {
+		panic(errors.New("wrong size"))
+	}
 	pS := &PagingSolver{size: size, faults: 0, algE: palgs.PagingAlg(algP)}
 	pS.createSolvingAlg(algP, debug)
 	return pS
@@ -58,6 +62,14 @@ func (ps *PagingSolver) createSolvingAlg(algP palgs.PagingAlg, debug bool) {
 	case palgs.RM:
 		{
 			ps.alg = palgs.RMAlg_Create(ps.size, debug)
+		}
+	case palgs.FWF:
+		{
+			ps.alg = palgs.FWFAlg_Create(ps.size, debug)
+		}
+	case palgs.RAND:
+		{
+			ps.alg = palgs.RANDAlg_Create(ps.size, debug)
 		}
 	}
 }
