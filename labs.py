@@ -39,15 +39,20 @@ for j in range(len(Ns)):
     # plt.savefig("data/plots/exp5bHLL" + str(Ks[i]), bbox_inches="tight")
     # plt.close()
 
-# for a in range(len(Algs)):   
-#     for i in range(len(Distros)):
-#         for j in range(len(KsRatios)):
-#             plt.plot(Ns, res[j][i][a], label=str(Ns[j]))
+for j in range(len(Ns)):
+    ret = [int(i) for i in (res[j][0][0])]
+    
+    for a in range(1, len(Algs)):
+    
+        # myK = list(map(lambda x: Ns[j] * x, KsRatios))
+        print(ret)
+        for i in range(len(Distros)):
+            plt.plot(ret, res[j][i][a], label=Distros[i])
         
-#         plt.xlabel("Cache Size")
-#         plt.ylabel("Avg Cost")
-#         plt.title(Algs[a] + " " + Distros[i])
-#         plt.legend(loc='upper right')
-#         plt.savefig("data/labs/graphs/AlgDist/" + Distros[i] , bbox_inches="tight")
-#         plt.close()
-#         print(a)
+        plt.xlabel("Cache Size")
+        plt.ylabel("Avg Cost")
+        plt.xticks(ret)
+        plt.title("N = " + str(Ns[j]) + " " + Distros[i])
+        plt.legend(loc='upper right')
+        plt.savefig("data/labs/graphs/AlgDist/" + str(Ns[j]) + Algs[a] , bbox_inches="tight")
+        plt.close()
