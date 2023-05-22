@@ -7,6 +7,7 @@ import (
 	bigpackingsolver "OnlineAlgorithms/pkg/solver/bigPackingSolver"
 	bigpackingalgs "OnlineAlgorithms/pkg/solver/bigPackingSolver/bigPackingAlgs"
 	"fmt"
+	"math"
 	"math/rand"
 	"time"
 )
@@ -124,6 +125,6 @@ func sumSeq(sequence []float64) int {
 		sum += elem
 	}
 
-	return int(sum)
+	return int(math.Ceil(sum))
 
 }
